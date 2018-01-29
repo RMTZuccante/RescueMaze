@@ -22,12 +22,11 @@ private:
 };
 
 Color::Color(){
-  mirror = readIR();
-  
 }
 
 void Color::begin(){
-	pinMode(S0, OUTPUT);
+  mirror = readIR();
+  pinMode(S0, OUTPUT);
   pinMode(S1, OUTPUT);
   pinMode(S2, OUTPUT);
   pinMode(S3, OUTPUT);
