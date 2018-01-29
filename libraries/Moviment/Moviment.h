@@ -4,6 +4,8 @@
 #include "Motor.h"
 #include "IMU.h"
 
+#define FIRST_K 6000
+#define SECOND_K 4000
 #define FR_EN 10
 #define FR_IN1 8
 #define FR_IN2 11
@@ -126,8 +128,8 @@ float Moviment::endAngle(float angle, bool invert) {
 
 void Moviment::rotationSpeed(bool direction , float endRotation) {
   direzione = orientation.yaw();
-  if (endRotation-direzione>0) setK(40+((endRotation - direzione)*2), 60+((endRotation - direzione)*2));
-  else setK(60+((direzione - endRotation)*2), 40+((direzione - endRotation)*2));
+  if (endRotation-direzione>0) setK(FIRST_K+((endRotation - direzione)*2), SECOND_K+((endRotation - direzione)*2));
+  else setK(SECOND_K+((direzione - endRotation)*2), FIRST_K+((direzione - endRotation)*2));
   rotate(direction);
 }
 
