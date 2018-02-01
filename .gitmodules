@@ -1,0 +1,3 @@
+[submodule "libraries/IMU"]
+	path = libraries/IMU
+	url = https://github.com/RMTZuccante/IMU
