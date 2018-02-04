@@ -128,8 +128,8 @@ float Moviment::endAngle(float angle, bool invert) {
 
 void Moviment::rotationSpeed(bool direction , float endRotation) {
   direzione = orientation.yaw();
-  if (endRotation-direzione>0) setK(FIRST_K+((endRotation - direzione)*2), SECOND_K+((endRotation - direzione)*2));
-  else setK(SECOND_K+((direzione - endRotation)*2), FIRST_K+((direzione - endRotation)*2));
+  if (endRotation-direzione>0) setK(FIRST_K+((endRotation - direzione)*500), SECOND_K+((endRotation - direzione)*500));
+  else setK(SECOND_K+((direzione - endRotation)*500), FIRST_K+((direzione - endRotation)*500));
   rotate(direction);
 }
 
