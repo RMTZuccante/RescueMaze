@@ -1,15 +1,14 @@
 #include "Moviment.h"
-#include "IMU.h"
 
 Moviment mov(10000);
-void setup{
+
+void setup() {
 	mov.begin();
 	for(int i = 0; i<4; i++){
 		mov.rotate(true);
 	}
-
 }
 
-void loop{
+void loop() {
 
 }

@@ -5,10 +5,10 @@ Motor::Motor(byte i1, byte i2) {
   inverter2 = i2;
 }
 
-void Motor::start(byte speed, bool inverse) {
+void Motor::start(uint16_t speed, bool inverse) {
   this->inverse = inverse;
-  pwmWrite(inverter1, (!inverse)&speed);
-  pwmWrite(inverter2, inverse&speed);
+  pwmWrite(inverter1, inverse? 0 : speed);
+  pwmWrite(inverter2, inverse? speed : 0);
 }
 
 void Motor::begin() {
@@ -18,7 +18,7 @@ void Motor::begin() {
   pwmWrite(inverter2, 0);
 }
 
-void Motor::setSpeed(byte speed) {
+void Motor::setSpeed(uint16_t speed) {
   start(speed, inverse);
 }
 
