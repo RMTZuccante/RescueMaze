@@ -6,16 +6,12 @@
 
 #define FIRST_K 6000
 #define SECOND_K 4000
-#define FR_EN 10
 #define FR_IN1 8
 #define FR_IN2 11
-#define FL_EN 5
 #define FL_IN1 2
 #define FL_IN2 3
-#define RR_EN 9
 #define RR_IN1 12
 #define RR_IN2 13
-#define RL_EN 6
 #define RL_IN1 7
 #define RL_IN2 4
 
@@ -31,13 +27,12 @@ class Moviment {
     void setK(int rightK, int leftK);
   private:
     short bound (short n, short max);
-    Motor motorFR = Motor(FL_EN, FL_IN1, FL_IN2);
-    Motor motorFL = Motor(FR_EN, FR_IN1, FR_IN2);
-    Motor motorRR = Motor(RL_EN, RL_IN1, RL_IN2);
-    Motor motorRL = Motor(RR_EN, RR_IN1, RR_IN2);
+    Motor motorFR = Motor(FL_IN1, FL_IN2);
+    Motor motorFL = Motor(FR_IN1, FR_IN2);
+    Motor motorRR = Motor(RL_IN1, RL_IN2);
+    Motor motorRL = Motor(RR_IN1, RR_IN2);
     float endAngle(float angle, bool invert);
     IMU orientation;
-    byte state;
     byte speed;
     int kR;
     int kL;
@@ -45,15 +40,20 @@ class Moviment {
 };
 
 Moviment::Moviment (byte velocity) {
-  state=0;
   speed = velocity;
+}
+
+void Moviment::begin(){
+  motorFR.begin();
+  motorFL.begin();
+  motorRR.begin();
+  motorRL.begin();
   orientation.begin();
   delay(100);
   orientation.calibrate();
   delay(100);
   orientation.start();
 }
-
 void Moviment::go() {
   go(false);
 }
