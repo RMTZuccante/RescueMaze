@@ -9,6 +9,11 @@ void Moviment::begin(){
   motorFL.begin();
   motorRR.begin();
   motorRL.begin();
+  if (!orientation.check()) {
+    pinMode(PC13,OUTPUT);
+    gpio_write_bit(GPIOC, 13, 0);
+    while(1) delay(1000);
+  }
   orientation.begin();
   delay(100);
   orientation.calibrate();
@@ -59,12 +64,12 @@ void Moviment::stop() {
   motorRL.stop();
 }
 
-void Moviment::setSpeed(uint16_t velocity) {
-  speed = velocity;
-  motorFR.setSpeed(velocity);
-  motorFL.setSpeed(velocity);
-  motorRR.setSpeed(velocity);
-  motorRL.setSpeed(velocity);
+void Moviment::setSpeed(uint16_t speed) {
+  this->speed = speed;
+  motorFR.setSpeed(speed);
+  motorFL.setSpeed(speed);
+  motorRR.setSpeed(speed);
+  motorRL.setSpeed(speed);
 }
 
 void Moviment::setK(int rightK, int leftK) {
@@ -94,6 +99,6 @@ void Moviment::rotationSpeed(bool direction , float endRotation) {
   rotate(direction);
 }
 
-short Moviment::bound(uint16_t n, uint16_t max) {
+uint16_t Moviment::bound(uint16_t n, uint16_t max) {
   return (n > max) ? max : n;
 }

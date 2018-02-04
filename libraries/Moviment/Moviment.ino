@@ -1,14 +1,17 @@
+#include "definitions.h"
 #include "Moviment.h"
 
-Moviment mov(10000);
+Moviment mov(60000);
 
 void setup() {
 	mov.begin();
-	for(int i = 0; i<4; i++){
-		mov.rotate(true);
-	}
 }
 
 void loop() {
+  
+ for(int i = 0; i<4; i++){
+    mov.rotate(true);
+  }
 
+  delay(5000);
 }
