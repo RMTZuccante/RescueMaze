@@ -38,20 +38,24 @@ void Moviment::rotate() {
 
 void Moviment::rotate(bool invert) {
   orientation.start();
-  motorFR.start(bound((speed + kR) , 65535), !invert);
-  motorFL.start(bound((speed + kL) , 65535), invert);
-  motorRR.start(bound((speed + kR) , 65535), !invert);
-  motorRL.start(bound((speed + kL) , 65535), invert);
   float end = endAngle(orientation.yaw(), invert);
   if (invert) {
-    while(orientation.yaw()<end) rotationSpeed(invert,end);
+    while(orientation.yaw()<end) {
+      rotationSpeed(invert,end);
+    }
     stop();
-    while(orientation.yaw()>end) rotationSpeed(!invert,end);
+    while(orientation.yaw()>end) {
+      rotationSpeed(!invert,end);
+    }
   }
   else {
-    while(orientation.yaw()>end) rotationSpeed(invert,end);
+    while(orientation.yaw()>end){
+      rotationSpeed(invert,end);
+    }
     stop();
-    while(orientation.yaw()<end) rotationSpeed(!invert,end);
+    while(orientation.yaw()<end) {
+      rotationSpeed(!invert,end);
+    }
   }
   setK(0,0);
   stop();
@@ -92,13 +96,23 @@ float Moviment::endAngle(float angle, bool invert) {
   }
 }
 
-void Moviment::rotationSpeed(bool direction , float endRotation) {
+void Moviment::rotationSpeed(bool invert , float endRotation) {
   direzione = orientation.yaw();
-  if (endRotation-direzione>0) setK(FIRST_K+((endRotation - direzione)*500), SECOND_K+((endRotation - direzione)*500));
-  else setK(SECOND_K+((direzione - endRotation)*500), FIRST_K+((direzione - endRotation)*500));
-  rotate(direction);
+  if (endRotation-direzione>0) setK(FIRST_K+((endRotation - direzione)*300), SECOND_K+((endRotation - direzione)*300));
+  else setK(SECOND_K+((direzione - endRotation)*300), FIRST_K+((direzione - endRotation)*300));
+  motorFR.start(bound((speed + kR) , 65535), !invert);
+  motorFL.start(bound((speed + kL) , 65535), invert);
+  motorRR.start(bound((speed + kR) , 65535), !invert);
+  motorRL.start(bound((speed + kL) , 65535), invert);
+  Serial.print(endRotation);
+  Serial.print("  ");
+  Serial.print(direzione);
+  Serial.print(" R: ");
+  Serial.print(bound((kR) , 65535));
+  Serial.print(" L: ");
+  Serial.println(bound((kL) , 65535));
 }
 
-uint16_t Moviment::bound(uint16_t n, uint16_t max) {
+uint16_t Moviment::bound(uint32_t n, uint16_t max) {
   return (n > max) ? max : n;
 }
