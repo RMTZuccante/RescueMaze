@@ -3,6 +3,7 @@
 
 #include "Motor.h"
 #include "IMU.h"
+#include <Arduino.h>
 
 #define FIRST_K 6000
 #define SECOND_K 4000
@@ -27,7 +28,7 @@ class Moviment {
     void setSpeed(uint16_t speed);
     void setK(int rightK, int leftK);
   private:
-    uint16_t bound (uint16_t n, uint16_t max);
+    uint16_t bound (uint32_t n, uint16_t max);
     float endAngle(float angle, bool invert);
     void rotationSpeed(bool direction , float endRotation);
     
