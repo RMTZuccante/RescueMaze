@@ -50,12 +50,14 @@ void go(){
 }//go
 */
 
+/*
 void back(){
   mov.go(true);
   float endDist = endDist( dist[0].read() ) + 300;
-  while( (dist[0].read()>endDist));
+  while( (dist[0].read()<endDist));
   mov.stop;
 }
+*/
 
 float endDist(float distance){
   return distance-distance%300+CENTRED;
