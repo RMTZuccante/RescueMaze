@@ -28,7 +28,7 @@ Temperature tempL = Temperature(T_LEFT);
 Temperature tempR = Temperature(T_RIGHT);
 RGB led(RED , GREEN , BLUE);
 //Laser laser[3]={Laser(),Laser(),Laser()};
-//Matrix matrix();
+//Matrix matrix;
 
 
 float dist[3];
@@ -73,9 +73,12 @@ void setup(){
 }//setup
 
 void loop(){
-  /*  
+  /*  getDist();
    *  matrix._check(dist,tempL.read(),tempR.read(),color->read());
-   *  if(matrix.isBlack())back();
+   *  if(matrix.isBlack()){
+        back();
+        matrix.back();
+      }
    *  if(matrix.isVictim()){
    *    cagamattoni.caga();
    *    RGB.set(0,0,0);
