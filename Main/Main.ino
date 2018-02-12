@@ -19,9 +19,9 @@
 #define LEFT 2
 #define BACK 3
 //Misurements
-#define CENTRED 60 //distanza del robot rispetto al muro per ssere centrato
+#define CENTRED 60 //distanza del robot rispetto al muro per essere centrato
 
-//creating objests
+//creating objects
 Moviment mov(50000);
 Color *color;
 Temperature tempL = Temperature(T_LEFT);
@@ -31,7 +31,7 @@ RGB led(RED , GREEN , BLUE);
 //Matrix matrix();
 
 
-int dist[3];
+float dist[3];
 
 /*
 void getDist(){
@@ -44,13 +44,20 @@ void getDist(){
 /*
 void go(){
   mov.go();
-  int endDist = endDist(dist[0].read());
-  while(dist[0].read()>endDist);
+  float endDist = endDist(dist[0].read());
+  while( (dist[0].read()>endDist) && (color->read()==2) );
   mov.stop;
 }//go
 */
 
-int endDist(int distance){
+void back(){
+  mov.go(true);
+  float endDist = endDist( dist[0].read() ) + 300;
+  while( (dist[0].read()>endDist));
+  mov.stop;
+}
+
+float endDist(float distance){
   return distance-distance%300+CENTRED;
 }
 
@@ -65,28 +72,21 @@ void setup(){
 
 void loop(){
   /*  
-   *  matrix._check(dist,tempL.read(),tempR.read(),color.read());
+   *  matrix._check(dist,tempL.read(),tempR.read(),color->read());
    *  if(matrix.isBlack())back();
    *  if(matrix.isVictim()){
-   *    cagamattoni.caga();//remind nico to fix the _check function 'cause it doesn't check che distance of the wall when it's controlling thetemperature.
-   *    RGB.set(50000,50000,50000);
-   *    delay(1000);
+   *    cagamattoni.caga();
    *    RGB.set(0,0,0);
    *  }
    *  switch(matrix.getDir()){
-   *    case 0 :
-   *      go();
-   *      break;
    *    case 1 :
    *      mov.rotate(true);
-   *      go();
    *      break;
    *    case 2 :
    *      mov.rotate(false)
-   *      go();
    *      break ;
    *  }//switch
-   *  
+   *  go();
    * 
    */
 }//loop
