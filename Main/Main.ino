@@ -6,9 +6,18 @@
 //#include "Laser.h"
 //#include "Matrix.h"
 
-//Temperature adress
+//Temperature adresses
 #define T_LEFT 0x5A
 #define T_RIGHT 0x5B
+
+//Laser addresses
+#define L_LEFT 0x29
+#define L_FRONT 0x2A
+#define L_RIGHT 0x2B
+//Laser pin
+#define LX_LEFT PA15
+#define LX_FRONT PA10
+
 //RGB
 #define RED 4
 #define GREEN 5
@@ -23,7 +32,7 @@
 
 //creating objects
 Moviment mov(50000);
-Color *color;
+Color color;
 Temperature tempL = Temperature(T_LEFT);
 Temperature tempR = Temperature(T_RIGHT);
 RGB led(RED , GREEN , BLUE);
@@ -63,10 +72,24 @@ float endDist(float distance){
   return distance-distance%300+CENTRED;
 }
 
+/*void setAddresses() {
+  pinMode(LX_LEFT, OUTPUT);
+  pinMode(LX_FRONT, OUTPUT);  
+  laser[2].setAddress(L_RIGHT);
+  pinMode(LX_FRONT, INPUT);
+  delay(10);
+  laser[1].setAddress(L_FRONT);
+  pinMode(LX_LEFT, INPUT);
+  delay(10);
+  laser[0].setAddress(L_LEFT);
+}*/
+
 void setup(){
   Serial.begin(9600);
-  color = new Color();
-  color->begin();
+  Wire.begin();
+  Wire2.begin();
+  //setAddresses();
+  color.begin();
   mov.begin();
   //for(int i = 0 ; i<3 ; i++)laser[i].begin();
   
@@ -74,7 +97,7 @@ void setup(){
 
 void loop(){
   /*  getDist();
-   *  matrix._check(dist,tempL.read(),tempR.read(),color->read());
+   *  matrix._check(dist,tempL.read(),tempR.read(),color.read());
    *  if(matrix.isBlack()){
         back();
         matrix.back();
