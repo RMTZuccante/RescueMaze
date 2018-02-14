@@ -1,8 +1,8 @@
 #ifndef Moviment_h
 #define Moviment_h
 
-#include "Motor.h"
-#include "IMU.h"
+#include "Motor/Motor.h"
+#include "IMU/IMU.h"
 
 #define FIRST_K 6000
 #define SECOND_K 4000
