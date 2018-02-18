@@ -3,7 +3,7 @@
 #include "Color.h"
 #include "Temperature.h"
 #include "RGB.h"
-//#include "Laser.h"
+#include "VL53L0X.h"
 //#include "Matrix.h"
 
 //Temperature adresses
@@ -33,48 +33,41 @@
 //creating objects
 Moviment mov(50000);
 Color color;
-Temperature tempL = Temperature(T_LEFT);
-Temperature tempR = Temperature(T_RIGHT);
+Temperature tempL (T_LEFT);
+Temperature tempR (T_RIGHT);
 RGB led(RED , GREEN , BLUE);
-//Laser laser[3]={Laser(),Laser(),Laser()};
+VL53L0X laser[3] = {VL53L0X(), VL53L0X(), VL53L0X()};
 //Matrix matrix;
 
+uint16_t dist[3];
 
-float dist[3];
-
-/*
-void getDist(){
-  for(int i=0; i<3; i++){
-    dist[i]=laser[i].read();
+void getDist() {
+  for (int i = 0; i < 3; i++) {
+    dist[i] = laser[i].read();
   }//for
 }//getDist
-*/
 
-/*
-void go(){
+void go() {
   mov.go();
-  float endDist = endDist(dist[0].read());
-  while( (dist[0].read()>endDist) && (color->read()==2) );
-  mov.stop;
+  uint16_t end = endDist(laser[0].read());
+  while ( (laser[0].read() > end) && (color.read() == 2) );
+  mov.stop();
 }//go
-*/
 
-/*
-void back(){
+void back() {
   mov.go(true);
-  float endDist = endDist( dist[0].read() ) + 300;
-  while( (dist[0].read()<endDist));
-  mov.stop;
-}
-*/
-
-float endDist(float distance){
-  return distance-distance%300+CENTRED;
+  uint16_t end = endDist(laser[0].read()) + 300;
+  while (laser[0].read() < end);
+  mov.stop();
 }
 
-/*void setAddresses() {
+uint16_t endDist(uint16_t distance) {
+  return distance - (distance % 300) + CENTRED;
+}
+
+void setAddresses() {
   pinMode(LX_LEFT, OUTPUT);
-  pinMode(LX_FRONT, OUTPUT);  
+  pinMode(LX_FRONT, OUTPUT);
   laser[2].setAddress(L_RIGHT);
   pinMode(LX_FRONT, INPUT);
   delay(10);
@@ -82,39 +75,37 @@ float endDist(float distance){
   pinMode(LX_LEFT, INPUT);
   delay(10);
   laser[0].setAddress(L_LEFT);
-}*/
+}
 
-void setup(){
+void setup() {
   Serial.begin(9600);
   Wire.begin();
   Wire2.begin();
-  //setAddresses();
+  setAddresses();
   color.begin();
   mov.begin();
-  //for(int i = 0 ; i<3 ; i++)laser[i].begin();
-  
+  for(int i = 0 ; i<3 ; i++)laser[i].begin();
 }//setup
 
-void loop(){
+void loop() {
   /*  getDist();
-   *  matrix._check(dist,tempL.read(),tempR.read(),color.read());
-   *  if(matrix.isBlack()){
+      matrix._check(dist,tempL.read(),tempR.read(),color.read());
+      if(matrix.isBlack()){
         back();
         matrix.back();
       }
-   *  if(matrix.isVictim()){
-   *    cagamattoni.caga();
-   *    RGB.set(0,0,0);
-   *  }
-   *  switch(matrix.getDir()){
-   *    case 1 :
-   *      mov.rotate(true);
-   *      break;
-   *    case 2 :
-   *      mov.rotate(false)
-   *      break ;
-   *  }//switch
-   *  go();
-   * 
-   */
+      if(matrix.isVictim()){
+        cagamattoni.caga();
+        RGB.set(0,0,0);
+      }
+      switch(matrix.getDir()){
+        case 1 :
+          mov.rotate(true);
+          break;
+        case 2 :
+          mov.rotate(false)
+          break ;
+      }//switch
+      go();
+  */
 }//loop
