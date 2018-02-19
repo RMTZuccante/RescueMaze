@@ -4,15 +4,15 @@ Moviment::Moviment (uint16_t speed) {
   this->speed = speed;
 }
 
-void Moviment::begin(){
+void Moviment::begin() {
   motorFR.begin();
   motorFL.begin();
   motorRR.begin();
   motorRL.begin();
   if (!orientation.check()) {
-    pinMode(PC13,OUTPUT);
+    pinMode(PC13, OUTPUT);
     gpio_write_bit(GPIOC, 13, 0);
-    while(1) delay(1000);
+    while (1) delay(1000);
   }
   orientation.begin();
   delay(100);
@@ -29,7 +29,7 @@ void Moviment::go(bool invert) {
   motorFL.start(bound(speed + kL, 65535), !invert);
   motorRR.start(bound(speed + kR, 65535), !invert);
   motorRL.start(bound(speed + kL, 65535), !invert);
-  
+
 }
 
 void Moviment::rotate() {
@@ -40,24 +40,34 @@ void Moviment::rotate(bool invert) {
   orientation.start();
   float end = endAngle(orientation.yaw(), invert);
   if (invert) {
-    while(orientation.yaw()<end) {
-      rotationSpeed(invert,end);
+    if(end < 90){
+      rotationSpeed(invert, 0);
+      while (orientation.yaw() < 355) {};
+      delay(100);
+    }
+    while (orientation.yaw() < end) {
+      rotationSpeed(invert, end);
     }
     stop();
-    while(orientation.yaw()>end) {
-      rotationSpeed(!invert,end);
+    while (orientation.yaw() > end) {
+      rotationSpeed(!invert, end);
     }
   }
   else {
-    while(orientation.yaw()>end){
-      rotationSpeed(invert,end);
+    if(end < 270){
+      rotationSpeed(!invert, 360);
+      while (orientation.yaw() > 5) {};
+      delay(100);
+    }
+    while (orientation.yaw() > end) {
+      rotationSpeed(!invert, end);
     }
     stop();
-    while(orientation.yaw()<end) {
-      rotationSpeed(!invert,end);
+    while (orientation.yaw() < end) {
+      rotationSpeed(invert, end);
     }
   }
-  setK(0,0);
+  setK(0, 0);
   stop();
 }
 
@@ -98,19 +108,19 @@ float Moviment::endAngle(float angle, bool invert) {
 
 void Moviment::rotationSpeed(bool invert , float endRotation) {
   direzione = orientation.yaw();
-  if (endRotation-direzione>0) setK(FIRST_K+((endRotation - direzione)*300), SECOND_K+((endRotation - direzione)*300));
-  else setK(SECOND_K+((direzione - endRotation)*300), FIRST_K+((direzione - endRotation)*300));
+  if (endRotation - direzione > 0) setK(FIRST_K + ((endRotation - direzione) * 300), SECOND_K + ((endRotation - direzione) * 300));
+  else setK(SECOND_K + ((direzione - endRotation) * 300), FIRST_K + ((direzione - endRotation) * 300));
   motorFR.start(bound((speed + kR) , 65535), !invert);
   motorFL.start(bound((speed + kL) , 65535), invert);
   motorRR.start(bound((speed + kR) , 65535), !invert);
   motorRL.start(bound((speed + kL) , 65535), invert);
-  Serial.print(endRotation);
-  Serial.print("  ");
-  Serial.print(direzione);
-  Serial.print(" R: ");
-  Serial.print(bound((kR) , 65535));
-  Serial.print(" L: ");
-  Serial.println(bound((kL) , 65535));
+//  Serial.print(endRotation);
+//  Serial.print("  ");
+//  Serial.print(direzione);
+//  Serial.print(" R: ");
+//  Serial.print(bound((kR) , 65535));
+//  Serial.print(" L: ");
+//  Serial.println(bound((kL) , 65535));
 }
 
 uint16_t Moviment::bound(uint32_t n, uint16_t max) {
