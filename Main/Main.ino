@@ -4,7 +4,7 @@
 #include "Temperature.h"
 #include "RGB.h"
 #include "VL53L0X.h"
-//#include "Matrix.h"
+#include "Matrix.h"
 
 //creating objects
 Moviment mov(50000);
@@ -13,7 +13,12 @@ Temperature tempL (T_LEFT);
 Temperature tempR (T_RIGHT);
 RGB led(RED, GREEN, BLUE);
 VL53L0X laser[3] = {VL53L0X(), VL53L0X(), VL53L0X()};
-//Matrix matrix;
+Matrix matrix;
+
+bool info[2];
+
+#define VICTIM info[1]
+#define BLACK info[0]
 
 uint16_t dist[3];
 
@@ -67,25 +72,23 @@ void setup() {
 
 void loop() {
 	  getDist();
-      /*
-	  matrix._check(dist,tempL.read(),tempR.read(),color.read());
-      if(matrix.isBlack()){
-        back();
-        matrix.back();
-      }
-      if(matrix.isVictim()){
-        cagamattoni.caga();
-        RGB.set(0,0,0);
-      }
-      switch(matrix.getDir()){
-        case 1 :
-          mov.rotate(true);
-          break;
-        case 2 :
-          mov.rotate(false)
-          break ;
-      }//switch
-	  */
-      go();
-  */
+    matrix.check(dist,tempL.read(),tempR.read(),color.read());
+    matrix.getInfo(info);
+    if(BLACK){
+      back();
+      matrix.move(false);
+    }
+    if(VICTIM){
+      //cagamattoni.caga();
+      led.set(0,0,0);
+    }
+    switch(matrix.getDir()){
+      case 1 :
+        mov.rotate(true);
+        break;
+      case 2 :
+        mov.rotate(false);
+        break;
+    }//switch
+    go();
 }//loop
