@@ -1,6 +1,7 @@
 #ifndef Moviment_h
 #define Moviment_h
 
+#include <Arduino.h>
 #include "Motor.h"
 #include "IMU.h"
 
@@ -19,6 +20,7 @@ class Moviment {
   public:
     Moviment (uint16_t speed);
     void begin();
+    bool check();
     void go();
     void go (bool invert);
     void rotate();

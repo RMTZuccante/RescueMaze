@@ -9,17 +9,17 @@ void Moviment::begin() {
   motorFL.begin();
   motorRR.begin();
   motorRL.begin();
-  if (!orientation.check()) {
-    pinMode(PC13, OUTPUT);
-    gpio_write_bit(GPIOC, 13, 0);
-    while (1) delay(1000);
-  }
   orientation.begin();
   delay(100);
   orientation.calibrate();
   delay(100);
   orientation.start();
 }
+
+bool Moviment::check() {
+  return orientation.check();
+}
+
 void Moviment::go() {
   go(false);
 }

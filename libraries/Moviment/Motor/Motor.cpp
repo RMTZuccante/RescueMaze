@@ -1,6 +1,6 @@
 #include "Motor.h"
 
-Motor::Motor(byte i1, byte i2) {
+Motor::Motor(uint8_t i1, uint8_t i2) {
   inverter1 = i1;
   inverter2 = i2;
 }
