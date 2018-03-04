@@ -2,20 +2,21 @@
 #define Temperature_h
 
 #include <Arduino.h>
-#include <Wire.h>
+#include "I2C.h"
 
 #define MLX90614_TA 0x06
 #define MLX90614_TOBJ1 0x07
 
 class Temperature  {
  public:
-  Temperature(byte address);
+  Temperature(uint8_t address);
+  bool check();
   float read();
   float readAmb();
  private:
-  float readTemp(byte reg);
-  byte address;
-  unsigned short read16(byte reg);
+  float readTemp(uint8_t reg);
+  uint8_t address;
+  uint16_t read16(uint8_t reg);
 };
 
 #endif

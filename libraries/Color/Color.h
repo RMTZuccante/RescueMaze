@@ -1,16 +1,19 @@
 #ifndef Color_h
 #define Color_h
 
-#define MERROR 5
-
-#include <Wire.h>
+#include <Arduino.h>
+#include "I2C.h"
 
 #define COLORADDRESS 42
 
 class Color {
 public:
+  Color(int merror);
   void begin();
-  byte read();
+  bool check();
+  uint8_t read();
+private:
+  int merror;
 };
 
 #endif

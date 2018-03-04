@@ -1,11 +1,6 @@
 #include "VL53L0X.h"
-#include <Wire.h>
 
-// Defines /////////////////////////////////////////////////////////////////////
-
-// The Arduino two-wire interface uses a 7-bit number for the address,
-// and sets the last bit correctly based on reads and writes
-#define ADDRESS_DEFAULT 0b0101001
+#define ADDRESS_DEFAULT 0x29
 
 // Record the current time to check an upcoming timeout against
 #define startTimeout() (timeout_start_ms = millis())
@@ -203,72 +198,72 @@ bool VL53L0X::init(bool io_2v8) {
 
 // Write an 8-bit register
 void VL53L0X::writeReg(uint8_t reg, uint8_t value) {
-    Wire.beginTransmission(address);
-    Wire.write(reg);
-    Wire.write(value);
-    Wire.endTransmission();
+    I2C_1.beginTransmission(address);
+    I2C_1.write(reg);
+    I2C_1.write(value);
+    I2C_1.endTransmission();
 }
 
 // Write a 16-bit register
 void VL53L0X::writeReg16Bit(uint8_t reg, uint16_t value) {
-    Wire.beginTransmission(address);
-    Wire.write(reg);
-    Wire.write((byte)(value >> 8) & 0xFF); // value high byte
-    Wire.write(value & 0xFF); // value low byte
-    Wire.endTransmission();
+    I2C_1.beginTransmission(address);
+    I2C_1.write(reg);
+    I2C_1.write((byte)(value >> 8) & 0xFF); // value high byte
+    I2C_1.write(value & 0xFF); // value low byte
+    I2C_1.endTransmission();
 }
 
 // Write a 32-bit register
 void VL53L0X::writeReg32Bit(uint8_t reg, uint32_t value) {
-    Wire.beginTransmission(address);
-    Wire.write(reg);
-    Wire.write((byte)(value >> 24) & 0xFF); // value highest byte
-    Wire.write((byte)(value >> 16) & 0xFF);
-    Wire.write((byte)(value >> 8) & 0xFF);
-    Wire.write((byte)value & 0xFF); // value lowest byte
-    Wire.endTransmission();
+    I2C_1.beginTransmission(address);
+    I2C_1.write(reg);
+    I2C_1.write((byte)(value >> 24) & 0xFF); // value highest byte
+    I2C_1.write((byte)(value >> 16) & 0xFF);
+    I2C_1.write((byte)(value >> 8) & 0xFF);
+    I2C_1.write((byte)value & 0xFF); // value lowest byte
+    I2C_1.endTransmission();
 }
 
 // Read an 8-bit register
 uint8_t VL53L0X::readReg(uint8_t reg) {
     uint8_t value;
-    Wire.beginTransmission(address);
-    Wire.write(reg);
-    Wire.endTransmission();
-    Wire.requestFrom(address, (uint8_t) 1);
-    value = Wire.read();
+    I2C_1.beginTransmission(address);
+    I2C_1.write(reg);
+    I2C_1.endTransmission();
+    I2C_1.requestFrom(address, (uint8_t) 1);
+    value = I2C_1.read();
     return value;
 }
 
 // Read a 16-bit register
 uint16_t VL53L0X::readReg16Bit(uint8_t reg) {
     uint16_t value;
-    Wire.beginTransmission(address);
-    Wire.write(reg);
-    Wire.endTransmission();
-    Wire.requestFrom(address, (uint8_t) 2);
-    value = (uint16_t) Wire.read() << 8; // value high byte
-    value |= Wire.read(); // value low byte
+    I2C_1.beginTransmission(address);
+    I2C_1.write(reg);
+    I2C_1.endTransmission();
+    I2C_1.requestFrom(address, (uint8_t) 2);
+    value = (uint16_t) I2C_1.read() << 8; // value high byte
+    value |= I2C_1.read(); // value low byte
     return value;
 }
 
 // Write an arbitrary number of bytes from the given array to the sensor,
 // starting at the given register
 void VL53L0X::writeMulti(uint8_t reg, uint8_t const *src, uint8_t count) {
-    Wire.beginTransmission(address);
-    Wire.write(reg);
-    while (count-- > 0) Wire.write(*(src++));
-    Wire.endTransmission();
+    I2C_1.beginTransmission(address);
+    I2C_1.write(reg);
+    while (count-- > 0) I2C_1.write(*(src++));
+    I2C_1.endTransmission();
 }
 
 // Read an arbitrary number of bytes from the sensor, starting at the given
 // register, into the given array
 void VL53L0X::readMulti(uint8_t reg, uint8_t *dst, uint8_t count) {
-    Wire.beginTransmission(address);
-    Wire.write(reg);
-    Wire.endTransmission();
-    Wire.requestFrom(address, count);
-    while (count-- > 0) *(dst++) = Wire.read();
+    I2C_1.beginTransmission(address);
+    I2C_1.write(reg);
+    I2C_1.endTransmission();
+    I2C_1.requestFrom(address, count);
+    while (count-- > 0) *(dst++) = I2C_1.read();
 }
 
 // Set the return signal rate limit check value in units of MCPS (mega counts
@@ -594,6 +589,12 @@ bool VL53L0X::performSingleRefCalibration(uint8_t vhv_init_byte) {
 void VL53L0X::begin() {
     init();
     setTimeout(500);
+}
+
+bool VL53L0X::check() {
+  I2C_1.beginTransmission(address);
+  if (I2C_1.endTransmission()) return false;
+  return true;
 }
 
 uint16_t VL53L0X::read() {

@@ -2,12 +2,14 @@
 #define VL53L0X_h
 
 #include <Arduino.h>
+#include "I2C.h"
 
 class VL53L0X {
 public:
     VL53L0X();
     void setAddress(uint8_t new_addr);
     void begin();
+    bool check();
     uint16_t read();
     void start(uint32_t period_ms = 0);
     void stop();
@@ -88,6 +90,3 @@ private:
 };
 
 #endif
-
-
-
