@@ -11,11 +11,10 @@
 
 class Matrix {
   public:
-    Matrix(RobotData &data);
     bool check();
     void debug(String s);
 
-    void update();
+    void update(RobotData data);
 
     void move(bool forward);
     void backToStart();
@@ -28,7 +27,7 @@ class Matrix {
   private:
     RobotData data;
     
-    void inspect();
+    void inspect(RobotData data);
     void getInfo();
     int getDir();
     

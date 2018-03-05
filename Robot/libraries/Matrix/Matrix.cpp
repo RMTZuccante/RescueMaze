@@ -1,9 +1,5 @@
 #include "Matrix.h"
 
-Matrix::Matrix(RobotData &data) {
-  this->data = data;
-}
-
 bool Matrix::check() {
   int c = 0;
   String m;
@@ -22,8 +18,8 @@ void Matrix::debug(String s) {
   Serial.println(s);
 }
 
-void Matrix::update() {
-  inspect();
+void Matrix::update(RobotData data) {
+  inspect(data);
   getInfo();
   getDir();
 }
@@ -46,7 +42,7 @@ void Matrix::die() {
   Serial.println("stop");
 }
 
-void Matrix::inspect() {
+void Matrix::inspect(RobotData data) {
   Serial.print("check ");
   Serial.print(data.dist[0]);
   Serial.print(' ');

@@ -5,7 +5,7 @@ extern SoftWire I2C_1(PB6, PB7, SOFT_STANDARD);
 extern TwoWire I2C_2(2);
 
 Robot robot;
-Matrix matrix(robot.data);
+Matrix matrix;
 
 void setup() {
   //Hardware initialization
@@ -15,18 +15,17 @@ void setup() {
   robot.setup();
 
   //Check that everything is working
-  if(!(robot.check() && matrix.check())) {
-    digitalWrite(PC13, HIGH);
-    while(1);
-  }
+  digitalWrite(PC13, LOW);
+  if(!(robot.check() && matrix.check())) while(1);
+  digitalWrite(PC13, HIGH);
   
   //Sensors initialization
   robot.begin();
 }
 
 void loop() {
-	  robot.update();
-    matrix.update();
+	robot.update();
+    matrix.update(robot.data);
     
     if(matrix.black){
       robot.back();
