@@ -13,7 +13,7 @@ void setup() {
   I2C_1.begin();
   I2C_2.begin();
   robot.setup();
-  
+
   //Check that everything is working
   if(!(robot.check() && matrix.check())) {
     digitalWrite(PC13, HIGH);

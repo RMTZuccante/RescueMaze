@@ -51,13 +51,15 @@ void Robot::victim() {
 }
 
 void Robot::setAddresses() {
-  pinMode(LX_LEFT, OUTPUT);
-  pinMode(LX_FRONT, OUTPUT);
+  pinMode(LX_LEFT, OUTPUT_OPEN_DRAIN);
+  pinMode(LX_FRONT, OUTPUT_OPEN_DRAIN);
+  digitalWrite(LX_FRONT, LOW);
+  digitalWrite(LX_LEFT, LOW);  
   laser[1].setAddress(L_RIGHT);
-  pinMode(LX_FRONT, INPUT);
+  digitalWrite(LX_FRONT, HIGH);
   delay(10);
   laser[0].setAddress(L_FRONT);
-  pinMode(LX_LEFT, INPUT);
+  digitalWrite(LX_LEFT, HIGH);
   delay(10);
   laser[2].setAddress(L_LEFT);
 }
