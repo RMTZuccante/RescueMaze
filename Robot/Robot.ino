@@ -16,31 +16,31 @@ void setup() {
 
   //Check that everything is working
   digitalWrite(PC13, LOW);
-  if(!(robot.check() && matrix.check())) while(1);
+  if (!(robot.check() && matrix.check())) while (1);
   digitalWrite(PC13, HIGH);
-  
+
   //Sensors initialization
   robot.begin();
 }
 
 void loop() {
-	robot.update();
-    matrix.update(robot.data);
-    
-    if(matrix.black){
-      robot.back();
-      matrix.move(false);
-    }
-    
-    if(matrix.victim) robot.victim();
-    
-    switch(matrix.dir){
-      case 1 :
-        robot.rotate(true);
-        break;
-      case 2 :
-        robot.rotate(false);
-        break;
-    }
-    robot.go();
+  robot.update();
+  matrix.update(robot.data);
+
+  if (matrix.black) {
+    robot.back();
+    matrix.move(false);
+  }
+
+  if (matrix.victim) robot.victim();
+
+  switch (matrix.dir) {
+    case 1 :
+      robot.rotate(true);
+      break;
+    case 2 :
+      robot.rotate(false);
+      break;
+  }
+  robot.go();
 }

@@ -10,7 +10,7 @@ class RGB {
     RGB(uint8_t pinr, uint8_t ping, uint8_t pinb);
     void set(uint8_t red, uint8_t green, uint8_t blue);
     void crossFade();
-	void begin();
+    void begin();
   private:
     void refresh();
     int calculateStep(int prevValue, int endValue);

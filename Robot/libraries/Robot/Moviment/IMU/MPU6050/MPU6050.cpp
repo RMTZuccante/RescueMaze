@@ -10,8 +10,8 @@ MPU6050::MPU6050() {
 void MPU6050::begin() {
   dpsPerDigit = .007633f; //gyro scale at 250DPS
   rangePerDigit = .000061f; //accel ramge at 2G
-  writeRegister(MPU6050_GYRO_CONFIG,0); //set gyro scale to 250DPS
-  writeRegister(MPU6050_ACCEL_CONFIG,0); //set accel range to 2G
+  writeRegister(MPU6050_GYRO_CONFIG, 0); //set gyro scale to 250DPS
+  writeRegister(MPU6050_ACCEL_CONFIG, 0); //set accel range to 2G
   writeRegister(MPU6050_PWR_MGMT, 1); //set the clock to XGyro and turn on
 }
 
@@ -40,8 +40,8 @@ void MPU6050::readGyro() {
   int16_t raw[3];
   readData(MPU6050_GYRO, raw);
   FORTHREE g[i] = raw[i];
-  if (useCalibrate) FORTHREE g[i]-=drift[i];
-  FORTHREE g[i]*=dpsPerDigit;
+  if (useCalibrate) FORTHREE g[i] -= drift[i];
+  FORTHREE g[i] *= dpsPerDigit;
   if (actualThreshold) FORTHREE if (abs(g[i]) < threshold[i]) g[i] = 0;
 }
 
@@ -63,12 +63,12 @@ void MPU6050::calibrateGyro(uint8_t samples) {
   float sum[3];
   float sigma[3];
   int16_t raw[3];
-  FORTHREE sigma[i]=sum[i]=0;
+  FORTHREE sigma[i] = sum[i] = 0;
   for (uint8_t i = 0; i < samples; ++i) {
     readData(MPU6050_GYRO, raw);
     for (uint8_t i = 0; i < 3; i++) {
-      sum[i]+=raw[i];
-      sigma[i]+=raw[i]*raw[i];
+      sum[i] += raw[i];
+      sigma[i] += raw[i] * raw[i];
     }
     delay(5);
   }

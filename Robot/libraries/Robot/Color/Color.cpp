@@ -4,10 +4,10 @@ Color::Color(int merror) {
   this->merror = merror;
 }
 
-void Color::begin(){
+void Color::begin() {
   I2C_1.begin();
   I2C_1.beginTransmission(COLORADDRESS);
-  I2C_1.write(10+merror);
+  I2C_1.write(10 + merror);
   I2C_1.endTransmission();
 }
 
@@ -17,7 +17,7 @@ bool Color::check() {
   return true;
 }
 
-uint8_t Color::read(){ 
-  I2C_1.requestFrom(COLORADDRESS,1);
+uint8_t Color::read() {
+  I2C_1.requestFrom(COLORADDRESS, 1);
   return I2C_1.read();
 }

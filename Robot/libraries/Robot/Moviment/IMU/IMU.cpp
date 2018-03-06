@@ -51,6 +51,6 @@ void IMU::update() {
   if (microsNow - microsPrevious >= microsPerReading) {
     read();
     filter.update(imu.g[0], imu.g[1], imu.g[2], imu.a[0], imu.a[1], imu.a[2]);
-    microsPrevious+=microsPerReading;
+    microsPrevious += microsPerReading;
   }
 }

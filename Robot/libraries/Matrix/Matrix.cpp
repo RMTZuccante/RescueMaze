@@ -4,13 +4,13 @@ bool Matrix::check() {
   int c = 0;
   String m;
   do {
-    if (c > 10) return 0;
+    if (c > 10) return false;
     m = readLine();
     Serial.println(m);
     m = readLine();
     c++;
   } while (m != "ok");
-  return 1;
+  return true;
 }
 
 void Matrix::debug(String s) {

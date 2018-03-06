@@ -40,7 +40,7 @@ void Moviment::rotate(bool invert) {
   orientation.start();
   float end = endAngle(orientation.yaw(), invert);
   if (invert) {
-    if(end < 90){
+    if (end < 90) {
       rotationSpeed(invert, 0);
       while (orientation.yaw() < 355) {};
       delay(100);
@@ -54,7 +54,7 @@ void Moviment::rotate(bool invert) {
     }
   }
   else {
-    if(end < 270){
+    if (end < 270) {
       rotationSpeed(!invert, 360);
       while (orientation.yaw() > 5) {};
       delay(100);
@@ -114,13 +114,13 @@ void Moviment::rotationSpeed(bool invert , float endRotation) {
   motorFL.start(bound((speed + kL) , 65535), invert);
   motorRR.start(bound((speed + kR) , 65535), !invert);
   motorRL.start(bound((speed + kL) , 65535), invert);
-//  Serial.print(endRotation);
-//  Serial.print("  ");
-//  Serial.print(direzione);
-//  Serial.print(" R: ");
-//  Serial.print(bound((kR) , 65535));
-//  Serial.print(" L: ");
-//  Serial.println(bound((kL) , 65535));
+  //  Serial.print(endRotation);
+  //  Serial.print("  ");
+  //  Serial.print(direzione);
+  //  Serial.print(" R: ");
+  //  Serial.print(bound((kR) , 65535));
+  //  Serial.print(" L: ");
+  //  Serial.println(bound((kL) , 65535));
 }
 
 uint16_t Moviment::bound(uint32_t n, uint16_t max) {

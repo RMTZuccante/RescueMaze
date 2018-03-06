@@ -32,7 +32,7 @@ class Robot {
     void victim();
 
     RobotData data;
-  private:    
+  private:
     Moviment mov = Moviment(SPEED);
     Color color = Color(MERROR);
     Temperature tempL = Temperature(T_LEFT);

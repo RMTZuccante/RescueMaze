@@ -7,8 +7,8 @@ Motor::Motor(uint8_t i1, uint8_t i2) {
 
 void Motor::start(uint16_t speed, bool inverse) {
   this->inverse = inverse;
-  pwmWrite(inverter1, inverse? 0 : speed);
-  pwmWrite(inverter2, inverse? speed : 0);
+  pwmWrite(inverter1, inverse ? 0 : speed);
+  pwmWrite(inverter2, inverse ? speed : 0);
 }
 
 void Motor::begin() {

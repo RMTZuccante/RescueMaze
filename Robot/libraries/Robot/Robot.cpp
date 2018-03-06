@@ -12,7 +12,7 @@ void Robot::begin() {
 
 bool Robot::check() {
   bool ok = true;
-  for (int i = 0 ; i < 3 ; i++) ok&=laser[i].check();
+  for (int i = 0 ; i < 3 ; i++) ok &= laser[i].check();
   return ok && color.check() && mov.check();
 }
 
@@ -54,7 +54,7 @@ void Robot::setAddresses() {
   pinMode(LX_LEFT, OUTPUT_OPEN_DRAIN);
   pinMode(LX_FRONT, OUTPUT_OPEN_DRAIN);
   digitalWrite(LX_FRONT, LOW);
-  digitalWrite(LX_LEFT, LOW);  
+  digitalWrite(LX_LEFT, LOW);
   laser[1].setAddress(L_RIGHT);
   digitalWrite(LX_FRONT, HIGH);
   delay(10);

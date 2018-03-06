@@ -3,8 +3,8 @@
 Cagamattoni::Cagamattoni(int ntappi) {
   kits = ntappi;
 }
-void Cagamattoni::begin(){
-    pinMode(PIN1, OUTPUT);
+void Cagamattoni::begin() {
+  pinMode(PIN1, OUTPUT);
   pinMode(PIN2, OUTPUT);
 
   digitalWrite(PIN1, 0);

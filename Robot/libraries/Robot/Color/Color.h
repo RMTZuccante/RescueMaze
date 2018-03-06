@@ -7,13 +7,13 @@
 #define COLORADDRESS 42
 
 class Color {
-public:
-  Color(int merror);
-  void begin();
-  bool check();
-  uint8_t read();
-private:
-  int merror;
+  public:
+    Color(int merror);
+    void begin();
+    bool check();
+    uint8_t read();
+  private:
+    int merror;
 };
 
 #endif

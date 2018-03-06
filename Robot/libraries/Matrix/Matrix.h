@@ -25,12 +25,10 @@ class Matrix {
     bool victim;
     bool black;
   private:
-    RobotData data;
-    
     void inspect(RobotData data);
     void getInfo();
     int getDir();
-    
+
     String readLine();
 };
 #endif
