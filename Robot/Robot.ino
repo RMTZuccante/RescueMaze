@@ -31,16 +31,24 @@ void loop() {
     robot.back();
     matrix.move(false);
   }
+  
+  else {
+    if (matrix.victim) robot.victim();
 
-  if (matrix.victim) robot.victim();
-
-  switch (matrix.dir) {
-    case 1 :
-      robot.rotate(true);
-      break;
-    case 2 :
-      robot.rotate(false);
-      break;
+    switch (matrix.dir) {
+      case FRONT:
+        robot.go();
+      case RIGHT:
+        robot.rotate(true);
+        break;
+      case LEFT :
+        robot.rotate(false);
+        break;
+      case BACK :
+        robot.rotate(false);
+        robot.rotate(false);
+        break;
+    }
+    matrix.move(true);
   }
-  robot.go();
 }
