@@ -21,6 +21,7 @@ void Robot::update() {
   data.color = color.read();
   data.tempL = tempL.read();
   data.tempR = tempR.read();
+  data.pitch = mov.getPitch();
 }
 
 void Robot::go() {

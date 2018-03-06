@@ -54,7 +54,9 @@ void Matrix::inspect(RobotData data) {
   Serial.print(' ');
   Serial.print(data.tempR);
   Serial.print(' ');
-  Serial.println(data.color);
+  Serial.print(data.color);
+  Serial.print(' ');
+  Serial.println(data.pitch);
 }
 
 void Matrix::getInfo() {

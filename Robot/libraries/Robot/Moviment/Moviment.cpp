@@ -126,3 +126,7 @@ void Moviment::rotationSpeed(bool invert , float endRotation) {
 uint16_t Moviment::bound(uint32_t n, uint16_t max) {
   return (n > max) ? max : n;
 }
+
+float Moviment::getPitch() {
+  return orientation.pitch();
+}

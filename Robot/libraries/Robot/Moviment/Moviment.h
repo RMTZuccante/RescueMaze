@@ -28,6 +28,7 @@ class Moviment {
     void stop();
     void setSpeed(uint16_t speed);
     void setK(int rightK, int leftK);
+    float getPitch();
   private:
     uint16_t bound (uint32_t n, uint16_t max);
     float endAngle(float angle, bool invert);

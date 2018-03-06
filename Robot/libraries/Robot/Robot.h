@@ -17,6 +17,7 @@ struct RobotData {
   uint8_t color;
   float tempL;
   float tempR;
+  float pitch;
 };
 
 class Robot {
