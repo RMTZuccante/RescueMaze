@@ -66,6 +66,6 @@ void Robot::setAddresses() {
 }
 
 uint16_t Robot::endDist(uint16_t distance) {
-  distance -= 200;
+  distance -= CENTRED;
   return distance - ((distance) % 300) + CENTRED;
 }
