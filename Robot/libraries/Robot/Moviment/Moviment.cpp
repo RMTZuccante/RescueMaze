@@ -21,7 +21,7 @@ bool Moviment::check() {
 }
 
 void Moviment::go() {
-  go(false);
+  go(true);
 }
 
 void Moviment::go(bool invert) {
@@ -29,7 +29,6 @@ void Moviment::go(bool invert) {
   motorFL.start(bound(speed + kL, 65535), !invert);
   motorRR.start(bound(speed + kR, 65535), !invert);
   motorRL.start(bound(speed + kL, 65535), !invert);
-
 }
 
 void Moviment::rotate() {
@@ -108,8 +107,8 @@ float Moviment::endAngle(float angle, bool invert) {
 
 void Moviment::rotationSpeed(bool invert , float endRotation) {
   direzione = orientation.yaw();
-  if (endRotation - direzione > 0) setK(FIRST_K + ((endRotation - direzione) * 300), SECOND_K + ((endRotation - direzione) * 300));
-  else setK(SECOND_K + ((direzione - endRotation) * 300), FIRST_K + ((direzione - endRotation) * 300));
+  if (endRotation - direzione > 0) setK(FIRST_K + ((endRotation - direzione) * 200), SECOND_K + ((endRotation - direzione) * 200));
+  else setK(SECOND_K + ((direzione - endRotation) * 200), FIRST_K + ((direzione - endRotation) * 200));
   motorFR.start(bound((speed + kR) , 65535), !invert);
   motorFL.start(bound((speed + kL) , 65535), invert);
   motorRR.start(bound((speed + kR) , 65535), !invert);
