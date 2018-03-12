@@ -5,16 +5,16 @@
 #include "Motor.h"
 #include "IMU.h"
 
-#define FIRST_K -1000
+#define FIRST_K 1000
 #define SECOND_K 1000
-#define FR_IN1 PA0
-#define FR_IN2 PA1
-#define RL_IN1 PA3
-#define RL_IN2 PA2
+#define FR_IN1 PA2
+#define FR_IN2 PA3
+#define RL_IN1 PA7
+#define RL_IN2 PA6
 #define FL_IN1 PB0
 #define FL_IN2 PB1
-#define RR_IN1 PA7
-#define RR_IN2 PA6
+#define RR_IN1 PA0
+#define RR_IN2 PA1
 
 class Moviment {
   public:
