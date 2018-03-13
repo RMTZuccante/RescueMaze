@@ -16,7 +16,7 @@ void setup() {
 
   //Check that everything is working
   digitalWrite(PC13, LOW);
-  if (!(robot.check() && matrix.check())) while (1);
+  //if (!(robot.check() && matrix.check())) while (1);
   digitalWrite(PC13, HIGH);
 
   //Sensors initialization
@@ -24,31 +24,7 @@ void setup() {
 }
 
 void loop() {
-  robot.update();
-  matrix.update(robot.data);
-
-  if (matrix.black) {
-    robot.back();
-    matrix.move(false);
-  }
-  
-  else {
-    if (matrix.victim) robot.victim();
-
-    switch (matrix.dir) {
-      case FRONT:
-        robot.go();
-      case RIGHT:
-        robot.rotate(true);
-        break;
-      case LEFT :
-        robot.rotate(false);
-        break;
-      case BACK :
-        robot.rotate(false);
-        robot.rotate(false);
-        break;
-    }
-    matrix.move(true);
-  }
+  Serial.println("rotate");
+  robot.rotate(false);
+  delay(2000);
 }

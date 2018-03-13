@@ -2,7 +2,7 @@
 #define definitions_h
 
 //Settings
-#define SPEED 50000
+#define SPEED 20000
 #define MERROR 5
 
 //Temperature adresses
@@ -24,6 +24,7 @@
 #define BLUE 6
 
 //Misurements
-#define CENTRED 60 //distanza del robot rispetto al muro per essere centrato
+#define CENTRED 100 //distanza del robot rispetto al muro per essere centrato
+#define CELL 200
 
 #endif

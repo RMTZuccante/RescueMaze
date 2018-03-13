@@ -21,16 +21,23 @@ bool Moviment::check() {
 }
 
 void Moviment::go() {
-  go(false);
+  go(true);
 }
 
 void Moviment::go(bool invert) {
-  motorFR.start(bound(speed + kR, 65535), !invert);
-  motorFL.start(bound(speed + kL, 65535), !invert);
-  motorRR.start(bound(speed + kR, 65535), !invert);
-  motorRL.start(bound(speed + kL, 65535), !invert);
-
+  //direzione = orientation.yaw();
+  motorFR.start(bound(speed, 65535), !invert);
+  motorFL.start(bound(speed, 65535), !invert);
+  motorRR.start(bound(speed, 65535), !invert);
+  motorRL.start(bound(speed, 65535), !invert);
 }
+
+//void Moviment::straight(){
+//  motorFR.start(bound(speed + (direzione-orientation.yaw())*1000, 65535), false);
+//  motorFL.start(bound(speed - (direzione-orientation.yaw())*1000, 65535), false);
+//  motorRR.start(bound(speed + (direzione-orientation.yaw())*1000, 65535), false);
+//  motorRL.start(bound(speed - (direzione-orientation.yaw())*1000, 65535), false);
+//}
 
 void Moviment::rotate() {
   rotate(false);
@@ -38,10 +45,25 @@ void Moviment::rotate() {
 
 void Moviment::rotate(bool invert) {
   orientation.start();
-  float end = endAngle(orientation.yaw(), invert);
-  if (invert) {
-    if (end < 90) {
+  float end = endAngle(orientation.yaw(), invert); 
+  if (!invert) {
+    if (end > 270) {
       rotationSpeed(invert, 0);
+      while (orientation.yaw() > 5) {};
+      delay(100);
+    }
+    while (orientation.yaw() > end) {
+      rotationSpeed(invert, end);
+    }
+    stop();
+    while (orientation.yaw() < end) {
+      rotationSpeed(!invert, end);
+      //delay(500);
+    }
+  }
+  else {
+    if (end < 90) {
+      rotationSpeed(invert, 360);
       while (orientation.yaw() < 355) {};
       delay(100);
     }
@@ -51,20 +73,6 @@ void Moviment::rotate(bool invert) {
     stop();
     while (orientation.yaw() > end) {
       rotationSpeed(!invert, end);
-    }
-  }
-  else {
-    if (end < 270) {
-      rotationSpeed(!invert, 360);
-      while (orientation.yaw() > 5) {};
-      delay(100);
-    }
-    while (orientation.yaw() > end) {
-      rotationSpeed(!invert, end);
-    }
-    stop();
-    while (orientation.yaw() < end) {
-      rotationSpeed(invert, end);
     }
   }
   setK(0, 0);
@@ -96,31 +104,30 @@ void Moviment::setK(int rightK, int leftK) {
 }
 
 float Moviment::endAngle(float angle, bool invert) {
+  float ris=angle;
   if (invert) {
-    angle += 90;
-    return (angle > 360) ? angle - 360 : angle;
+    ris += 90;
+    return (ris > 360) ? ris - 360 : ris;
   }
   else {
-    angle -= 90;
-    return (angle < 0) ? angle + 360 : angle;
+    ris -= 90;
+    Serial.println("endangle");
+    Serial.println((ris < 0) ? ris + 360 : ris);
+    return (ris < 0) ? ris + 360 : ris;
   }
 }
 
 void Moviment::rotationSpeed(bool invert , float endRotation) {
   direzione = orientation.yaw();
-  if (endRotation - direzione > 0) setK(FIRST_K + ((endRotation - direzione) * 300), SECOND_K + ((endRotation - direzione) * 300));
-  else setK(SECOND_K + ((direzione - endRotation) * 300), FIRST_K + ((direzione - endRotation) * 300));
-  motorFR.start(bound((speed + kR) , 65535), !invert);
-  motorFL.start(bound((speed + kL) , 65535), invert);
-  motorRR.start(bound((speed + kR) , 65535), !invert);
-  motorRL.start(bound((speed + kL) , 65535), invert);
-  //  Serial.print(endRotation);
-  //  Serial.print("  ");
-  //  Serial.print(direzione);
-  //  Serial.print(" R: ");
-  //  Serial.print(bound((kR) , 65535));
-  //  Serial.print(" L: ");
-  //  Serial.println(bound((kL) , 65535));
+  if (endRotation - direzione > 0) setK(FIRST_K + ((endRotation - direzione) * 200), SECOND_K + ((endRotation - direzione) * 200));
+  else setK(SECOND_K + ((direzione - endRotation) * 200), FIRST_K + ((direzione - endRotation) * 200));
+  motorFR.start(bound((speed + kR) , 65535), invert);
+  motorFL.start(bound((speed + kL) , 65535), !invert);
+  motorRR.start(bound((speed + kR) , 65535), invert);
+  motorRL.start(bound((speed + kL) , 65535), !invert);
+  Serial.print(endRotation);
+  Serial.print("  ");
+  Serial.println(direzione);
 }
 
 uint16_t Moviment::bound(uint32_t n, uint16_t max) {

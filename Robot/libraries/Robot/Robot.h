@@ -31,11 +31,11 @@ class Robot {
     void back();
     void rotate(bool dir);
     void victim();
-
+    void laserTest();
     RobotData data;
   private:
     Moviment mov = Moviment(SPEED);
-    Color color = Color(MERROR);
+    //Color color = Color(MERROR);
     Temperature tempL = Temperature(T_LEFT);
     Temperature tempR = Temperature(T_RIGHT);
     RGB led = RGB(RED, GREEN, BLUE);
