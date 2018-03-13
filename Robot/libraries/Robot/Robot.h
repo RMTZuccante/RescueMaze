@@ -22,6 +22,7 @@ struct RobotData {
 
 class Robot {
   public:
+    void climb();
     void setup();
     void begin();
     bool check();
