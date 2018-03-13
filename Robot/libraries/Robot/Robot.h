@@ -22,7 +22,6 @@ struct RobotData {
 
 class Robot {
   public:
-    void climb();
     void setup();
     void begin();
     bool check();
@@ -32,18 +31,18 @@ class Robot {
     void back();
     void rotate(bool dir);
     void victim();
-    void laserTest();
+    
     RobotData data;
   private:
     Moviment mov = Moviment(SPEED);
-    //Color color = Color(MERROR);
+    Color color = Color(MERROR);
     Temperature tempL = Temperature(T_LEFT);
     Temperature tempR = Temperature(T_RIGHT);
     RGB led = RGB(RED, GREEN, BLUE);
     VL53L0X laser[3] = {VL53L0X(), VL53L0X(), VL53L0X()};
-
-    void setAddresses();
     uint16_t endDist(uint16_t distance);
+    void setAddresses();
+    
 };
 
 #endif
