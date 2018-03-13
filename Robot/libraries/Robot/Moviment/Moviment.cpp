@@ -20,6 +20,12 @@ bool Moviment::check() {
   return orientation.check();
 }
 
+void Moviment::climb(){
+  motorFR.start(50000, false);
+  motorFL.start(50000, false);
+  motorRR.start(20000, false);
+  motorRL.start(20000, false);
+}
 void Moviment::go() {
   go(true);
 }
@@ -57,7 +63,7 @@ void Moviment::rotate(bool invert) {
     }
     stop();
     while (orientation.yaw() < end) {
-      rotationSpeed(!invert, end);
+      rotationSpeed(!invert, end-10);
       //delay(500);
     }
   }
@@ -72,7 +78,7 @@ void Moviment::rotate(bool invert) {
     }
     stop();
     while (orientation.yaw() > end) {
-      rotationSpeed(!invert, end);
+      rotationSpeed(!invert, end+10);
     }
   }
   setK(0, 0);
@@ -87,7 +93,7 @@ void Moviment::stop() {
 }
 
 void Moviment::setSpeed(uint16_t speed) {
-  this->speed = speed;
+  this->speed = bound((speed) , 65535);
   motorFR.setSpeed(speed);
   motorFL.setSpeed(speed);
   motorRR.setSpeed(speed);
@@ -123,8 +129,8 @@ void Moviment::rotationSpeed(bool invert , float endRotation) {
   else setK(SECOND_K + ((direzione - endRotation) * 200), FIRST_K + ((direzione - endRotation) * 200));
   motorFR.start(bound((speed + kR) , 65535), invert);
   motorFL.start(bound((speed + kL) , 65535), !invert);
-  motorRR.start(bound((speed + kR) , 65535), invert);
-  motorRL.start(bound((speed + kL) , 65535), !invert);
+  motorRR.start(bound((speed + kR*RK) , 65535), invert);
+  motorRL.start(bound((speed + kL*RK) , 65535), !invert);
   Serial.print(endRotation);
   Serial.print("  ");
   Serial.println(direzione);
