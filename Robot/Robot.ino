@@ -31,10 +31,8 @@ void loop() {
     robot.back();
     matrix.move(false);
   }
-  
-  else {
-    if (matrix.victim) robot.victim();
 
+  else {
     switch (matrix.dir) {
       case FRONT:
         robot.go();
@@ -49,6 +47,9 @@ void loop() {
         robot.rotate(false);
         break;
     }
+    matrix.update(robot.data);
+
+    if (matrix.victim) robot.victim();
     matrix.move(true);
   }
 }
