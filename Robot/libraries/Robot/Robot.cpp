@@ -20,6 +20,10 @@ void Robot::laserTest(){
   
 }
 
+void Robot::climb(){
+  mov.climb();
+}
+
 bool Robot::check() {
   bool ok = true;
   for (int i = 0 ; i < 3 ; i++) ok &= laser[i].check();
@@ -39,18 +43,32 @@ void Robot::go() {
   laser[0].start();
   delay(50);
   uint16_t end = endDist(laser[0].read());
-  Serial.print("laser : ");
-  Serial.println(laser[0].read());
-  Serial.print("end : ");
-  Serial.println(end);
- 
+//  Serial.print("laser : ");
+//  Serial.println(laser[0].read());
+//  Serial.print("end : ");
+//  Serial.println(end);
+  int i=0;
+  uint16_t front=laser[0].read();
   mov.go();
   //while ( (laser[0].read() > end) && (color.read() == 2) );
   while (laser[0].read() > end){
-    Serial.print(laser[0].read());
-    Serial.print(" ");
-    Serial.println(end);
-    mov.setSpeed(((laser[0].read()-end)*50)+SPEED);
+    if(i==50){
+      //Serial.println("if");
+      uint16_t now=laser[0].read();
+      if( ( (front > now) ? front-now : now-front ) < 10){
+        mov.setSpeed(65355);
+        delay(200);
+//        Serial.println("bump");
+//        delay(1000);
+      }
+      i=0;
+    }
+//    Serial.print(laser[0].read());
+//    Serial.print(" ");
+//    Serial.println(end);
+//    Serial.println(i);
+    i++;
+    mov.setSpeed(((laser[0].read()-end)*20)+SPEED);
 //    mov.straight();
   }
   mov.stop();
