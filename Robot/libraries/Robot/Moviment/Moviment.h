@@ -7,6 +7,7 @@
 
 #define FIRST_K 1000
 #define SECOND_K 1000
+#define RK 10
 #define FR_IN1 PA2
 #define FR_IN2 PA3
 #define RL_IN1 PA7
@@ -23,7 +24,9 @@ class Moviment {
     bool check();
     void go();
     void go (bool invert);
+    void straight();
     void rotate();
+    void climb();
     void rotate (bool invert);
     void stop();
     void setSpeed(uint16_t speed);
