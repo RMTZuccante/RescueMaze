@@ -4,7 +4,7 @@
 #include "MadgwickAHRS.h"
 #include "MPU6050.h"
 
-#define REFRESH 100
+#define REFRESH 50
 
 class IMU {
   public:
