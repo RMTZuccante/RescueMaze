@@ -4,14 +4,13 @@
 #include "MadgwickAHRS.h"
 #include "MPU6050.h"
 
-#define REFRESH 50
 
 class IMU {
   public:
     IMU();
     void begin();
     bool check();
-    void start();
+    void start(int refresh);
     float yaw();
     float pitch();
     float roll();

@@ -10,10 +10,25 @@ void Robot::begin() {
   mov.begin();
 }
 
+void Robot::laserTest(){
+  Serial.print(" 0: ");
+  Serial.print(laser[0].read());
+  Serial.print(" 1: ");
+  Serial.print(laser[1].read());
+  Serial.print(" 2: ");
+  Serial.println(laser[2].read());
+  
+}
+
+void Robot::climb(){
+  mov.stop();
+}
+
 bool Robot::check() {
   bool ok = true;
   for (int i = 0 ; i < 3 ; i++) ok &= laser[i].check();
-  return ok && color.check() && mov.check();
+  //return ok && color.check() && mov.check();
+  return ok && mov.check();
 }
 
 void Robot::update() {
@@ -25,23 +40,49 @@ void Robot::update() {
 }
 
 void Robot::go() {
-  laser[2].start();
+  laser[0].start();
   delay(50);
-  Serial.print("leser: ");
-  Serial.println(laser[2].read());
-  uint16_t end = endDist(laser[2].read());
-  Serial.print("end: ");
-  Serial.println(end);
+  uint16_t end = endDist(laser[0].read());
+//  Serial.print("laser : ");
+//  Serial.println(laser[0].read());
+//  Serial.print("end : ");
+//  Serial.println(end);
+  int i=0;
+  uint16_t front=laser[0].read();
   mov.go();
-  //while ( (laser[0].read() > end) && (color.read() == 2) ){
-  while (laser[2].read() > end){
-    Serial.print("leser: ");
-    Serial.println(laser[2].read());
-    Serial.print("end: ");
-    Serial.println(end);
+  //while ( (laser[0].read() > end) && (color.read() == 2) );
+  while (laser[0].read() > end){
+    //int time=millis();
+    if(i==100){
+      //Serial.println("if");
+      uint16_t now=laser[0].read();
+      if( ( (front > now) ? front-now : now-front ) < 5){
+        mov.setSpeed(65355);
+        delay(200);
+//        Serial.println("bump");
+//        delay(1000);
+      }
+      front=now;
+      i=0;
+    }
+//    Serial.print(laser[0].read());
+//    Serial.print(" ");
+//    Serial.println(end);
+//    Serial.println(i);
+    i++;
+    uint16_t front=laser[0].read();
+    //Serial.println(millis()-time);
+    
+    mov.setSpeed(((laser[0].read()-end)*20)+SPEED);
+    
+    mov.straight();
+    
   }
   mov.stop();
-  laser[2].stop();
+  delay(1000);
+  mov.endGo();
+  mov.stop();
+  laser[0].stop();
 }
 
 void Robot::back() {
@@ -77,6 +118,6 @@ void Robot::setAddresses() {
 }
 
 uint16_t Robot::endDist(uint16_t distance) {
- distance -= CENTRED;
+  distance = distance > CELL ? distance-CELL : 0;;
   return distance - ((distance) % 300) + CENTRED;
 }

@@ -1,9 +1,8 @@
 #include "IMU.h"
 
-IMU::IMU() {
-  microsPerReading = 1000000 / REFRESH;
+IMU::IMU(){
+  microsPerReading = 1000000 / 50;
 }
-
 void IMU::begin() {
   imu.begin();
 }
@@ -12,8 +11,9 @@ bool IMU::check() {
   return imu.check();
 }
 
-void IMU::start() {
-  filter.begin(REFRESH);
+void IMU::start(int refresh) {
+  microsPerReading = 1000000 / refresh;
+  filter.begin(refresh);
   microsPrevious = micros();
 }
 
