@@ -16,7 +16,7 @@ void setup() {
 
   //Check that everything is working
   digitalWrite(PC13, LOW);
-  if (!(robot.check() && matrix.check())) while (1);
+  //if (!(robot.check() && matrix.check())) while (1);
   digitalWrite(PC13, HIGH);
 
   //Sensors initialization
