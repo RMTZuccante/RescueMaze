@@ -24,7 +24,32 @@ void setup() {
 }
 
 void loop() {
-  Serial.println("rotate");
-  robot.rotate(false);
-  delay(2000);
+  robot.update();
+  matrix.update(robot.data);
+
+  if (matrix.black) {
+    robot.back();
+    matrix.move(false);
+  }
+
+  else {
+    switch (matrix.dir) {
+      case FRONT:
+        robot.go();
+      case RIGHT:
+        robot.rotate(true);
+        break;
+      case LEFT :
+        robot.rotate(false);
+        break;
+      case BACK :
+        robot.rotate(false);
+        robot.rotate(false);
+        break;
+    }
+    matrix.update(robot.data);
+
+    if (matrix.victim) robot.victim();
+    matrix.move(true);
+  }
 }
