@@ -7,7 +7,8 @@
 
 #define FIRST_K 1000
 #define SECOND_K 1000
-#define ROTATION_H 500
+#define ROTATION_P 500
+#define ROTATION_SPEED 60000
 #define RK 1
 #define FILL_L 0
 #define FILL_R 0
@@ -41,6 +42,7 @@ class Moviment {
     uint16_t bound (uint32_t n, uint16_t max);
     float endAngle(float angle, bool invert, float end);
     void rotationSpeed(bool direction , float endRotation);
+    void rotationSpeed(uint16_t speed, bool invert);
     Motor motorFR = Motor(FL_IN1, FL_IN2);
     Motor motorFL = Motor(FR_IN1, FR_IN2);
     Motor motorRR = Motor(RL_IN1, RL_IN2);

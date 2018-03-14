@@ -72,15 +72,14 @@ void Moviment::rotate(bool invert ,float angle) {
   float end = endAngle(orientation.yaw(), invert , angle); 
   if (!invert) {
     if (end > (360-angle)) {
-      rotationSpeed(invert, 0);
+      rotationSpeed(ROTATION_SPEED,invert);
       while (orientation.yaw() > 5) {};
       delay(100);
     }
     while (orientation.yaw() > end) {
-      rotationSpeed(invert, end);
+      rotationSpeed(ROTATION_SPEED,invert);
     }
     stop();
-    delay(100);
     while (orientation.yaw() <= (end+FILL_R)) {
       rotationSpeed(!invert, end);
       //delay(500);
@@ -88,15 +87,14 @@ void Moviment::rotate(bool invert ,float angle) {
   }
   else {
     if (end < angle) {
-      rotationSpeed(invert, 360);
+      rotationSpeed(ROTATION_SPEED,invert);
       while (orientation.yaw() < 355) {};
       delay(100);
     }
     while (orientation.yaw() < end) {
-      rotationSpeed(invert, end);
+      rotationSpeed(ROTATION_SPEED,invert);
     }
     stop();
-    delay(100);
     while (orientation.yaw() >=(end-FILL_L)) {
       rotationSpeed(!invert, end);
     }
@@ -142,8 +140,8 @@ float Moviment::endAngle(float angle, bool invert, float end) {
 
 void Moviment::rotationSpeed(bool invert , float endRotation) {
   direzione = orientation.yaw();
-  if (endRotation - direzione > 0) setK(FIRST_K + ((endRotation - direzione) * ROTATION_H), SECOND_K + ((endRotation - direzione) * ROTATION_H));
-  else setK(SECOND_K + ((direzione - endRotation) * ROTATION_H), FIRST_K + ((direzione - endRotation) * ROTATION_H));
+  if (endRotation - direzione > 0) setK(FIRST_K + ((endRotation - direzione) * ROTATION_P), SECOND_K + ((endRotation - direzione) * ROTATION_P));
+  else setK(SECOND_K + ((direzione - endRotation) * ROTATION_P), FIRST_K + ((direzione - endRotation) * ROTATION_P));
   motorFR.start(bound((speed + kR) , 65535), invert);
   motorFL.start(bound((speed + kL) , 65535), !invert);
   motorRR.start(bound((speed + kR*RK) , 65535), invert);
@@ -152,6 +150,13 @@ void Moviment::rotationSpeed(bool invert , float endRotation) {
   Serial.print(endRotation);
   Serial.print("  ");
   Serial.println(direzione);
+}
+
+void Moviment::rotationSpeed(uint16_t speed, bool invert){
+  motorFR.start(speed, invert);
+  motorFL.start(speed, !invert);
+  motorRR.start(speed, invert);
+  motorRL.start(speed, !invert);
 }
 
 uint16_t Moviment::bound(uint32_t n, uint16_t max) {
