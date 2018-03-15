@@ -21,7 +21,6 @@ void Matrix::debug(String s) {
 void Matrix::update(RobotData data) {
   inspect(data);
   getInfo();
-  if(!black) getDir();
 }
 
 void Matrix::move(bool forward) {

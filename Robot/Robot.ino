@@ -30,26 +30,27 @@ void loop() {
   if (matrix.black) {
     robot.back();
     matrix.move(false);
-  }
-
-  else {
-    switch (matrix.dir) {
-      case FRONT:
-        robot.go();
+  } else {
+    int dir = matrix.getDir();
+    switch (dir) {
       case RIGHT:
         robot.rotate(true);
+        matrix.update(robot.data)
         break;
       case LEFT :
         robot.rotate(false);
+        matrix.update(robot.data)
         break;
       case BACK :
         robot.rotate(false);
         robot.rotate(false);
         break;
     }
-    matrix.update(robot.data);
-
+    
     if (matrix.victim) robot.victim();
     matrix.move(true);
+    if (!robot.go()) {
+      //update matrix with black cell and      matrix.move(false);
+    }
   }
 }

@@ -20,15 +20,13 @@ class Matrix {
     void backToStart();
     bool end();
     void die();
+    int getDir();
 
-    int dir;
     bool victim;
     bool black;
   private:
     void inspect(RobotData data);
     void getInfo();
-    int getDir();
-
     String readLine();
 };
 #endif
