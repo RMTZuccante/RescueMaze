@@ -1,13 +1,15 @@
 #include "Color.h"
 
-Color::Color(int merror) {
-  this->merror = merror;
+Color::Color(byte merror, byte mcolor) {
+  merr = merror;
+  mcol = mcolor;
 }
 
 void Color::begin() {
   I2C_1.begin();
   I2C_1.beginTransmission(COLORADDRESS);
-  I2C_1.write(10 + merror);
+  I2C_1.write(10 + merr);
+  I2C_1.write(mcol);
   I2C_1.endTransmission();
 }
 

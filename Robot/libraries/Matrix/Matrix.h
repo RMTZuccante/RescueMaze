@@ -21,6 +21,7 @@ class Matrix {
     bool end();
     void die();
     int getDir();
+    void sendBlack();
 
     bool victim;
     bool black;

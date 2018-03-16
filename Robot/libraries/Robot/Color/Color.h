@@ -8,12 +8,13 @@
 
 class Color {
   public:
-    Color(int merror);
+    Color(byte merror, byte mcolor);
     void begin();
     bool check();
     uint8_t read();
   private:
-    int merror;
+    byte merr;
+    byte mcol;
 };
 
 #endif

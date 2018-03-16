@@ -58,6 +58,23 @@ void Matrix::inspect(RobotData data) {
   Serial.println(data.pitch);
 }
 
+void Matrix::sendBlack() {
+  Serial.print("check ");
+  Serial.print(0);
+  Serial.print(' ');
+  Serial.print(0);
+  Serial.print(' ');
+  Serial.print(0);
+  Serial.print(' ');
+  Serial.print(0);
+  Serial.print(' ');
+  Serial.print(0);
+  Serial.print(' ');
+  Serial.print(2);
+  Serial.print(' ');
+  Serial.println(0);
+}
+
 void Matrix::getInfo() {
   Serial.println("getinfo");
   String s = readLine();

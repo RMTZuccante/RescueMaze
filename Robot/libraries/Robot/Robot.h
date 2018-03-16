@@ -28,7 +28,7 @@ class Robot {
     bool check();
     void update();
 
-    void go();
+    bool go();
     void back();
     void rotate(bool dir);
     void victim();
@@ -36,7 +36,7 @@ class Robot {
     RobotData data;
   private:
     Moviment mov = Moviment(SPEED);
-    //Color color = Color(MERROR);
+    Color color = Color(MERROR, MCOLOR);
     Temperature tempL = Temperature(T_LEFT);
     Temperature tempR = Temperature(T_RIGHT);
     RGB led = RGB(RED, GREEN, BLUE);

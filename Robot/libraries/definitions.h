@@ -4,6 +4,8 @@
 //Settings
 #define SPEED 20000
 #define MERROR 5
+#define MCOLOR 15
+
 
 //Temperature adresses
 #define T_LEFT 0x5A
@@ -24,7 +26,7 @@
 #define BLUE 6
 
 //Misurements
-#define CENTRED 100 //distanza del robot rispetto al muro per essere centrato
+#define CENTRED 60 //distanza del robot rispetto al muro per essere centrato
 #define CELL 200
 
 #endif
