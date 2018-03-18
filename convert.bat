@@ -5,6 +5,7 @@ if exist Robot\libraries (
 	rd /s /q "Robot\libraries\"
 ) else (
 
+	md Robot\libraries\Debug
 	md Robot\libraries\Matrix
 	md Robot\libraries\Robot\Cagamattoni
 	md Robot\libraries\Robot\Color
@@ -17,6 +18,7 @@ if exist Robot\libraries (
 
 	cd Robot\
 
+	move Debug.* libraries\Debug
 	move Matrix.* libraries\Matrix
 	move Robot.h libraries\Robot
 	move Robot.cpp libraries\Robot
