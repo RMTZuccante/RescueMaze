@@ -13,20 +13,18 @@ void setup() {
   I2C_1.begin();
   I2C_2.begin();
   robot.setup();
+  pinMode(PC13, OUTPUT);
 
   //Check that everything is working
-  digitalWrite(PC13, LOW);
-  //if (!(robot.check())) while (1);
-  matrix.check();
-  digitalWrite(PC13, HIGH);
+  digitalWrite(PC13, !(matrix.check() && robot.check()));
+  
   //Sensors initialization
   robot.begin();
 }
 
-void loop() {
+void loop() {  
   robot.update();
   matrix.update(robot.data);
-
   if (matrix.black) {
     robot.back();
     matrix.move(false);

@@ -2,10 +2,11 @@
 
 Moviment::Moviment (uint16_t speed) {
   this->speed = speed;
+  fill=0;
 }
 
 void Moviment::begin() {
-  //  Serial.println("begun");
+//  Serial.println("begun");
   motorFR.begin();
   motorFL.begin();
   motorRR.begin();
@@ -70,6 +71,7 @@ void Moviment::rotate(bool invert , float angle) {
   //  delay(5000);
   orientation.start(100);
   float end = endAngle(orientation.yaw(), invert , angle);
+  end-=fill;
   if (!invert) {
     if (end > (360 - angle)) {
       rotationSpeed(ROTATION_SPEED, invert);
@@ -80,7 +82,7 @@ void Moviment::rotate(bool invert , float angle) {
       rotationSpeed(ROTATION_SPEED, invert);
     }
     stop();
-    while (orientation.yaw() <= (end + FILL_R)) {
+    while (orientation.yaw() < (end)) {
       rotationSpeed(!invert, end);
       //delay(500);
     }
@@ -95,13 +97,18 @@ void Moviment::rotate(bool invert , float angle) {
       rotationSpeed(ROTATION_SPEED, invert);
     }
     stop();
-    while (orientation.yaw() >= (end - FILL_L)) {
+    while (orientation.yaw() > (end)) {
       rotationSpeed(!invert, end);
     }
   }
   stop();
   setK(0, 0);
-
+  for(int i=millis()+2000;millis()<i;){
+    orientation.yaw();
+  }
+  fill=(orientation.yaw()-end);
+  //Serial.println(fill);
+  //fill=end-orientation.yaw();
 }
 
 void Moviment::stop() {
@@ -165,4 +172,8 @@ uint16_t Moviment::bound(uint32_t n, uint16_t max) {
 
 float Moviment::getPitch() {
   return orientation.pitch();
+}
+
+void Moviment::idle() {
+  orientation.update();
 }

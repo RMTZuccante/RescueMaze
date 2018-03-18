@@ -10,8 +10,6 @@
 #define ROTATION_P 500
 #define ROTATION_SPEED 60000
 #define RK 1
-#define FILL_L 0
-#define FILL_R 0
 #define FR_IN1 PA2
 #define FR_IN2 PA3
 #define RL_IN1 PA7
@@ -38,6 +36,7 @@ class Moviment {
     void setSpeed(uint16_t speed);
     void setK(int rightK, int leftK);
     float getPitch();
+    void idle();
   private:
     uint16_t bound (uint32_t n, uint16_t max);
     float endAngle(float angle, bool invert, float end);
@@ -52,6 +51,7 @@ class Moviment {
     int kR;
     int kL;
     float direzione;
+    float fill;
 };
 
 #endif

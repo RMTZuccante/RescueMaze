@@ -22,7 +22,6 @@ struct RobotData {
 
 class Robot {
   public:
-    void climb();
     void setup();
     void begin();
     bool check();
@@ -32,8 +31,12 @@ class Robot {
     void back();
     void rotate(bool dir);
     void victim();
+    void climb();
     void laserTest();
+    void setLED(bool red, bool green, bool blue);
     RobotData data;
+
+    void delay(unsigned int t);
   private:
     Moviment mov = Moviment(SPEED);
     Color color = Color(MERROR, MCOLOR);

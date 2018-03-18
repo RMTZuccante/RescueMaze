@@ -21,9 +21,9 @@
 #define LX_FRONT PA10
 
 //RGB
-#define RED 4
-#define GREEN 5
-#define BLUE 6
+#define RED PB13
+#define GREEN PB14
+#define BLUE PB15
 
 //Misurements
 #define CENTRED 60 //distanza del robot rispetto al muro per essere centrato

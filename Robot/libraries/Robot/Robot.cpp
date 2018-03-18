@@ -17,7 +17,6 @@ void Robot::laserTest() {
   Serial.print(laser[1].read());
   Serial.print(" 2: ");
   Serial.println(laser[2].read());
-
 }
 
 void Robot::climb() {
@@ -41,13 +40,16 @@ void Robot::update() {
 }
 
 bool Robot::go() {
+  //  Serial.println("go");
   laser[0].start();
   delay(50);
   uint16_t end = endDist(laser[0].read());
-  //  Serial.print("laser : ");
-  //  Serial.println(laser[0].read());
-  //  Serial.print("end : ");
-  //  Serial.println(end);
+  //  uint16_t front=laser[0].read();
+  //  uint16_t end = (front > 300) ? front-300 : CENTRED;
+  //    Serial.print("laser : ");
+  //    Serial.println(laser[0].read());
+  //    Serial.print("end : ");
+  //    Serial.println(end);
   int i = 0;
   uint16_t front = laser[0].read();
   bool black = false;//(color.read() == 2);
@@ -68,18 +70,17 @@ bool Robot::go() {
       i = 0;
       //black = (color.read() == 2);
     }
-    //    Serial.print(laser[0].read());
-    //    Serial.print(" ");
-    //    Serial.println(end);
+    //        Serial.print(laser[0].read());
+    //        Serial.print(" ");
+    //        Serial.println(end);
     //    Serial.println(i);
     i++;
     uint16_t front = laser[0].read();
     //Serial.println(millis()-time);
-
     mov.setSpeed(((laser[0].read() - end) * 20) + SPEED);
-
     mov.straight();
   }
+  mov.go(false);
   mov.stop();
   delay(1000);
   mov.endGo();
@@ -90,8 +91,8 @@ bool Robot::go() {
 
 void Robot::back() {
   laser[0].start();
-  mov.go(true);
   uint16_t end = endDist(laser[0].read()) + 300;
+  mov.go(true);
   while (laser[0].read() < end);
   mov.stop();
   laser[0].stop();
@@ -103,7 +104,16 @@ void Robot::rotate(bool dir) {
 
 void Robot::victim() {
   //cagamattoni.caga();
-  led.set(0, 0, 0);
+  for (int i = 0; i < 5; i++) {
+    led.set(HIGH, LOW, LOW);
+    delay(100);
+    led.set(LOW, LOW, LOW);
+    delay(100);
+  }
+}
+
+void Robot::setLED(bool red, bool green, bool blue) {
+  led.set(red, green, blue);
 }
 
 void Robot::setAddresses() {
@@ -123,4 +133,10 @@ void Robot::setAddresses() {
 uint16_t Robot::endDist(uint16_t distance) {
   distance = distance > CELL ? distance - CELL : 0;;
   return distance - ((distance) % 300) + CENTRED;
+}
+
+
+void Robot::delay(unsigned int t) {
+  unsigned int end = millis() + t;
+  while (end < millis()) mov.idle();
 }

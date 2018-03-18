@@ -1,6 +1,6 @@
 #include "IMU.h"
 
-IMU::IMU(){
+IMU::IMU() {
   microsPerReading = 1000000 / 50;
 }
 void IMU::begin() {

@@ -4,7 +4,6 @@
 #include "MadgwickAHRS.h"
 #include "MPU6050.h"
 
-
 class IMU {
   public:
     IMU();
@@ -16,9 +15,9 @@ class IMU {
     float roll();
     float getTemperature();
     void calibrate();
+    void update();
   private:
     void read();
-    void update();
     MPU6050 imu;
     Madgwick filter;
     unsigned long microsPerReading;
