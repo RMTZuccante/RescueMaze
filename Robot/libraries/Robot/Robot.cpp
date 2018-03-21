@@ -4,9 +4,9 @@ void Robot::setup() {
   setAddresses();
 }
 
-void Robot::begin() {
+void Robot::begin() {  
   for (int i = 0 ; i < 3 ; i++) laser[i].begin();
-  color.begin();
+  //color.begin();
   mov.begin();
 }
 
@@ -26,13 +26,13 @@ void Robot::climb() {
 bool Robot::check() {
   bool ok = true;
   for (int i = 0 ; i < 3 ; i++) ok &= laser[i].check();
-  return ok && color.check() && mov.check();
-  //return ok && mov.check();
+  //return ok && color.check() && mov.check();
+  return ok && mov.check();
 }
 
 void Robot::update() {
   for (int i = 0; i < 3; i++) data.dist[i] = laser[i].read();
-  data.color = color.read();
+  data.color = 0; //color.read();
   float tempAmb = (tempL.readAmb() + tempR.readAmb()) / 2;
   data.tempL = tempL.read() - tempAmb;
   data.tempR = tempR.read() - tempAmb;
@@ -82,7 +82,7 @@ bool Robot::go() {
   }
   mov.go(false);
   mov.stop();
-  delay(1000);
+  //delay(1000);
   mov.endGo();
   mov.stop();
   laser[0].stop();
@@ -118,16 +118,21 @@ void Robot::setLED(bool red, bool green, bool blue) {
 
 void Robot::setAddresses() {
   pinMode(LX_LEFT, OUTPUT_OPEN_DRAIN);
-  pinMode(LX_FRONT, OUTPUT_OPEN_DRAIN);
-  digitalWrite(LX_FRONT, LOW);
+  pinMode(LX_FRONTL, OUTPUT_OPEN_DRAIN);
+  pinMode(LX_FRONTR, OUTPUT_OPEN_DRAIN);
+  digitalWrite(LX_FRONTL, LOW);
+  digitalWrite(LX_FRONTR, LOW);
   digitalWrite(LX_LEFT, LOW);
   laser[1].setAddress(L_RIGHT);
-  digitalWrite(LX_FRONT, HIGH);
+  digitalWrite(LX_FRONTR, HIGH);
   delay(10);
-  laser[0].setAddress(L_FRONT);
+  laser[0].setAddress(L_FRONTR);
   digitalWrite(LX_LEFT, HIGH);
   delay(10);
   laser[2].setAddress(L_LEFT);
+  digitalWrite(LX_FRONTL, HIGH);
+  delay(10);
+  laser[3].setAddress(L_FRONTL);
 }
 
 uint16_t Robot::endDist(uint16_t distance) {
@@ -135,6 +140,22 @@ uint16_t Robot::endDist(uint16_t distance) {
   return distance - ((distance) % 300) + CENTRED;
 }
 
+void Robot::straighten(){
+  
+  laser[0].start();
+  laser[3].start();
+  float dif;
+  for(int i=0;i<3;i++){
+    dif=dif+laser[0].read()-laser[3].read()+LASER_FL;
+  }
+  dif=dif/3;
+  
+  while( dif > 5){
+    mov.rotate((dif>0) , 1);
+  }
+  laser[0].stop();
+  laser[3].stop();
+}
 
 void Robot::delay(unsigned int t) {
   unsigned int end = millis() + t;

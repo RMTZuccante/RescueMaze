@@ -27,6 +27,7 @@ class Robot {
     bool check();
     void update();
 
+    void straighten();
     bool go();
     void back();
     void rotate(bool dir);
@@ -37,13 +38,14 @@ class Robot {
     RobotData data;
 
     void delay(unsigned int t);
+    VL53L0X laser[4] = {VL53L0X(), VL53L0X(), VL53L0X(), VL53L0X()};
   private:
     Moviment mov = Moviment(SPEED);
-    Color color = Color(MERROR, MCOLOR);
+    //Color color = Color(MERROR, MCOLOR);
     Temperature tempL = Temperature(T_LEFT);
     Temperature tempR = Temperature(T_RIGHT);
     RGB led = RGB(RED, GREEN, BLUE);
-    VL53L0X laser[3] = {VL53L0X(), VL53L0X(), VL53L0X()};
+
 
     void setAddresses();
     uint16_t endDist(uint16_t distance);

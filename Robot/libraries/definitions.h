@@ -13,12 +13,14 @@
 
 //Laser addresses
 #define L_LEFT 0x29
-#define L_FRONT 0x2A
+#define L_FRONTL 0x2A
 #define L_RIGHT 0x2B
+#define L_FRONTR 0x2C
 
 //Laser pin
 #define LX_LEFT PA15
-#define LX_FRONT PA10
+#define LX_FRONTL PA5
+#define LX_FRONTR PA10
 
 //RGB
 #define RED PB13
@@ -28,5 +30,6 @@
 //Misurements
 #define CENTRED 60 //distanza del robot rispetto al muro per essere centrato
 #define CELL 200
+#define LASER_FL 10
 
 #endif

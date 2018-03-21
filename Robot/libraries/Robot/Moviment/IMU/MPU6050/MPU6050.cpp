@@ -26,7 +26,6 @@ bool MPU6050::check() {
   I2C_2.requestFrom(MPU6050_ADDRESS, 1);
   uint8_t value = I2C_2.read();
   I2C_2.endTransmission();
-  Serial.println("whoami done");
   return value == MPU6050_ADDRESS;
 }
 

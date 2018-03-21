@@ -7,22 +7,44 @@ extern TwoWire I2C_2(2);
 Robot robot;
 Matrix matrix;
 
+void setAddresses() {
+  pinMode(LX_LEFT, OUTPUT_OPEN_DRAIN);
+  pinMode(LX_FRONTR, OUTPUT_OPEN_DRAIN);
+  pinMode(LX_FRONTL, OUTPUT_OPEN_DRAIN);
+  digitalWrite(LX_FRONTR, LOW);
+  digitalWrite(LX_FRONTL, LOW);
+  digitalWrite(LX_LEFT, LOW);
+  robot.laser[1].setAddress(L_RIGHT);
+  digitalWrite(LX_FRONTL, HIGH);
+  delay(10);
+  robot.laser[3].setAddress(L_FRONTL);
+  digitalWrite(LX_FRONTR, HIGH);
+  delay(10);
+  robot.laser[0].setAddress(L_FRONTR);
+  digitalWrite(LX_LEFT, HIGH);
+  delay(10);
+  robot.laser[2].setAddress(L_LEFT);
+}
+
+
 void setup() {
   //Hardware initialization
   Serial.begin(115200);
   I2C_1.begin();
   I2C_2.begin();
-  robot.setup();
-  pinMode(PC13, OUTPUT);
-
-  //Check that everything is working
-  digitalWrite(PC13, !(matrix.check() && robot.check()));
   
+  setAddresses();
+  
+  //Check that everything is working
+  //pinMode(PC13, OUTPUT);
+  //digitalWrite(PC13, !( matrix.check() && robot.check()));
+  matrix.check();
+
   //Sensors initialization
   robot.begin();
 }
 
-void loop() {  
+void loop() {
   robot.update();
   matrix.update(robot.data);
   if (matrix.black) {
@@ -43,9 +65,9 @@ void loop() {
         break;
       case BACK :
         robot.rotate(false);
-        robot.update();
-        matrix.update(robot.data);
+        //robot.update();
         robot.rotate(false);
+        //matrix.update(robot.data);
         break;
     }
 
