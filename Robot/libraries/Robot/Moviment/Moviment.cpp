@@ -1,10 +1,16 @@
 #include "Moviment.h"
 
+/**
+ * Sets the movement speed and default parameters.
+ */
 Moviment::Moviment (uint16_t speed) {
   this->speed = speed;
   fill=0;
 }
 
+/**
+ * Makes the robot ready to move.
+ */
 void Moviment::begin() {
 //  Serial.println("begun");
   motorFR.begin();
@@ -19,20 +25,35 @@ void Moviment::begin() {
 
 }
 
+/**
+ * Checks if the sensors are ready to be read from.
+ * @return
+ */
 bool Moviment::check() {
   return orientation.check();
 }
 
+/**
+ * Sets the motors to high speed to easily climb.
+ */
 void Moviment::climb() {
   motorFR.start(50000, false);
   motorFL.start(50000, false);
   motorRR.start(20000, false);
   motorRL.start(20000, false);
 }
+
+/**
+ * Moves the robot forward.
+ */
 void Moviment::go() {
   go(true);
 }
 
+/**
+ * Moves the robot forward or backward.
+ * @param invert Forward if TRUE, backward if FALSE.
+ */
 void Moviment::go(bool invert) {
   orientation.start(20);
   direzione = orientation.yaw();
@@ -42,6 +63,9 @@ void Moviment::go(bool invert) {
   motorRL.start(bound(speed, 65535), !invert);
 }
 
+/**
+ * Moves the robot forward in a straight line.
+ */
 void Moviment::straight() {
   float fix = direzione - orientation.yaw();
   //  Serial.print(direzione);
@@ -53,19 +77,36 @@ void Moviment::straight() {
   motorRL.start(bound(speed + fix * 5000, 65535), false);
 }
 
+/**
+ * Straightens the robot at the end of a movement.
+ */
 void Moviment::endGo() {
   float now = orientation.yaw();
   //  Serial.println(now);
   //  Serial.println(direzione);
   (direzione > now) ? rotate(true, direzione - now) : rotate(false, now - direzione);
 }
+
+/**
+ * Rotates the robot by 90 degrees to the right.
+ */
 void Moviment::rotate() {
   rotate(false);
 }
+
+/**
+ * Rotates the robot by 90 degrees.
+ * @param invert Rotates right if FALSE, left if TRUE.
+ */
 void Moviment::rotate(bool invert) {
   rotate(invert, 90);
 }
 
+/**
+ * Rotates the robot by a given number degrees.
+ * @param invert Rotates right if FALSE, left if TRUE.
+ * @param angle The angle by.
+ */
 void Moviment::rotate(bool invert , float angle) {
   //  Serial.println(angle);
   //  delay(5000);
@@ -111,6 +152,9 @@ void Moviment::rotate(bool invert , float angle) {
   //fill=end-orientation.yaw();
 }
 
+/**
+ * Stops the motor.
+ */
 void Moviment::stop() {
   motorFR.stop();
   motorFL.stop();
@@ -118,6 +162,10 @@ void Moviment::stop() {
   motorRL.stop();
 }
 
+/**
+ * Adjust the speed of the motors.
+ * @param speed The speed, from 0 to 65535.
+ */
 void Moviment::setSpeed(uint16_t speed) {
   this->speed = bound((speed) , 65535);
   motorFR.setSpeed(speed);
@@ -126,11 +174,23 @@ void Moviment::setSpeed(uint16_t speed) {
   motorRL.setSpeed(speed);
 }
 
+/**
+ * Set the rotation coefficient.
+ * @param rightK Right coefficient.
+ * @param leftK Left coefficient.
+ */
 void Moviment::setK(int rightK, int leftK) {
   kR = rightK;
   kL = leftK;
 }
 
+/**
+ * Calculates the angle in which the robot has to stop.
+ * @param angle Actual angle.
+ * @param invert Rotates right if FALSE, left if TRUE.
+ * @param end The end angle of the rotation.
+ * @return The angle to turn of.
+ */
 float Moviment::endAngle(float angle, bool invert, float end) {
   float ris = angle;
   if (invert) {
@@ -145,7 +205,12 @@ float Moviment::endAngle(float angle, bool invert, float end) {
   }
 }
 
-void Moviment::rotationSpeed(bool invert , float endRotation) {
+/**
+ * Adjust the rotation speed, based on the distance from the given angle.
+ * @param invert Rotates right if FALSE, left if TRUE.
+ * @param endRotation The end angle of the rotation.
+ */
+void Moviment::rotationSpeed(bool invert, float endRotation) {
   direzione = orientation.yaw();
   if (endRotation - direzione > 0) setK(FIRST_K + ((endRotation - direzione) * ROTATION_P), SECOND_K + ((endRotation - direzione) * ROTATION_P));
   else setK(SECOND_K + ((direzione - endRotation) * ROTATION_P), FIRST_K + ((direzione - endRotation) * ROTATION_P));
@@ -159,6 +224,11 @@ void Moviment::rotationSpeed(bool invert , float endRotation) {
 //  Serial.println(direzione);
 }
 
+/**
+ * Sets the motor rotation speed to the given one.
+ * @param speed Speed of the motors, from 0 to 65535.
+ * @param invert Rotates right if FALSE, left if TRUE.
+ */
 void Moviment::rotationSpeed(uint16_t speed, bool invert) {
   motorFR.start(speed, invert);
   motorFL.start(speed, !invert);
@@ -166,14 +236,28 @@ void Moviment::rotationSpeed(uint16_t speed, bool invert) {
   motorRL.start(speed, !invert);
 }
 
+/**
+ * Bound n to max.
+ * Cap down n to not overflow the max value.
+ * @param n The number given.
+ * @param max The max value that n should be.
+ * @return The capped value.
+ */
 uint16_t Moviment::bound(uint32_t n, uint16_t max) {
   return (n > max) ? max : n;
 }
 
+/**
+ * Reads the pitch from the orientation sensor.
+ * @return The already corrected pitch.
+ */
 float Moviment::getPitch() {
   return orientation.pitch();
 }
 
+/**
+ * Does idle operation, aka does nothing.
+ */
 void Moviment::idle() {
   orientation.update();
 }

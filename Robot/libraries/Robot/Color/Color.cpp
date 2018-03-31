@@ -1,10 +1,18 @@
 #include "Color.h"
 
+/**
+ * Sets the color sensor parameters.
+ * @param merror Mirror detection threshold.
+ * @param mcolor Color detection threshold.
+ */
 Color::Color(byte merror, byte mcolor) {
   merr = merror;
   mcol = mcolor;
 }
 
+/**
+ * Starts the sensor and makes it ready to be read.
+ */
 void Color::begin() {
   I2C_1.begin();
   I2C_1.beginTransmission(COLORADDRESS);
@@ -13,12 +21,18 @@ void Color::begin() {
   I2C_1.endTransmission();
 }
 
+/**
+ * Check if the sensor is working.
+ * @return TRUE if it works.
+ */
 bool Color::check() {
   I2C_1.beginTransmission(COLORADDRESS);
-  if (I2C_1.endTransmission()) return false;
-  return true;
+  return !I2C_1.endTransmission();
 }
-
+/**
+ * Reads the actual color read from the sensors.
+ * @return 0 if it detects a white cell, 1 for mirror and 2 for black.
+ */
 uint8_t Color::read() {
   I2C_1.requestFrom(COLORADDRESS, 1);
   return I2C_1.read();

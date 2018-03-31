@@ -9,7 +9,7 @@ class IMU {
     IMU();
     void begin();
     bool check();
-    void start(int refresh);
+    void start(unsigned long refresh);
     float yaw();
     float pitch();
     float roll();

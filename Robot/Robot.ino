@@ -7,6 +7,9 @@ extern TwoWire I2C_2(2);
 Robot robot;
 Matrix matrix;
 
+/**
+ * Sets the addresses to the distance sensors.
+ */
 void setAddresses() {
   pinMode(LX_LEFT, OUTPUT_OPEN_DRAIN);
   pinMode(LX_FRONTR, OUTPUT_OPEN_DRAIN);
@@ -44,7 +47,7 @@ void setup() {
   robot.begin();
 }
 
-void loop() {
+void loop() {/*
   robot.update();
   matrix.update(robot.data);
   if (matrix.black) {
@@ -79,4 +82,8 @@ void loop() {
       matrix.move(false);
     }
   }
+  */
+  robot.rotate(true);
+  robot.rotate(true);
+  robot.go();
 }

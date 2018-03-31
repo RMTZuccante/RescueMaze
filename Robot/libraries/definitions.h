@@ -7,7 +7,7 @@
 #define MCOLOR 15
 
 
-//Temperature adresses
+//Temperature addresses
 #define T_LEFT 0x5A
 #define T_RIGHT 0x5B
 
@@ -27,8 +27,8 @@
 #define GREEN PB14
 #define BLUE PB15
 
-//Misurements
-#define CENTRED 60 //distanza del robot rispetto al muro per essere centrato
+//Measurements
+#define CENTRED 60 //distance of the robot from the wall to be centered
 #define CELL 200
 #define LASER_FL 10
 
