@@ -47,7 +47,7 @@ void setup() {
   robot.begin();
 }
 
-void loop() {/*
+void loop() {
   robot.update();
   matrix.update(robot.data);
   if (matrix.black) {
@@ -82,8 +82,4 @@ void loop() {/*
       matrix.move(false);
     }
   }
-  */
-  robot.rotate(true);
-  robot.rotate(true);
-  robot.go();
 }
