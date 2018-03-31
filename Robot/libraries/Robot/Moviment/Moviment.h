@@ -5,8 +5,8 @@
 #include "Motor.h"
 #include "IMU.h"
 
-#define FIRST_K 1000
-#define SECOND_K 1000
+#define FIRST_K 2000
+#define SECOND_K 2000
 #define ROTATION_P 500
 #define ROTATION_SPEED 60000
 #define RK 1
@@ -31,7 +31,7 @@ class Moviment {
     void rotate();
     void climb();
     void rotate (bool invert);
-    void rotate (bool invert,float angle);
+    void rotate (bool invert, float angle);
     void stop();
     void setSpeed(uint16_t speed);
     void setK(int rightK, int leftK);

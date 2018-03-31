@@ -67,6 +67,7 @@ bool Robot::go() {
   //  Serial.println("go");
   laser[0].start();
   delay(50);
+  laser[0].read();
   uint16_t end = endDist(laser[0].read());
   Serial.print(end);
   //  uint16_t front=laser[0].read();
@@ -197,14 +198,13 @@ void Robot::straighten(){
   laser[0].start();
   laser[3].start();
   float dif;
-  do
-  {
-	for(int i=0;i<3;i++){
-      dif=dif+laser[0].read()-laser[3].read()+LASER_FL;
-	}
-	dif=dif/3;
+  do{
+  	for(int i=0;i<3;i++){
+        dif=dif+laser[0].read()-laser[3].read()+LASER_FL;
+  	}
+  	dif=dif/3;
     mov.rotate((dif>0) , 1);
-	dif=0;
+  	dif=0;
   }while( dif > 5 || dif < -5);
   laser[0].stop();
   laser[3].stop();
