@@ -10,14 +10,14 @@
 #define ROTATION_P 500
 #define ROTATION_SPEED 60000
 #define RK 1
-#define FR_IN1 PA2
-#define FR_IN2 PA3
-#define RL_IN1 PA7
-#define RL_IN2 PA6
-#define FL_IN1 PB0
-#define FL_IN2 PB1
-#define RR_IN1 PA0
-#define RR_IN2 PA1
+#define FR_IN1 PA3
+#define FR_IN2 PA2
+#define RL_IN1 PA6
+#define RL_IN2 PA7
+#define FL_IN1 PB1
+#define FL_IN2 PB0
+#define RR_IN1 PA1
+#define RR_IN2 PA0
 
 class Moviment {
   public:
