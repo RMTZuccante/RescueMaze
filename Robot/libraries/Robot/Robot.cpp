@@ -1,5 +1,5 @@
 #include "Robot.h";
-
+#include <math.h>
 /**
  * Sets sensors to be used.
  * This function has to be called before doing everything else or the robot will crash.
@@ -12,7 +12,7 @@ void Robot::setup() {
  * Begins all sensors.
  */
 void Robot::begin() {  
-  for (int i = 0 ; i < 3 ; i++) laser[i].begin();
+  for (int i = 0 ; i < 4 ; i++) laser[i].begin();
   //color.begin();
   mov.begin();
 }
@@ -69,7 +69,7 @@ bool Robot::go() {
   delay(50);
   laser[0].read();
   uint16_t end = endDist(laser[0].read());
-  Serial.print(end);
+  //Serial.print(end);
   //  uint16_t front=laser[0].read();
   //  uint16_t end = (front > 300) ? front-300 : CENTRED;
   //    Serial.print("laser : ");
@@ -106,12 +106,17 @@ bool Robot::go() {
     mov.setSpeed(((laser[0].read() - end) * 20) + SPEED);
     mov.straight();
   }
+
   mov.go(false);
   mov.stop();
+  
   //delay(1000);
+  //Serial.println("engGo");  
   mov.endGo();
+  //Serial.println("engGo finished");
   mov.stop();
   laser[0].stop();
+  //Serial.println("finished");
   return !black;
 }
 
@@ -197,15 +202,19 @@ uint16_t Robot::endDist(uint16_t distance) {
 void Robot::straighten(){
   laser[0].start();
   laser[3].start();
-  float dif;
-  do{
-  	for(int i=0;i<3;i++){
-        dif=dif+laser[0].read()-laser[3].read()+LASER_FL;
-  	}
-  	dif=dif/3;
-    mov.rotate((dif>0) , 1);
+  uint16_t laser1=laser[0].read();
+  uint16_t laser2=laser[3].read();
+  /*do{
+    laser[0].read();
+    laser[3].read();
   	dif=0;
+    dif=dif+laser[0].read();
+    dif=dif-laser[3].read();
+    mov.rotate((dif > 0) , 1);
   }while( dif > 5 || dif < -5);
+  */
+  //(laser1 > laser2) ? mov.rotate(true,atan2((laser1-laser2),LASER_DIST)) : mov.rotate(false,atan2((laser2-laser1),LASER_DIST));
+  
   laser[0].stop();
   laser[3].stop();
 }
