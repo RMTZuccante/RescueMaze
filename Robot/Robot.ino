@@ -12,18 +12,22 @@ Matrix matrix;
  */
 void setAddresses() {
   pinMode(LX_LEFT, OUTPUT_OPEN_DRAIN);
-  pinMode(LX_FRONTR, OUTPUT_OPEN_DRAIN);
+  pinMode(LX_RIGHT, OUTPUT_OPEN_DRAIN);
   pinMode(LX_FRONTL, OUTPUT_OPEN_DRAIN);
-  digitalWrite(LX_FRONTR, LOW);
-  digitalWrite(LX_FRONTL, LOW);
   digitalWrite(LX_LEFT, LOW);
-  robot.laser[1].setAddress(L_RIGHT);
+  digitalWrite(LX_RIGHT, LOW);
+  digitalWrite(LX_FRONTL, LOW);
+  
+  robot.laser[0].setAddress(L_FRONTR);
+  
   digitalWrite(LX_FRONTL, HIGH);
   delay(10);
   robot.laser[3].setAddress(L_FRONTL);
-  digitalWrite(LX_FRONTR, HIGH);
+  
+  digitalWrite(LX_RIGHT, HIGH);
   delay(10);
-  robot.laser[0].setAddress(L_FRONTR);
+  robot.laser[1].setAddress(L_RIGHT);
+  
   digitalWrite(LX_LEFT, HIGH);
   delay(10);
   robot.laser[2].setAddress(L_LEFT);
@@ -42,6 +46,10 @@ void setup() {
   //pinMode(PC13, OUTPUT);
   //digitalWrite(PC13, !( matrix.check() && robot.check()));
   matrix.check();
+
+  /*PROVE DI NICO---CANCELLARE*/
+  delay(2000);
+  matrix.die();
 
   //Sensors initialization
   robot.begin();

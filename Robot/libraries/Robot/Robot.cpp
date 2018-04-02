@@ -168,21 +168,25 @@ void Robot::setLED(bool red, bool green, bool blue) {
  */
 void Robot::setAddresses() {
   pinMode(LX_LEFT, OUTPUT_OPEN_DRAIN);
+  pinMode(LX_RIGHT, OUTPUT_OPEN_DRAIN);
   pinMode(LX_FRONTL, OUTPUT_OPEN_DRAIN);
-  pinMode(LX_FRONTR, OUTPUT_OPEN_DRAIN);
-  digitalWrite(LX_FRONTL, LOW);
-  digitalWrite(LX_FRONTR, LOW);
   digitalWrite(LX_LEFT, LOW);
-  laser[1].setAddress(L_RIGHT);
-  digitalWrite(LX_FRONTR, HIGH);
-  delay(10);
+  digitalWrite(LX_RIGHT, LOW);
+  digitalWrite(LX_FRONTL, LOW);
+  
   laser[0].setAddress(L_FRONTR);
-  digitalWrite(LX_LEFT, HIGH);
-  delay(10);
-  laser[2].setAddress(L_LEFT);
+  
   digitalWrite(LX_FRONTL, HIGH);
   delay(10);
   laser[3].setAddress(L_FRONTL);
+  
+  digitalWrite(LX_RIGHT, HIGH);
+  delay(10);
+  laser[1].setAddress(L_RIGHT);
+  
+  digitalWrite(LX_LEFT, HIGH);
+  delay(10);
+  laser[2].setAddress(L_LEFT);
 }
 
 /**
@@ -204,12 +208,17 @@ void Robot::straighten(){
   laser[3].start();
   uint16_t laser1=laser[0].read();
   uint16_t laser2=laser[3].read();
-  /*do{
+  /*
+    int dif;
+    do{
     laser[0].read();
     laser[3].read();
   	dif=0;
-    dif=dif+laser[0].read();
-    dif=dif-laser[3].read();
+  	for(int i = 0 ; i<3; i++){
+      dif=dif+laser[0].read();
+      dif=dif-laser[3].read();
+    }
+    dif=dif/3;
     mov.rotate((dif > 0) , 1);
   }while( dif > 5 || dif < -5);
   */
