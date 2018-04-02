@@ -123,7 +123,7 @@ void Moviment::rotate(bool invert , float angle) {
       rotationSpeed(ROTATION_SPEED, invert);
     }
     stop();
-    while (orientation.yaw() < (end)) {
+    while (orientation.yaw() <= (end)) {
       rotationSpeed(!invert, end);
       //delay(500);
     }
@@ -138,15 +138,12 @@ void Moviment::rotate(bool invert , float angle) {
       rotationSpeed(ROTATION_SPEED, invert);
     }
     stop();
-    while (orientation.yaw() > (end)) {
+    while (orientation.yaw() >= (end)) {
       rotationSpeed(!invert, end);
     }
   }
   stop();
   setK(0, 0);
-  for(int i=millis()+2000;millis()<i;){
-    orientation.yaw();
-  }
   fill=(orientation.yaw()-end);
   //Serial.println(fill);
   //fill=end-orientation.yaw();
