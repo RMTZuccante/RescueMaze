@@ -25,6 +25,7 @@ class Robot {
     void setup();
     void begin();
     bool check();
+    bool checkBattery();
     void update();
 
     void straighten();
@@ -46,7 +47,7 @@ class Robot {
     Temperature tempR = Temperature(T_RIGHT);
     RGB led = RGB(RED, GREEN, BLUE);
 
-
+    float getBattery();
     void setAddresses();
     uint16_t endDist(uint16_t distance);
 };

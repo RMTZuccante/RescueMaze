@@ -6,7 +6,6 @@
 #define MERROR 5
 #define MCOLOR 15
 
-
 //Temperature addresses
 #define T_LEFT 0x5A
 #define T_RIGHT 0x5B
@@ -26,6 +25,11 @@
 #define RED PB13
 #define GREEN PB14
 #define BLUE PB15
+
+//Battery
+#define B_PIN PA4
+#define B_R1 68000
+#define B_R2 22000
 
 //Measurements
 #define CENTRED 60 //distance of the robot from the wall to be centered

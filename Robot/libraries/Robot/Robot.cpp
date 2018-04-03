@@ -41,9 +41,17 @@ void Robot::climb() {
  */
 bool Robot::check() {
   bool ok = true;
-  for (int i = 0 ; i < 3 ; i++) ok &= laser[i].check();
+  for (int i = 0 ; i < 4 ; i++) ok &= laser[i].check();
   //return ok && color.check() && mov.check();
   return ok && mov.check();
+}
+
+/**
+ * Check if the battery is charged enough for the robot to work
+ * @return TRUE if the battery voltage is higher than 11 volts
+ */
+bool Robot::checkBattery() {
+  return getBattery()>11.f;
 }
 
 /**
@@ -227,6 +235,15 @@ void Robot::straighten(){
   laser[0].stop();
   laser[3].stop();
 }
+
+/**
+ * Reads the battery current voltage.
+ * @return The already corrected battery voltage in Volts.
+ */
+float Robot::getBattery() {
+  return ((analogRead(B_PIN) * (3.3f / 4095.0f)) * (B_R1+B_R2))/B_R2;
+}
+
 
 /**
  * Idles for the given time.
