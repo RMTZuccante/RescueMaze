@@ -67,6 +67,9 @@ String SerialDebug::getLevel(int level) {
   }
 }
 
+/**
+ * Waits until "ok" is read from the serial port.
+ */
 void SerialDebug::wait() {
   if(level==LVL_DEBUG) {
     Serial.println("Waiting...");
@@ -77,6 +80,10 @@ void SerialDebug::wait() {
   }
 }
 
+/**
+ * Reads a single line from the serial port.
+ * @return The line read.
+ */
 String SerialDebug::readLine() {
   while (!Serial.available());
   String s;
