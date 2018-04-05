@@ -13,7 +13,7 @@ void Robot::setup() {
  */
 void Robot::begin() {  
   for (int i = 0 ; i < 4 ; i++) laser[i].begin();
-  //color.begin();
+  color.begin();
   mov.begin();
 }
 
@@ -42,8 +42,7 @@ void Robot::climb() {
 bool Robot::check() {
   bool ok = true;
   for (int i = 0 ; i < 4 ; i++) ok &= laser[i].check();
-  //return ok && color.check() && mov.check();
-  return ok && mov.check();
+  return ok && color.check() && mov.check();
 }
 
 /**
@@ -51,7 +50,11 @@ bool Robot::check() {
  * @return TRUE if the battery voltage is higher than 11 volts
  */
 bool Robot::checkBattery() {
-  return getBattery()>11.f;
+  float battery = getBattery();
+  bool ok = getBattery()>11.f;
+  Debug.println(String("Battery voltage: ")+battery+"v.",LVL_INFO);
+  if(!ok) Debug.println("Critical battery level!", LVL_WARN);
+  return ok;
 }
 
 /**
@@ -59,7 +62,7 @@ bool Robot::checkBattery() {
  */
 void Robot::update() {
   for (int i = 0; i < 3; i++) data.dist[i] = laser[i].read();
-  data.color = 0; //color.read();
+  data.color = color.read();
   float tempAmb = (tempL.readAmb() + tempR.readAmb()) / 2;
   data.tempL = tempL.read() - tempAmb;
   data.tempR = tempR.read() - tempAmb;
@@ -181,7 +184,7 @@ void Robot::setAddresses() {
   digitalWrite(LX_LEFT, LOW);
   digitalWrite(LX_RIGHT, LOW);
   digitalWrite(LX_FRONTL, LOW);
-  
+
   laser[0].setAddress(L_FRONTR);
   
   digitalWrite(LX_FRONTL, HIGH);
@@ -252,5 +255,5 @@ float Robot::getBattery() {
  */
 void Robot::delay(unsigned int t) {
   unsigned int end = millis() + t;
-  while (end < millis()) mov.idle();
+  while (end > millis()) mov.idle();
 }

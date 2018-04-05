@@ -4,6 +4,7 @@
 #include <Arduino.h>
 
 #include "I2C.h"
+#include "Debug.h"
 #include "Moviment.h"
 #include "Color.h"
 #include "Temperature.h"
@@ -42,7 +43,7 @@ class Robot {
     VL53L0X laser[4] = {VL53L0X(), VL53L0X(), VL53L0X(), VL53L0X()};
   private:
     Moviment mov = Moviment(SPEED);
-    //Color color = Color(MERROR, MCOLOR);
+    Color color = Color(MERROR, MCOLOR);
     Temperature tempL = Temperature(T_LEFT);
     Temperature tempR = Temperature(T_RIGHT);
     RGB led = RGB(RED, GREEN, BLUE);

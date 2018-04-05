@@ -1,58 +1,34 @@
+#include "Debug.h"
 #include "Robot.h"
 #include "Matrix.h"
 
-extern SoftWire I2C_1(PB6, PB7, SOFT_STANDARD);
-extern TwoWire I2C_2(2);
+SerialDebug Debug;
+SoftWire I2C_1(PB6, PB7, SOFT_STANDARD);
+TwoWire I2C_2(2);
 
 Robot robot;
 Matrix matrix;
 
-/**
- * Sets the addresses to the distance sensors.
- */
-void setAddresses() {
-  pinMode(LX_LEFT, OUTPUT_OPEN_DRAIN);
-  pinMode(LX_RIGHT, OUTPUT_OPEN_DRAIN);
-  pinMode(LX_FRONTL, OUTPUT_OPEN_DRAIN);
-  digitalWrite(LX_LEFT, LOW);
-  digitalWrite(LX_RIGHT, LOW);
-  digitalWrite(LX_FRONTL, LOW);
-  
-  robot.laser[0].setAddress(L_FRONTR);
-  
-  digitalWrite(LX_FRONTL, HIGH);
-  delay(10);
-  robot.laser[3].setAddress(L_FRONTL);
-  
-  digitalWrite(LX_RIGHT, HIGH);
-  delay(10);
-  robot.laser[1].setAddress(L_RIGHT);
-  
-  digitalWrite(LX_LEFT, HIGH);
-  delay(10);
-  robot.laser[2].setAddress(L_LEFT);
-}
-
-
 void setup() {
   //Hardware initialization
+  pinMode(PC13, OUTPUT);
+  digitalWrite(PC13, LOW);
   Serial.begin(115200);
   I2C_1.begin();
   I2C_2.begin();
-  
-  setAddresses();
-  
+  robot.setup();
+  Debug.println("Hardware initialization done.", LVL_INFO);
+
   //Check that everything is working
-  //pinMode(PC13, OUTPUT);
-  //digitalWrite(PC13, !( matrix.check() && robot.check()));
-  matrix.check();
-
-  /*PROVE DI NICO---CANCELLARE*/
-  delay(2000);
-  matrix.die();
-
+  bool ok = matrix.check() && robot.check() && robot.checkBattery();
+  Debug.println("Check done.", LVL_INFO);
+  if(!ok) Debug.println("Something is not working correctly. Proceed at your own risk!",LVL_WARN);
+  digitalWrite(PC13, ok);
+  
   //Sensors initialization
   robot.begin();
+  Debug.println("Software initialization done.", LVL_INFO);
+  Debug.println("STARTING!", LVL_INFO);
 }
 
 void loop() {

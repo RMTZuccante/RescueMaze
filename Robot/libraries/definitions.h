@@ -17,9 +17,9 @@
 #define L_FRONTR 0x2C
 
 //Laser pin
+#define LX_FRONTL PA5
 #define LX_LEFT PA10
 #define LX_RIGHT PA15
-#define LX_FRONTL PA5
 
 //RGB
 #define RED PB13

@@ -8,20 +8,23 @@
 #define LVL_WARN 1
 #define LVL_OFF 0
 
-class Debug {
+class SerialDebug {
 public:
-  static void print(String st, int level);
-  static void println(String st, int level);
-  static void print(String st);
-  static void println(String st);
+  void print(String st, int level);
+  void println(String st, int level);
+  void print(String st);
+  void println(String st);
 
-  static void delay(int t);
-  static void setLevel(int lvl);
+  void delay(int t);
+  void wait();
+  void setLevel(int lvl);
 private:
-  static int level;
-  static String buffer;
-  Debug() {}
-  static String getLevel(int level);
+  String getLevel(int level);
+  String readLine();
+  int level;
+  String buffer;
 };
+
+extern SerialDebug Debug;
 
 #endif
