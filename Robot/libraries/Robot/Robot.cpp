@@ -1,5 +1,5 @@
 #include "Robot.h";
-#include <math.h>
+
 /**
  * Sets sensors to be used.
  * This function has to be called before doing everything else or the robot will crash.
@@ -21,14 +21,14 @@ void Robot::begin() {
  * Prints one reading from each distance sensor.
  */
 void Robot::laserTest() {
-  Serial.print(" 0: ");
-  Serial.print(laser[0].read());
-  Serial.print(" 1: ");
-  Serial.print(laser[1].read());
-  Serial.print(" 2: ");
-  Serial.print(laser[2].read());
-  Serial.print(" 3: ");
-  Serial.println(laser[3].read());
+  Debug.print(" 0: ");
+  Debug.print(String(laser[0].read()));
+  Debug.print(" 1: ");
+  Debug.print(String(laser[1].read()));
+  Debug.print(" 2: ");
+  Debug.print(String(laser[2].read()));
+  Debug.print(" 3: ");
+  Debug.println(String(laser[3].read()));
 }
 
 void Robot::climb() {
@@ -75,59 +75,35 @@ void Robot::update() {
  * @return FALSE if it found a black cell
  */
 bool Robot::go() {
-  //  Serial.println("go");
   laser[0].start();
   delay(50);
   laser[0].read();
   uint16_t end = endDist(laser[0].read());
-  //Serial.print(end);
-  //  uint16_t front=laser[0].read();
-  //  uint16_t end = (front > 300) ? front-300 : CENTRED;
-  //    Serial.print("laser : ");
-  //    Serial.println(laser[0].read());
-  //    Serial.print("end : ");
-  //    Serial.println(end);
   int i = 0;
   uint16_t front = laser[0].read();
-  bool black = false;//(color.read() == 2);
+  bool black = (color.read() == 2);
   mov.go();
-  //while ( (laser[0].read() > end) && !black );
-  while (laser[0].read() > end) {
-    //int time=millis();
+  while (laser[0].read() > end && !black) {
     if (i == 100) {
-      //Serial.println("if");
       uint16_t now = laser[0].read();
       if ( ( (front > now) ? front - now : now - front ) < 5) {
         mov.setSpeed(65355);
         delay(200);
-        //        Serial.println("bump");
-        //        delay(1000);
       }
       front = now;
       i = 0;
-      //black = (color.read() == 2);
+      black = (color.read() == 2);
     }
-    //        Serial.print(laser[0].read());
-    //        Serial.print(" ");
-    //        Serial.println(end);
-    //    Serial.println(i);
     i++;
     uint16_t front = laser[0].read();
-    //Serial.println(millis()-time);
     mov.setSpeed(((laser[0].read() - end) * 20) + SPEED);
     mov.straight();
   }
-
   mov.go(false);
   mov.stop();
-  
-  //delay(1000);
-  //Serial.println("engGo");  
   mov.endGo();
-  //Serial.println("engGo finished");
   mov.stop();
   laser[0].stop();
-  //Serial.println("finished");
   return !black;
 }
 

@@ -2,6 +2,8 @@
 #define Robot_h
 
 #include <Arduino.h>
+#include <math.h>
+#include "definitions.h"
 
 #include "I2C.h"
 #include "Debug.h"
@@ -11,7 +13,6 @@
 #include "RGB.h"
 #include "VL53L0X.h"
 
-#include "definitions.h"
 
 struct RobotData {
   uint16_t dist[3];

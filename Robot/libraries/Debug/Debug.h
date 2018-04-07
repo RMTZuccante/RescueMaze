@@ -2,11 +2,7 @@
 #define DEBUG_H
 
 #include <Arduino.h>
-
-#define LVL_DEBUG 3
-#define LVL_INFO 2
-#define LVL_WARN 1
-#define LVL_OFF 0
+#include "definitions.h"
 
 class SerialDebug {
 public:

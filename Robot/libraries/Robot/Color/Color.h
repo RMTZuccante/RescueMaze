@@ -2,9 +2,8 @@
 #define Color_h
 
 #include <Arduino.h>
+#include "definitions.h"
 #include "I2C.h"
-
-#define COLORADDRESS 0x42
 
 class Color {
   public:

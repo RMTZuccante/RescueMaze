@@ -73,11 +73,11 @@ void Matrix::die() {
  */
 void Matrix::inspect(RobotData data) {
   Serial.print("check ");
-  Serial.print(data.dist[0]);
+  Serial.print(data.dist[FRONT]);
   Serial.print(' ');
-  Serial.print(data.dist[1]);
+  Serial.print(data.dist[RIGHT]);
   Serial.print(' ');
-  Serial.print(data.dist[2]);
+  Serial.print(data.dist[LEFT]);
   Serial.print(' ');
   Serial.print(data.tempL);
   Serial.print(' ');

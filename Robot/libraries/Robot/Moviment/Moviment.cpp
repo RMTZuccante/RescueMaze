@@ -12,7 +12,6 @@ Moviment::Moviment (uint16_t speed) {
  * Makes the robot ready to move.
  */
 void Moviment::begin() {
-//  Serial.println("begun");
   motorFR.begin();
   motorFL.begin();
   motorRR.begin();
@@ -22,7 +21,6 @@ void Moviment::begin() {
   orientation.calibrate();
   delay(100);
   orientation.start(100);
-
 }
 
 /**
@@ -68,9 +66,6 @@ void Moviment::go(bool invert) {
  */
 void Moviment::straight() {
   float fix = direzione - orientation.yaw();
-  //  Serial.print(direzione);
-  //  Serial.print("  ");
-  //  Serial.println(orientation.yaw());
   motorFR.start(bound(speed - fix * 5000, 65535), false);
   motorFL.start(bound(speed + fix * 5000, 65535), false);
   motorRR.start(bound(speed - fix * 5000, 65535), false);
@@ -82,8 +77,6 @@ void Moviment::straight() {
  */
 void Moviment::endGo() {
   float now = orientation.yaw();
-  //  Serial.println(now);
-  //  Serial.println(direzione);
   (direzione > now) ? rotate(true, direzione - now) : rotate(false, now - direzione);
 }
 
@@ -108,8 +101,6 @@ void Moviment::rotate(bool invert) {
  * @param angle The angle by.
  */
 void Moviment::rotate(bool invert , float angle) {
-  //  Serial.println(angle);
-  //  delay(5000);
   orientation.start(100);
   float end = endAngle(orientation.yaw(), invert , angle);
   end-=fill;
@@ -125,7 +116,6 @@ void Moviment::rotate(bool invert , float angle) {
     stop();
     while (orientation.yaw() <= (end)) {
       rotationSpeed(!invert, end);
-      //delay(500);
     }
   }
   else {
@@ -145,8 +135,6 @@ void Moviment::rotate(bool invert , float angle) {
   stop();
   setK(0, 0);
   fill=(orientation.yaw()-end);
-  //Serial.println(fill);
-  //fill=end-orientation.yaw();
 }
 
 /**
@@ -196,8 +184,6 @@ float Moviment::endAngle(float angle, bool invert, float end) {
   }
   else {
     ris -= end;
-    //    Serial.println("endangle");
-    //    Serial.println((ris < 0) ? ris + 360 : ris);
     return (ris < 0) ? ris + 360 : ris;
   }
 }
@@ -213,12 +199,8 @@ void Moviment::rotationSpeed(bool invert, float endRotation) {
   else setK(SECOND_K + ((direzione - endRotation) * ROTATION_P), FIRST_K + ((direzione - endRotation) * ROTATION_P));
   motorFR.start(bound((speed + kR) , 65535), invert);
   motorFL.start(bound((speed + kL) , 65535), !invert);
-  motorRR.start(bound((speed + kR * RK) , 65535), invert);
-  motorRL.start(bound((speed + kL * RK) , 65535), !invert);
-//
-//  Serial.print(endRotation);
-//  Serial.print("  ");
-//  Serial.println(direzione);
+  motorRR.start(bound((speed + kR * ROTATION_K) , 65535), invert);
+  motorRL.start(bound((speed + kL * ROTATION_K) , 65535), !invert);
 }
 
 /**

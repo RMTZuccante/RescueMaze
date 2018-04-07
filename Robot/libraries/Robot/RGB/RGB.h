@@ -3,8 +3,6 @@
 
 #include <Arduino.h>
 
-#define WAIT 5
-
 class RGB {
   public:
     RGB(uint8_t pinr, uint8_t ping, uint8_t pinb);
