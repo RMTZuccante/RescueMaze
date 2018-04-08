@@ -71,6 +71,7 @@ RobotData* Robot::read() {
   data->tempL = tempL.read() - tempAmb;
   data->tempR = tempR.read() - tempAmb;
   data->pitch = mov.getPitch();
+  return data;
 }
 
 /**
