@@ -12,7 +12,7 @@
 //Measurements
 #define CENTRED 60 //distance of the robot from the wall to be centered
 #define CELL 200
-#define LASER_FL 10
+#define LASER_DIF -1
 
 //Color
 #define MERROR 5
