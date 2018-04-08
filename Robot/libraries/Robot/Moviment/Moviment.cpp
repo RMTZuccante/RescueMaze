@@ -88,6 +88,17 @@ void Moviment::rotate() {
 }
 
 /**
+ * Makes the robot rotate while stop is not called
+ * @param invert Rotates right if FALSE, left if TRUE.
+ */
+void Moviment::rotation(bool invert){
+  motorFR.start(30000, invert);
+  motorFL.start(30000, !invert);
+  motorRR.start(30000, invert);
+  motorRL.start(30000, !invert);
+}
+
+/**
  * Rotates the robot by 90 degrees.
  * @param invert Rotates right if FALSE, left if TRUE.
  */

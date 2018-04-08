@@ -17,6 +17,7 @@ class Moviment {
     void endGo();
     void rotate();
     void climb();
+    void rotation(bool invert);
     void rotate (bool invert);
     void rotate (bool invert, float angle);
     void stop();
