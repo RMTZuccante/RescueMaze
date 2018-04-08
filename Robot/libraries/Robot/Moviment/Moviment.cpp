@@ -88,7 +88,7 @@ void Moviment::rotate() {
 }
 
 /**
- * Makes the robot rotate while stop is not called
+ * Makes the robot rotate until stop is called.
  * @param invert Rotates right if FALSE, left if TRUE.
  */
 void Moviment::rotation(bool invert){

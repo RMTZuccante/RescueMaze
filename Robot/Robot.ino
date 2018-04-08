@@ -11,7 +11,8 @@ Robot robot;
 Matrix matrix;
 
 void pause() {
-  
+  matrix.checkpoint();
+  nvic_sys_reset();
 }
 
 void setup() {
@@ -34,48 +35,61 @@ void setup() {
   if(!ok) Debug.println("Something is not working correctly. Proceed at your own risk!",LVL_WARN);
   digitalWrite(LED_BUILTIN, ok);
   
-  //Sensors initialization
+  //Software initialization
   robot.begin();
+  Debug.setLevel(matrix.getDebug());
   Debug.println("Software initialization done.", LVL_INFO);
 
   //Waiting user start command
+  Debug.println("Waiting for the user to press the button...", LVL_INFO);
   while(digitalRead(PUSHBUTTON));
 
   //Attaching interrupts
-  attachInterrupt(PUSHBUTTON, stop, FALLING);
+  attachInterrupt(PUSHBUTTON, pause, FALLING);
   attachInterrupt(RASP1, nvic_sys_reset, FALLING);
   
   Debug.println("STARTING!", LVL_INFO);
+
+  if(matrix.wasPaused()) {
+    while(!matrix.isOriented(robot.read())) {
+      robot.rotate(false);
+    }
+  }
+  
 }
 
 void loop() {
-  robot.update();
-  matrix.update(robot.data);
-  if (matrix.black) {
+  matrix.update(robot.read());
+  
+  if (matrix.end()) {
+    matrix.die();
+    digitalWrite(LED_BUILTIN, LOW);
+    while(1);    
+  }
+  
+  else if (matrix.black) {
     robot.back();
     matrix.move(false);
-  } else {
-    int dir = matrix.getDir();
-    switch (dir) {
+  } 
+  
+  else {
+    switch (matrix.getDir()) {
       case RIGHT:
         robot.rotate(false);
-        robot.update();
-        matrix.update(robot.data);
+        matrix.update(robot.read());
         break;
       case LEFT :
         robot.rotate(true);
-        robot.update();
-        matrix.update(robot.data);
+        matrix.update(robot.read());
         break;
       case BACK :
         robot.rotate(false);
-        //robot.update();
         robot.rotate(false);
-        //matrix.update(robot.data);
         break;
     }
-
+    
     if (matrix.victim) robot.victim();
+    
     matrix.move(true);
     if (!robot.go()) {
       //update matrix with black cell

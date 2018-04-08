@@ -12,21 +12,25 @@
 class Matrix {
   public:
     bool check();
-    void debug(String s);
+    int getDebug();
 
-    void update(RobotData data);
+    void update(RobotData *data);
 
     void move(bool forward);
-    void backToStart();
-    bool end();
-    void die();
-    int getDir();
     void sendBlack();
+    void checkpoint();
+    void backToStart();
+    void die();
+    
+    bool wasPaused();
+    bool isOriented(RobotData* data);
+    int getDir();
+    bool end();
 
     bool victim;
     bool black;
   private:
-    void inspect(RobotData data);
+    void inspect(RobotData *data);
     void getInfo();
     String readLine();
 };

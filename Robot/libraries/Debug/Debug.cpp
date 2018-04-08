@@ -49,8 +49,8 @@ void SerialDebug::delay(int t) {
  * Sets the level to be used for the debug.
  * @param lvl Debug level.
  */
-void SerialDebug::setLevel(int lvl) {
-  level = lvl;
+void SerialDebug::setLevel(int level) {
+  this->level = level;
 }
 
 /**

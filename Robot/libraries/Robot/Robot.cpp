@@ -60,15 +60,17 @@ bool Robot::checkBattery() {
 }
 
 /**
- * Updates all data inside the data package.
+ * Reads all the data from the robot.
+ * @return Pointer to struct containing the data.
  */
-void Robot::update() {
-  for (int i = 0; i < 3; i++) data.dist[i] = laser[i].read();
-  data.color = color.read();
+RobotData* Robot::read() {
+  RobotData *data = new RobotData();
+  for (int i = 0; i < 3; i++) data->dist[i] = laser[i].read();
+  data->color = color.read();
   float tempAmb = (tempL.readAmb() + tempR.readAmb()) / 2;
-  data.tempL = tempL.read() - tempAmb;
-  data.tempR = tempR.read() - tempAmb;
-  data.pitch = mov.getPitch();
+  data->tempL = tempL.read() - tempAmb;
+  data->tempR = tempR.read() - tempAmb;
+  data->pitch = mov.getPitch();
 }
 
 /**
