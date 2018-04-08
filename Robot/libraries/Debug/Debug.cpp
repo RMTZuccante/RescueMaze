@@ -1,28 +1,32 @@
 #include "Debug.h"
 
 /**
- * Add the given string to the same line buffer.
- * This function won't send until println is called.
+ * Sends a string to the Serial port with a debug level, only if it is lower than the setted one. 
+ * The debug level will be sent only if it's a new line.
  * @param st String to print.
  * @param level Debug level.
  */
 void SerialDebug::print(String st, int level) {
-  buffer+=st;
+	if (level <= this->level) {
+		if (ended) Serial.print(getLevel(level));
+		Serial.print(st);
+		ended = st.endsWith("\n");
+	}
 }
 
 /**
- * Add the given string to the line buffer, and send it, with a level of DEBUG.
+ * Sends a line to the Serial port with a debug level, only if it is lower than the setted one. 
+ * The debug level will be sent only if it's a new line.
  * @param st String to print.
  * @param level Debug level.
  */
 void SerialDebug::println(String st, int level) {
-  print(st);
-  Serial.println(getLevel(level) + buffer);
-  buffer = "";
+  print(st+"\n", level);
 }
 
 /**
- * Add the given string to the same line buffer, with a level of DEBUG.
+ * Sends a debug string to the Serial port, only debug is accepted.
+ * The debug level will be sent only if it's a new line.
  * @param st String to print.
  */
 void SerialDebug::print(String st) {
@@ -30,7 +34,8 @@ void SerialDebug::print(String st) {
 }
 
 /**
- * Add the given string to the line buffer, and send it, with a level of DEBUG.
+ * Sends a debug line to the Serial port, only debug is accepted.
+ * The debug level will be sent only if it's a new line.
  * @param st String to print.
  */
 void SerialDebug::println(String st) {

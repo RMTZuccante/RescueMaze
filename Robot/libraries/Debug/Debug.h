@@ -6,6 +6,8 @@
 
 class SerialDebug {
 public:
+  SerialDebug() : ended(true) {}
+  
   void print(String st, int level);
   void println(String st, int level);
   void print(String st);
@@ -17,6 +19,7 @@ public:
 private:
   String getLevel(int level);
   String readLine();
+  bool ended;
   int level;
   String buffer;
 };
