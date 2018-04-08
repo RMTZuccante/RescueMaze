@@ -32,6 +32,5 @@ class Matrix {
   private:
     void inspect(RobotData *data);
     void getInfo();
-    String readLine();
 };
 #endif

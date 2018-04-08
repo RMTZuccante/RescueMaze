@@ -18,7 +18,6 @@ public:
   void setLevel(int lvl);
 private:
   String getLevel(int level);
-  String readLine();
   bool ended;
   int level;
   String buffer;

@@ -9,9 +9,9 @@ bool Matrix::check() {
   String m;
   do {
     if (c > 10) return false;
-    m = readLine();
+    m = Serial.readStringUntil(ENDL);
     Serial.println(m);
-    m = readLine();
+    m = Serial.readStringUntil(ENDL);
     c++;
   } while (m != "ok");
   return true;
@@ -23,7 +23,7 @@ bool Matrix::check() {
  */
 int Matrix::getDebug() {
   Serial.print("debuglevel");
-  return readLine()[0] - '0';
+  return Serial.readStringUntil(ENDL)[0] - '0';
 }
 
 /**
@@ -91,7 +91,7 @@ void Matrix::die() {
  */
 bool Matrix::wasPaused() {
   Serial.println("paused");
-  return readLine()[0] - '0';
+  return Serial.readStringUntil(ENDL)[0] - '0';
 }
 
 /**
@@ -104,7 +104,7 @@ bool Matrix::isOriented(RobotData* data) {
   Serial.print(data->dist[RIGHT]);
   Serial.print(' ');
   Serial.print(data->dist[LEFT]);
-  return readLine()[0] - '0';
+  return Serial.readStringUntil(ENDL)[0] - '0';
 }
 
 /**
@@ -113,7 +113,7 @@ bool Matrix::isOriented(RobotData* data) {
  */
 int Matrix::getDir() {
   Serial.println("getdir");
-  return readLine().toInt();
+  return Serial.readStringUntil(ENDL).toInt();
 }
 
 /**
@@ -122,7 +122,7 @@ int Matrix::getDir() {
  */
 bool Matrix::end() {
   Serial.println("end");
-  return readLine()[0] - '0';
+  return Serial.readStringUntil(ENDL)[0] - '0';
 }
 
 /**
@@ -151,23 +151,7 @@ void Matrix::inspect(RobotData *data) {
  */
 void Matrix::getInfo() {
   Serial.println("getinfo");
-  String s = readLine();
+  String s = Serial.readStringUntil(ENDL);
   black = s[0] - '0';
   victim = s[2]  - '0';
-}
-
-/**
- * Reads a single line from the Raspberry.
- * @return The line read.
- */
-String Matrix::readLine() {
-  while (!Serial.available());
-  String s;
-  char c = Serial.read();
-  do {
-    s += c;
-    while (!Serial.available());
-    c = Serial.read();
-  } while (c != '\n');
-  return s;
 }
