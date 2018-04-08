@@ -1,3 +1,4 @@
+#include "definitions.h"
 #include "Debug.h"
 #include "Robot.h"
 #include "Matrix.h"
@@ -9,11 +10,19 @@ TwoWire I2C_2(2);
 Robot robot;
 Matrix matrix;
 
+void pause() {
+  
+}
+
 void setup() {
+  //I/O initialization
+  pinMode(LED_BUILTIN, OUTPUT);
+  pinMode(PUSHBUTTON, INPUT_PULLUP);
+  pinMode(RASP1, INPUT_PULLUP);
+  digitalWrite(LED_BUILTIN, LOW);
+
   //Hardware initialization
-  pinMode(PC13, OUTPUT);
-  digitalWrite(PC13, LOW);
-  Serial.begin(115200);
+  Serial.begin();
   I2C_1.begin();
   I2C_2.begin();
   robot.setup();
@@ -23,11 +32,19 @@ void setup() {
   bool ok = matrix.check() && robot.check() && robot.checkBattery();
   Debug.println("Check done.", LVL_INFO);
   if(!ok) Debug.println("Something is not working correctly. Proceed at your own risk!",LVL_WARN);
-  digitalWrite(PC13, ok);
+  digitalWrite(LED_BUILTIN, ok);
   
   //Sensors initialization
   robot.begin();
   Debug.println("Software initialization done.", LVL_INFO);
+
+  //Waiting user start command
+  while(digitalRead(PUSHBUTTON));
+
+  //Attaching interrupts
+  attachInterrupt(PUSHBUTTON, stop, FALLING);
+  attachInterrupt(RASP1, nvic_sys_reset, FALLING);
+  
   Debug.println("STARTING!", LVL_INFO);
 }
 

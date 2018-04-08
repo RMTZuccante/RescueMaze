@@ -37,7 +37,7 @@
 #define L_RIGHT 0x2B
 #define L_FRONTR 0x2C
 
-//Motors
+//Motors pins
 #define FR_IN1 PA3
 #define FR_IN2 PA2
 #define RL_IN1 PA6
@@ -47,7 +47,7 @@
 #define RR_IN1 PA1
 #define RR_IN2 PA0
 
-//Laser pin
+//Laser pins
 #define LX_FRONTL PA5
 #define LX_LEFT PA10
 #define LX_RIGHT PA15
@@ -61,5 +61,10 @@
 #define B_PIN PA4
 #define B_R1 68000
 #define B_R2 22000
+
+//Interrupts
+#define PUSHBUTTON PB3
+#define RASP1 PB4
+#define RASP2 PB5
 
 #endif
