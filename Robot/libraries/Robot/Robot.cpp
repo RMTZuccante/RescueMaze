@@ -195,10 +195,18 @@ uint16_t Robot::endDist(uint16_t distance) {
 void Robot::straighten(){
   laser[0].start();
   laser[3].start();
-  uint16_t laser1=laser[0].read();
-  uint16_t laser2=laser[3].read();
-  
+  mov.rotation(laser[0].read()>laser[3].read());
   int dif;
+  do{
+   dif=0;
+   for(int i = 0 ; i<3; i++){
+      dif=dif+laser[0].read();
+      dif=dif-laser[3].read();
+      dif=dif+LASER_DIF;
+    }
+    dif=dif/3;
+  }while( dif > 2 || dif < -2);
+  mov.stop();
   do{
     laser[0].read();
     laser[3].read();
@@ -212,9 +220,6 @@ void Robot::straighten(){
     Debug.println(String(dif));
     mov.rotate((dif > 0) , 1);
   }while( dif > 1 || dif < -1);
-  
-  //(laser1 > laser2) ? mov.rotate(true,atan2((laser1-laser2),LASER_DIST)*180) : mov.rotate(false,atan2((laser2-laser1),LASER_DIST)*180);
-  
   laser[0].stop();
   laser[3].stop();
 }
