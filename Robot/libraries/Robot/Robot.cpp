@@ -29,6 +29,8 @@ void Robot::laserTest() {
   Debug.print(String(laser[2].read()));
   Debug.print(" 3: ");
   Debug.println(String(laser[3].read()));
+  Debug.println(String(laser[0].read()-laser[3].read()));
+  Debug.println(String(laser[1].read()-laser[0].read()));
 }
 
 void Robot::climb() {
@@ -195,21 +197,23 @@ void Robot::straighten(){
   laser[3].start();
   uint16_t laser1=laser[0].read();
   uint16_t laser2=laser[3].read();
-  /*
-    int dif;
-    do{
+  
+  int dif;
+  do{
     laser[0].read();
     laser[3].read();
   	dif=0;
   	for(int i = 0 ; i<3; i++){
       dif=dif+laser[0].read();
       dif=dif-laser[3].read();
+      dif=dif+LASER_DIF;
     }
     dif=dif/3;
+    Debug.println(String(dif));
     mov.rotate((dif > 0) , 1);
-  }while( dif > 5 || dif < -5);
-  */
-  //(laser1 > laser2) ? mov.rotate(true,atan2((laser1-laser2),LASER_DIST)) : mov.rotate(false,atan2((laser2-laser1),LASER_DIST));
+  }while( dif > 1 || dif < -1);
+  
+  //(laser1 > laser2) ? mov.rotate(true,atan2((laser1-laser2),LASER_DIST)*180) : mov.rotate(false,atan2((laser2-laser1),LASER_DIST)*180);
   
   laser[0].stop();
   laser[3].stop();
