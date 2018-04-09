@@ -23,7 +23,7 @@ void setup() {
   digitalWrite(LED_BUILTIN, LOW);
 
   //Hardware initialization
-  Serial.begin();
+  Serial.begin(115200);
   I2C_1.begin();
   I2C_2.begin();
   robot.setup();

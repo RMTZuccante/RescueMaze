@@ -6,7 +6,7 @@
 
 class SerialDebug {
 public:
-  SerialDebug() : ended(true) {}
+  SerialDebug() : ended(true), level(LVL_DEBUG) {}
   
   void print(String st, int level);
   void println(String st, int level);

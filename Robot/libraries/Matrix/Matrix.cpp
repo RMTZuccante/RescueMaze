@@ -22,7 +22,7 @@ bool Matrix::check() {
  * @return Debug level to use.
  */
 int Matrix::getDebug() {
-  Serial.print("debuglevel");
+  Serial.println("debuglevel");
   return Serial.readStringUntil(ENDL)[0] - '0';
 }
 

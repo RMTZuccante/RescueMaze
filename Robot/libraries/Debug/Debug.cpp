@@ -47,7 +47,7 @@ void SerialDebug::println(String st) {
  * @param t Time to wait in microseconds.
  */
 void SerialDebug::delay(int t) {
-  if(level==LVL_DEBUG) delay(t);
+  if(level>=LVL_DEBUG) delay(t);
 }
 
 /**
@@ -76,7 +76,7 @@ String SerialDebug::getLevel(int level) {
  * Waits until "ok" is read from the serial port.
  */
 void SerialDebug::wait() {
-  if(level==LVL_DEBUG) {
+  if(level>=LVL_DEBUG) {
     Serial.println("Waiting...");
     String m;
     do {
