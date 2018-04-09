@@ -24,9 +24,6 @@
 #define LVL_INFO 2
 #define LVL_DEBUG 3
 
-//Miscellaneous
-#define ENDL '\n'
-
 //Color address
 #define COLORADDRESS 0x42
 

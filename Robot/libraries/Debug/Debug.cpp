@@ -80,7 +80,23 @@ void SerialDebug::wait() {
     Serial.println("Waiting...");
     String m;
     do {
-      m = Serial.readStringUntil(ENDL);
+      m = readLine();
     } while (m != "ok");
   }
+}
+
+/**
+ * Reads a single line from the serial port.
+ * @return The line read.
+ */
+String SerialDebug::readLine() {
+  while (!Serial.available());
+  String s;
+  char c = Serial.read();
+  do {
+    s += c;
+    while (!Serial.available());
+    c = Serial.read();
+  } while (c != '\n');
+  return s;
 }
