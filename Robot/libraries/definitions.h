@@ -17,6 +17,7 @@
 #define CELL 200
 #define LASER_DIF -1
 #define TEMP_DIF 1.0
+#define TEMP_K 23.0
 
 //Color
 #define MERROR 70
@@ -62,7 +63,7 @@
 #define CAGA1 9
 #define CAGA2 8
 #define CAGADEL 1000
-#define CAGADIST 200
+#define CAGADIST 30
 #define MINDEL 40
 
 //RGB

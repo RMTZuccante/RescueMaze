@@ -18,7 +18,7 @@ void Robot::begin() {
   for (int i = 0 ; i < 5 ; i++) laser[i].begin();
   for (int i = 0 ; i < 5 ; i++) laser[i].start();
   //tempk = (tempL.read()+tempL.read())/2+TEMP_DIF;
-  tempk=23.0;
+  tempk=TEMP_K;
 }
 
 void Robot::tempTest(){
@@ -100,7 +100,7 @@ int Robot::go(){
  * @return FALSE if it found a black cell
  */
 int Robot::go(bool frontLaser) {
-  int dist = frontLaser ? ( (laser[0].read()>laser[3].read()) ? 0 : 3 ) : 4;
+  int dist = frontLaser ? ( (laser[0].read()<laser[3].read()) ? 0 : 3 ) : 4;
   uint16_t end = endDist(laser[dist].read(),frontLaser);
   int i = 0;
   int salita = 0;
@@ -167,7 +167,7 @@ int Robot::go(bool frontLaser) {
  * Goes back to the center of the cell.
  */
 void Robot::back() {
-  int dist = ( (laser[0].read()<2000) ? ( (laser[0].read()>laser[3].read()) ? 0 : 3 ) : 4);
+  int dist = ( (laser[0].read()<2000) ? ( (laser[0].read()<laser[3].read()) ? 0 : 3 ) : 4);
   Debug.println(String("back"));
   uint16_t end = endDist(laser[dist].read(), dist!=4) + CELL_DIM;
   Debug.println(String("end ") + String(end));
@@ -183,7 +183,13 @@ void Robot::back() {
  * @param dir TRUE to turn right, false to turn left
  */
 void Robot::rotate(bool dir) {
+
+
+  
   mov.rotate(dir);
+
+
+  
   straighten();  
 }
 
@@ -276,7 +282,7 @@ uint16_t Robot::endDist(uint16_t distance, bool front) {
 void Robot::straighten(){
   int dif;
   dif=difLaser();
-  if(((laser[0].read() <= CENTRED<<1)&&(laser[3].read() <= CENTRED<<1)) && (dif > 5 ||  dif < -5)){
+  if(((laser[0].read() <= CENTRED<<1)&&(laser[3].read() <= CENTRED<<1)) && (dif > 6 ||  dif < -6)){
     mov.rotation(dif>0);
     do{
       dif=difLaser();
