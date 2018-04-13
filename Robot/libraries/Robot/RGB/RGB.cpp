@@ -26,7 +26,7 @@ void RGB::begin() {
  * @param blue Intensity of the blue led
  */
 void RGB::set(bool red, bool green, bool blue) {
-  digitalWrite(pin[0], !red);
-  digitalWrite(pin[1], !green);
-  digitalWrite(pin[2], !blue);
+  digitalWrite(pin[0], red);
+  digitalWrite(pin[1], green);
+  digitalWrite(pin[2], blue);
 }

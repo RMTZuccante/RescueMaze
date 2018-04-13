@@ -3,6 +3,7 @@
 
 #include <Arduino.h>
 #include "I2C.h"
+#include "Debug.h"
 
 #define MLX90614_TA 0x06
 #define MLX90614_TOBJ1 0x07

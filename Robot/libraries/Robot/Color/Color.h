@@ -3,6 +3,7 @@
 
 #include <Arduino.h>
 #include "definitions.h"
+#include "Debug.h"
 #include "I2C.h"
 
 class Color {

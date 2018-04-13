@@ -13,17 +13,18 @@ class Moviment {
     bool check();
     void go();
     void go (bool invert);
+    void impennati(uint16_t speed);    
     void straight();
     void endGo();
     void rotate();
-    void climb();
+    void climb(int k);
     void rotation(bool invert);
     void rotate (bool invert);
     void rotate (bool invert, float angle);
     void stop();
     void setSpeed(uint16_t speed);
     void setK(int rightK, int leftK);
-    float getPitch();
+    float inclination();
     void idle();
   private:
     uint16_t bound (uint32_t n, uint16_t max);

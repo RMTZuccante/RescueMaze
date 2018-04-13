@@ -2,6 +2,7 @@
 #define VL53L0X_h
 
 #include <Arduino.h>
+#include "Debug.h"
 #include "I2C.h"
 
 class VL53L0X {

@@ -26,7 +26,9 @@ void Color::begin() {
  */
 bool Color::check() {
   I2C_1.beginTransmission(COLORADDRESS);
-  return !I2C_1.endTransmission();
+  bool ok = !I2C_1.endTransmission();
+  if (!ok) Debug.println(String("Color sensor not detected."), LVL_WARN);
+  return ok;
 }
 
 /**

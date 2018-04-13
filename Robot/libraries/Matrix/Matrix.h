@@ -21,6 +21,8 @@ class Matrix {
     void checkpoint();
     void backToStart();
     void die();
+
+    void sendRise(bool rise);
     
     bool wasPaused();
     bool isOriented(RobotData* data);

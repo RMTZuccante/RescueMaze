@@ -1,5 +1,5 @@
 #include "Moviment.h"
-
+#include "Debug.h"
 /**
  * Sets the movement speed and default parameters.
  */
@@ -34,18 +34,27 @@ bool Moviment::check() {
 /**
  * Sets the motors to high speed to easily climb.
  */
-void Moviment::climb() {
-  motorFR.start(50000, false);
-  motorFL.start(50000, false);
-  motorRR.start(20000, false);
-  motorRL.start(20000, false);
+void Moviment::climb(int k) {
+  k=-k*CLIMB_K;
+  motorFR.start(bound(50000+k,65535), false);
+  motorFL.start(bound(50000-k,65535), false);
+  motorRR.start(bound(20000+k,65535), false);
+  motorRL.start(bound(20000-k,65535), false);
 }
+/**
+ * Makes the robot IMPENNARSI!!!
+ */
 
+void Moviment::impennati(uint16_t speed){
+  motorRR.start(bound(speed, 65535), false);
+  motorRL.start(bound(speed, 65535), false);
+}
+ 
 /**
  * Moves the robot forward.
  */
 void Moviment::go() {
-  go(true);
+  go(false);
 }
 
 /**
@@ -55,10 +64,10 @@ void Moviment::go() {
 void Moviment::go(bool invert) {
   orientation.start(20);
   direzione = orientation.yaw();
-  motorFR.start(bound(speed, 65535), !invert);
-  motorFL.start(bound(speed, 65535), !invert);
-  motorRR.start(bound(speed, 65535), !invert);
-  motorRL.start(bound(speed, 65535), !invert);
+  motorFR.start(bound(speed, 65535), invert);
+  motorFL.start(bound(speed, 65535), invert);
+  motorRR.start(bound(speed, 65535), invert);
+  motorRL.start(bound(speed, 65535), invert);
 }
 
 /**
@@ -104,6 +113,7 @@ void Moviment::rotation(bool invert){
  */
 void Moviment::rotate(bool invert) {
   rotate(invert, 90);
+  //delay(1000);
 }
 
 /**
@@ -112,6 +122,7 @@ void Moviment::rotate(bool invert) {
  * @param angle The angle by.
  */
 void Moviment::rotate(bool invert , float angle) {
+  Debug.println("rotate start");
   orientation.start(100);
   float end = endAngle(orientation.yaw(), invert , angle);
   end-=fill;
@@ -146,6 +157,7 @@ void Moviment::rotate(bool invert , float angle) {
   stop();
   setK(0, 0);
   fill=(orientation.yaw()-end);
+  Debug.println("rotate end");
 }
 
 /**
@@ -238,11 +250,11 @@ uint16_t Moviment::bound(uint32_t n, uint16_t max) {
 }
 
 /**
- * Reads the pitch from the orientation sensor.
- * @return The already corrected pitch.
+ * Reads the inclination from the orientation sensor.
+ * @return The already corrected inclination.
  */
-float Moviment::getPitch() {
-  return orientation.pitch();
+float Moviment::inclination() {
+  return orientation.inclination();
 }
 
 /**

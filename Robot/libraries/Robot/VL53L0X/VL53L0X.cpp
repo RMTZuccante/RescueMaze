@@ -664,7 +664,9 @@ void VL53L0X::begin() {
  */
 bool VL53L0X::check() {
   I2C_1.beginTransmission(address);
-  return !I2C_1.endTransmission();
+  bool ok = !I2C_1.endTransmission();
+  if(!ok) Debug.println(String("Laser sensor at address ") + String(address, HEX) + " not found.", LVL_WARN);
+  return ok;
 }
 
 /**

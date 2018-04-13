@@ -8,6 +8,7 @@
 #include "I2C.h"
 #include "Debug.h"
 #include "Moviment.h"
+#include "Cagamattoni.h"
 #include "Color.h"
 #include "Temperature.h"
 #include "RGB.h"
@@ -32,12 +33,14 @@ class Robot {
     RobotData* read();
 
     void straighten();
-    bool go();
+    int go();
+    int go(bool frontLaser);
     void back();
     void rotate(bool dir);
-    void victim();
-    void climb();
+    void victim(int n);
+    void climb(int k);
     void laserTest();
+    void tempTest();
     void setLED(bool red, bool green, bool blue);
 
     void delay(unsigned int t);
@@ -47,11 +50,16 @@ class Robot {
     Temperature tempL = Temperature(T_LEFT);
     Temperature tempR = Temperature(T_RIGHT);
     RGB led = RGB(RED, GREEN, BLUE);
-    VL53L0X laser[4] = {VL53L0X(), VL53L0X(), VL53L0X(), VL53L0X()};
+    VL53L0X laser[5] = {VL53L0X(), VL53L0X(), VL53L0X(), VL53L0X(), VL53L0X()};
+    Cagamattoni caga = Cagamattoni(5,&laser[4]);
 
+    float tempk;
+    int difLaser();
     float getBattery();
     void setAddresses();
-    uint16_t endDist(uint16_t distance);
+    uint16_t endDist(uint16_t distance, bool front);
+    bool isVictimL;
+    bool isVictimR;
 };
 
 #endif

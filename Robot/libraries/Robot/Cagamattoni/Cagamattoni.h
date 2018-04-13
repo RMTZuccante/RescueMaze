@@ -2,16 +2,12 @@
 #define CAGAMATTONI_H
 
 #include <Arduino.h>
-
-#define PIN1 6
-#define PIN2 7
-
-#define DELAY 869.56
-#define MINDEL 200
+#include "VL53L0X.h"
+#include "definitions.h"
 
 class Cagamattoni {
   public :
-    Cagamattoni(int ntappi);
+    Cagamattoni(int ntappi, VL53L0X* laser);
     void caga();
     bool isEmpty();
     void turnOut();
@@ -20,6 +16,7 @@ class Cagamattoni {
     void begin();
   private :
     byte kits;
+    VL53L0X* laser;
 };
 
 #endif

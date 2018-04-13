@@ -1,5 +1,4 @@
 #include "Robot.h";
-
 /**
  * Sets sensors to be used.
  * This function has to be called before doing everything else or the robot will crash.
@@ -12,10 +11,23 @@ void Robot::setup() {
  * Begins all sensors.
  */
 void Robot::begin() {  
-  for (int i = 0 ; i < 4 ; i++) laser[i].begin();
+  led.begin();
   color.begin();
+  caga.begin();
   mov.begin();
+  for (int i = 0 ; i < 5 ; i++) laser[i].begin();
+  for (int i = 0 ; i < 5 ; i++) laser[i].start();
+  //tempk = (tempL.read()+tempL.read())/2+TEMP_DIF;
+  tempk=23.0;
 }
+
+void Robot::tempTest(){
+  Debug.print(" tempL: ");
+  Debug.print(String(tempL.read()));
+  Debug.print(" tempR: ");
+  Debug.println(String(tempR.read()));
+}
+
 
 /**
  * Prints one reading from each distance sensor.
@@ -28,13 +40,16 @@ void Robot::laserTest() {
   Debug.print(" 2: ");
   Debug.print(String(laser[2].read()));
   Debug.print(" 3: ");
-  Debug.println(String(laser[3].read()));
-  Debug.println(String(laser[0].read()-laser[3].read()));
-  Debug.println(String(laser[1].read()-laser[0].read()));
+  Debug.print(String(laser[3].read()));
+  Debug.print(" 4: ");
+  Debug.println(String(laser[4].read()));
+  //Debug.println(String(laser[0].read()-laser[3].read()));
+  //Debug.println(String(laser[1].read()-laser[0].read()));
 }
 
-void Robot::climb() {
-  mov.stop();
+void Robot::climb(int k) {
+  Debug.println(String("climb"),LVL_INFO);
+  mov.climb(k);
 }
 
 /**
@@ -43,7 +58,7 @@ void Robot::climb() {
  */
 bool Robot::check() {
   bool ok = true;
-  for (int i = 0 ; i < 4 ; i++) ok &= laser[i].check();
+  for (int i = 0 ; i < 5 ; i++) ok &= laser[i].check();
   return ok && color.check() && mov.check();
 }
 
@@ -67,11 +82,16 @@ RobotData* Robot::read() {
   RobotData *data = new RobotData();
   for (int i = 0; i < 3; i++) data->dist[i] = laser[i].read();
   data->color = color.read();
-  float tempAmb = (tempL.readAmb() + tempR.readAmb()) / 2;
-  data->tempL = tempL.read() - tempAmb;
-  data->tempR = tempR.read() - tempAmb;
-  data->pitch = mov.getPitch();
+  //float tempAmb = (tempL.readAmb() + tempR.readAmb()) / 2;
+  data->tempL = isVictimL ? 10 : (tempL.read() - tempk);
+  data->tempR = isVictimR ? 10 : (tempR.read() - tempk);
+  isVictimL = isVictimR = false;
+  data->pitch = mov.inclination();
   return data;
+}
+
+int Robot::go(){
+  return go(laser[0].read()<2000);
 }
 
 /**
@@ -79,49 +99,83 @@ RobotData* Robot::read() {
  * Tries to go forward by 30 cm, but stops and goes back if a black cell is detected.
  * @return FALSE if it found a black cell
  */
-bool Robot::go() {
-  laser[0].start();
-  delay(50);
-  laser[0].read();
-  uint16_t end = endDist(laser[0].read());
+int Robot::go(bool frontLaser) {
+  int dist = frontLaser ? ( (laser[0].read()>laser[3].read()) ? 0 : 3 ) : 4;
+  uint16_t end = endDist(laser[dist].read(),frontLaser);
   int i = 0;
-  uint16_t front = laser[0].read();
-  bool black = (color.read() == 2);
+  int salita = 0;
+  uint16_t front = laser[dist].read();
+  uint16_t before = front;
+  int sol = (color.read() == 2);
+  
+  Debug.println(String(sol));
   mov.go();
-  while (laser[0].read() > end && !black) {
+  
+  Debug.println(String("start go "));
+  Debug.println(String("First read: ")+front);
+  while ( ( (frontLaser) ? (front > end) : (front < end)) && sol!=1) {
     if (i == 100) {
-      uint16_t now = laser[0].read();
-      if ( ( (front > now) ? front - now : now - front ) < 5) {
-        mov.setSpeed(65355);
-        delay(200);
+      uint16_t now = laser[dist].read();
+      if ( ( (before > now) ? before - now : now - before ) < 5) {
+        mov.impennati(65535);
+        while( ( (before > now) ? before - now : now - before ) < 5){
+          now = laser[dist].read();
+        }
       }
-      front = now;
+      before = now;
       i = 0;
-      black = (color.read() == 2);
     }
     i++;
-    uint16_t front = laser[0].read();
-    mov.setSpeed(((laser[0].read() - end) * 20) + SPEED);
+    front = laser[dist].read();
+    Debug.println(String("Laser read: ")+front);
+    mov.setSpeed(((front - end) * 10) + SPEED);
     mov.straight();
+    float incl=mov.inclination();
+    (abs(incl) > 10) ? salita++ : salita=0;
+    if(salita >= 10){
+      Debug.println("salita");
+      Debug.println("incl");
+      sol = (incl > 0) ? 2 : -2;
+      delay(50);
+      while(abs(mov.inclination()) > 8){
+        int dif=laser[2].read();
+        dif=dif-laser[1].read();
+        climb(dif);
+      }
+      end = endDist(laser[dist].read(),front);
+    }
+    if(color.read() == 2) sol=1;
+    
+    float tempAmb = (tempL.readAmb() + tempR.readAmb()) / 2;
+    isVictimL |= (tempL.read()) > tempk;
+    isVictimR |= (tempR.read()) > tempk;
   }
-  mov.go(false);
   mov.stop();
+  if(sol==1){
+    Debug.println(String("Call to back"));
+    back();
+  }
   mov.endGo();
   mov.stop();
-  laser[0].stop();
-  return !black;
+  
+  Debug.println(String("stop "));
+  straighten();
+  return sol;
 }
 
 /**
  * Goes back to the center of the cell.
  */
 void Robot::back() {
-  laser[0].start();
-  uint16_t end = endDist(laser[0].read()) + 300;
+  int dist = ( (laser[0].read()<2000) ? ( (laser[0].read()>laser[3].read()) ? 0 : 3 ) : 4);
+  Debug.println(String("back"));
+  uint16_t end = endDist(laser[dist].read(), dist!=4) + CELL_DIM;
+  Debug.println(String("end ") + String(end));
   mov.go(true);
-  while (laser[0].read() < end);
+  uint16_t distance = laser[dist].read();
+  if (dist!=4)while (laser[dist].read() < end)distance = laser[dist].read();
+  else while (laser[dist].read() > end)distance = laser[dist].read();
   mov.stop();
-  laser[0].stop();
 }
 
 /**
@@ -130,19 +184,32 @@ void Robot::back() {
  */
 void Robot::rotate(bool dir) {
   mov.rotate(dir);
+  straighten();  
 }
 
 /**
  * Signals if a victim has been found using led and cagamattoni.
  */
-void Robot::victim() {
-  //cagamattoni.caga();
-  for (int i = 0; i < 5; i++) {
-    led.set(HIGH, LOW, LOW);
-    delay(100);
-    led.set(LOW, LOW, LOW);
-    delay(100);
+void Robot::victim(int n) {
+  Debug.println("Victim found!");
+  led.set(LOW, LOW, HIGH);
+
+  int time = millis()+5000;
+  
+  if (!caga.isEmpty()) {
+    for(int i = 0; i < n; i++) caga.caga();
   }
+  else {
+    for(int i = 0; i < 5; i++) {
+      led.set(LOW, LOW, HIGH);
+      delay(500);
+      led.set(LOW, LOW, LOW);
+      delay(500);
+    }
+  }
+  
+  while(millis() < time);
+  led.set(LOW, LOW, LOW);
 }
 
 /**
@@ -162,15 +229,13 @@ void Robot::setAddresses() {
   pinMode(LX_LEFT, OUTPUT_OPEN_DRAIN);
   pinMode(LX_RIGHT, OUTPUT_OPEN_DRAIN);
   pinMode(LX_FRONTL, OUTPUT_OPEN_DRAIN);
+  pinMode(LX_BACK, OUTPUT_OPEN_DRAIN);
   digitalWrite(LX_LEFT, LOW);
   digitalWrite(LX_RIGHT, LOW);
   digitalWrite(LX_FRONTL, LOW);
+  digitalWrite(LX_BACK, LOW);
 
   laser[0].setAddress(L_FRONTR);
-  
-  digitalWrite(LX_FRONTL, HIGH);
-  delay(10);
-  laser[3].setAddress(L_FRONTL);
   
   digitalWrite(LX_RIGHT, HIGH);
   delay(10);
@@ -179,6 +244,14 @@ void Robot::setAddresses() {
   digitalWrite(LX_LEFT, HIGH);
   delay(10);
   laser[2].setAddress(L_LEFT);
+  
+  digitalWrite(LX_FRONTL, HIGH);
+  delay(10);
+  laser[3].setAddress(L_FRONTL);
+  
+  digitalWrite(LX_BACK, HIGH);
+  delay(10);
+  laser[4].setAddress(L_BACK);
 }
 
 /**
@@ -186,9 +259,14 @@ void Robot::setAddresses() {
  * @param distance Distance read from the sensor
  * @return
  */
-uint16_t Robot::endDist(uint16_t distance) {
-  distance = distance > CELL ? distance - CELL : 0;;
-  return distance - ((distance) % 300) + CENTRED;
+uint16_t Robot::endDist(uint16_t distance, bool front) {
+  if(front){
+    distance = distance > CELL ? distance - CELL : 0;
+    return distance - ((distance) % CELL_DIM) + ((distance<CELL_DIM) ? CENTRED : CENTRED2);
+  }
+  distance = distance + CELL;
+  return distance - ((distance) % CELL_DIM) + ((distance<CELL_DIM) ? CENTRED : CENTRED2) + CELL_DIM;
+  
 }
 
 /**
@@ -196,37 +274,37 @@ uint16_t Robot::endDist(uint16_t distance) {
  * Using the two distance sensors tries to place the robot parallel to a wall.
  */
 void Robot::straighten(){
-  laser[0].start();
-  laser[3].start();
-  mov.rotation(laser[0].read()>laser[3].read());
   int dif;
-  do{
-   dif=0;
-   for(int i = 0 ; i<3; i++){
-      dif=dif+laser[0].read();
-      dif=dif-laser[3].read();
-      dif=dif+LASER_DIF;
-    }
-    dif=dif/3;
-  }while( dif > 2 || dif < -2);
-  mov.stop();
-  do{
-    laser[0].read();
-    laser[3].read();
-  	dif=0;
-  	for(int i = 0 ; i<3; i++){
-      dif=dif+laser[0].read();
-      dif=dif-laser[3].read();
-      dif=dif+LASER_DIF;
-    }
-    dif=dif/3;
-    Debug.println(String(dif));
-    mov.rotate((dif > 0) , 1);
-  }while( dif > 1 || dif < -1);
-  laser[0].stop();
-  laser[3].stop();
+  dif=difLaser();
+  if(((laser[0].read() <= CENTRED<<1)&&(laser[3].read() <= CENTRED<<1)) && (dif > 5 ||  dif < -5)){
+    mov.rotation(dif>0);
+    do{
+      dif=difLaser();
+    }while( dif > 2|| dif < -2);
+    mov.stop();
+    delay(500);
+//    do{
+//      dif=difLaser();
+//      mov.rotate((dif > 0) , 1);
+//    }while( dif > 2|| dif < -2);
+  }
 }
 
+/**
+ * Returns the difference of the front lasers 
+ */
+
+int Robot::difLaser(){
+  int dif=0;
+  //for(int i = 0 ; i<3; i++){
+  dif=dif+laser[0].read();
+  dif=dif-laser[3].read();
+  dif=dif+LASER_DIF;
+  //dif=dif/3;
+  Debug.println(String("dif ")+String(dif));
+  return dif;
+}
+ 
 /**
  * Reads the battery current voltage.
  * @return The already corrected battery voltage in Volts.

@@ -19,6 +19,8 @@ void IMU::begin() {
  * @return TRUE if the IMU works.
  */
 bool IMU::check() {
+  bool ok = imu.check();
+  if (!ok) Debug.println(String("IMU not found."), LVL_WARN);
   return imu.check();
 }
 
@@ -64,6 +66,11 @@ float IMU::pitch() {
 float IMU::roll() {
   update();
   return filter.getRoll();
+}
+
+float IMU::inclination() {
+  imu.readAccel();
+  return atan2(imu.a[0], imu.a[2])*180./PI;
 }
 
 /**

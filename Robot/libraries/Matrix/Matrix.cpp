@@ -27,6 +27,27 @@ int Matrix::getDebug() {
 }
 
 /**
+ * 
+ */
+
+void Matrix::sendRise(bool rise){
+  Serial.print("check ");
+  Serial.print(300);
+  Serial.print(' ');
+  Serial.print(0);
+  Serial.print(' ');
+  Serial.print(0);
+  Serial.print(' ');
+  Serial.print(0);
+  Serial.print(' ');
+  Serial.print(0);
+  Serial.print(' ');
+  Serial.print(0);
+  Serial.print(' ');
+  Serial.println(rise ? 30 : -30);
+}
+ 
+/**
  * Sends the data given to the Raspberry.
  * @param data A data package.
  */
@@ -103,7 +124,7 @@ bool Matrix::isOriented(RobotData* data) {
   Serial.print(' ');
   Serial.print(data->dist[RIGHT]);
   Serial.print(' ');
-  Serial.print(data->dist[LEFT]);
+  Serial.println(data->dist[LEFT]);
   return readLine()[0] - '0';
 }
 

@@ -1,6 +1,7 @@
 #ifndef IMU_h
 #define IMU_h
 
+#include "Debug.h"
 #include "MadgwickAHRS.h"
 #include "MPU6050.h"
 
@@ -13,6 +14,7 @@ class IMU {
     float yaw();
     float pitch();
     float roll();
+    float inclination();
     float getTemperature();
     void calibrate();
     void update();
