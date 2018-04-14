@@ -83,8 +83,8 @@ RobotData* Robot::read() {
   for (int i = 0; i < 3; i++) data->dist[i] = laser[i].read();
   data->color = color.read();
   //float tempAmb = (tempL.readAmb() + tempR.readAmb()) / 2;
-  data->tempL = isVictimL ? 10 : (tempL.read() - tempk);
-  data->tempR = isVictimR ? 10 : (tempR.read() - tempk);
+  data->tempL = isVictimL ? 10 : (tempL.read());
+  data->tempR = isVictimR ? 10 : (tempR.read());
   isVictimL = isVictimR = false;
   data->pitch = mov.inclination();
   return data;
@@ -208,7 +208,10 @@ void Robot::victim(int n) {
   int time = millis()+5000;
   
   if (!caga.isEmpty()) {
-    for(int i = 0; i < n; i++) caga.caga();
+    for(int i = 0; i < n; i++) {
+      caga.caga();
+      delay(50);
+    }
   }
   else {
     for(int i = 0; i < 5; i++) {

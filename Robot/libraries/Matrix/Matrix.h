@@ -29,7 +29,7 @@ class Matrix {
     int getDir();
     bool end();
 
-    bool victim;
+    uint8_t victim;
     bool black;
   private:
     void inspect(RobotData *data);
