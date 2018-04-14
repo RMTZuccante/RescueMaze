@@ -3,8 +3,10 @@
 /**
  * Sets the movement speed and default parameters.
  */
-Moviment::Moviment (uint16_t speed) {
+Moviment::Moviment (uint16_t speed, Temperature *tl, Temperature *tr) {
   this->speed = speed;
+  tleft = tl;
+  tright = tr;
   fill=0;
 }
 
@@ -111,8 +113,8 @@ void Moviment::rotation(bool invert){
  * Rotates the robot by 90 degrees.
  * @param invert Rotates right if FALSE, left if TRUE.
  */
-void Moviment::rotate(bool invert) {
-  rotate(invert, 90);
+int Moviment::rotate(bool invert) {
+  return rotate(invert, 90);
   //delay(1000);
 }
 
@@ -121,10 +123,12 @@ void Moviment::rotate(bool invert) {
  * @param invert Rotates right if FALSE, left if TRUE.
  * @param angle The angle by.
  */
-void Moviment::rotate(bool invert , float angle) {
+int Moviment::rotate(bool invert , float angle) {
   Debug.println("rotate start");
   orientation.start(100);
   float end = endAngle(orientation.yaw(), invert , angle);
+  bool isVictimL = false;
+  bool isVictimR = false;
   end-=fill;
   if (!invert) {
     if (end > (360 - angle)) {
@@ -134,6 +138,8 @@ void Moviment::rotate(bool invert , float angle) {
     }
     while (orientation.yaw() > end) {
       rotationSpeed(ROTATION_SPEED, invert);
+      isVictimL |= (tleft->read()) > TEMP_K;
+      isVictimR |= (tright->read()) > TEMP_K;
     }
     stop();
     while (orientation.yaw() <= (end)) {
@@ -148,6 +154,8 @@ void Moviment::rotate(bool invert , float angle) {
     }
     while (orientation.yaw() < end) {
       rotationSpeed(ROTATION_SPEED, invert);
+      isVictimL |= (tleft->read()) > TEMP_K;
+      isVictimR |= (tright->read()) > TEMP_K;
     }
     stop();
     while (orientation.yaw() >= (end)) {
@@ -158,6 +166,9 @@ void Moviment::rotate(bool invert , float angle) {
   setK(0, 0);
   fill=(orientation.yaw()-end);
   Debug.println("rotate end");
+  if(isVictimL)return 1;
+  if(isVictimR)return 2;
+  return 0;
 }
 
 /**

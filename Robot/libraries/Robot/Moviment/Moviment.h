@@ -4,11 +4,12 @@
 #include <Arduino.h>
 #include "definitions.h"
 #include "Motor.h"
+#include "Temperature.h"
 #include "IMU.h"
 
 class Moviment {
   public:
-    Moviment (uint16_t speed);
+    Moviment (uint16_t speed, Temperature *tl, Temperature *tr);
     void begin();
     bool check();
     void go();
@@ -19,8 +20,8 @@ class Moviment {
     void rotate();
     void climb(int k);
     void rotation(bool invert);
-    void rotate (bool invert);
-    void rotate (bool invert, float angle);
+    int rotate (bool invert);
+    int rotate (bool invert, float angle);
     void stop();
     void setSpeed(uint16_t speed);
     void setK(int rightK, int leftK);
@@ -36,6 +37,8 @@ class Moviment {
     Motor motorRR = Motor(RL_IN1, RL_IN2);
     Motor motorRL = Motor(RR_IN1, RR_IN2);
     IMU orientation;
+    Temperature *tright;
+    Temperature *tleft;
     uint16_t speed;
     int kR;
     int kL;

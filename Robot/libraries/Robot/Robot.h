@@ -45,10 +45,10 @@ class Robot {
 
     void delay(unsigned int t);
   private:
-    Moviment mov = Moviment(SPEED);
     Color color = Color(MERROR, MCOLOR);
     Temperature tempL = Temperature(T_LEFT);
     Temperature tempR = Temperature(T_RIGHT);
+    Moviment mov = Moviment(SPEED, &tempL, &tempR);
     RGB led = RGB(RED, GREEN, BLUE);
     VL53L0X laser[5] = {VL53L0X(), VL53L0X(), VL53L0X(), VL53L0X(), VL53L0X()};
     Cagamattoni caga = Cagamattoni(5,&laser[4]);

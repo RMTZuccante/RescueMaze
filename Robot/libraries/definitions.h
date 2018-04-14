@@ -17,7 +17,7 @@
 #define CELL 200
 #define LASER_DIF -1
 #define TEMP_DIF 1.0
-#define TEMP_K 23.0
+#define TEMP_K 23
 
 //Color
 #define MERROR 70

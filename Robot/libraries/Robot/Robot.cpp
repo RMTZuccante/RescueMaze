@@ -91,7 +91,7 @@ RobotData* Robot::read() {
 }
 
 int Robot::go(){
-  return go(laser[0].read()<2000);
+  return go(laser[0].read()<1000);
 }
 
 /**
@@ -102,12 +102,13 @@ int Robot::go(){
 int Robot::go(bool frontLaser) {
   int dist = frontLaser ? ( (laser[0].read()<laser[3].read()) ? 0 : 3 ) : 4;
   uint16_t end = endDist(laser[dist].read(),frontLaser);
+  Debug.println(String("End")+String(end));
   int i = 0;
   int salita = 0;
   uint16_t front = laser[dist].read();
   uint16_t before = front;
   int sol = (color.read() == 2);
-  
+  int start = front;
   Debug.println(String(sol));
   mov.go();
   
@@ -147,8 +148,11 @@ int Robot::go(bool frontLaser) {
     if(color.read() == 2) sol=1;
     
     float tempAmb = (tempL.readAmb() + tempR.readAmb()) / 2;
-    isVictimL |= (tempL.read()) > tempk;
-    isVictimR |= (tempR.read()) > tempk;
+    if( abs(start-front) > CENTRED){
+      Debug.println(String("is Victim?"));
+      isVictimL |= (tempL.read()) > tempk;
+      isVictimR |= (tempR.read()) > tempk;
+    }
   }
   mov.stop();
   if(sol==1){
@@ -183,13 +187,14 @@ void Robot::back() {
  * @param dir TRUE to turn right, false to turn left
  */
 void Robot::rotate(bool dir) {
-
-
-  
-  mov.rotate(dir);
-
-
-  
+  switch(mov.rotate(dir)){
+    case 1: 
+      isVictimL=true;
+      break;
+    case 2:
+      isVictimR=true;
+      break;
+  }
   straighten();  
 }
 
