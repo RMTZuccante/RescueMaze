@@ -1,13 +1,6 @@
 #include "IMU.h"
 
 /**
- * Sets the default reading speed.
- */
-IMU::IMU() {
-  microsPerReading = 1000000 / 50;
-}
-
-/**
  * Makes the IMU ready to be read.
  */
 void IMU::begin() {
@@ -68,6 +61,10 @@ float IMU::roll() {
   return filter.getRoll();
 }
 
+/**
+ * Reads the inclination, without using the filter.
+ * @return The already corrected inclination value.
+ */
 float IMU::inclination() {
   imu.readAccel();
   return atan2(imu.a[0], imu.a[2])*180./PI;

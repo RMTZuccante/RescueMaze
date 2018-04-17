@@ -7,7 +7,7 @@
 
 class IMU {
   public:
-    IMU();
+    IMU() : microsPerReading(0) {}
     void begin();
     bool check();
     void start(unsigned long refresh);
