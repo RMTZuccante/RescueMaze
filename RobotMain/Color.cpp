@@ -2,22 +2,20 @@
 
 /**
  * Sets the color sensor parameters.
- * @param merror Mirror detection threshold.
- * @param mcolor Color detection threshold.
  */
-Color::Color(byte merror, byte mcolor) {
-  merr = merror;
-  mcol = mcolor;
+Color::Color() {
+  ambient_light = 0;
+  red_light = 0;
+  green_light = 0;
+  blue_light = 0;
 }
 
 /**
  * Starts the sensor and makes it ready to be read.
  */
 void Color::begin() {
-  I2C_1.beginTransmission(COLORADDRESS);
-  I2C_1.write(10 + merr);
-  I2C_1.write(mcol);
-  I2C_1.endTransmission();
+  apds.init();
+  apds.enableLightSensor(false);
 }
 
 /**
@@ -25,9 +23,9 @@ void Color::begin() {
  * @return TRUE if it works.
  */
 bool Color::check() {
-  I2C_1.beginTransmission(COLORADDRESS);
+  I2C_1.beginTransmission(0x39);
   bool ok = !I2C_1.endTransmission();
-  if (!ok) Debug.println(String("Color sensor not detected."), LVL_WARN);
+  if(!ok) Debug.println(String("Color sensor at address ") + String(0x39, HEX) + " not found.", LVL_WARN);
   return ok;
 }
 
@@ -36,35 +34,10 @@ bool Color::check() {
  * @return 0 if it detects a white cell, 1 for mirror and 2 for black.
  */
 uint8_t Color::read() {
-  return read(0);
-}
-
-/**
- * Reads the avarege raw value of the two IR sensors.
- * @return The reflectance of the surface under the sensor.
- */
-uint8_t Color::readIR() {
-  return read(1);
-}
-
-/**
- * Reads the raw value of the color sensor.
- * @return The color of the surface under the sensor.
- */
-uint8_t Color::readColor() {
-  return read(2);
-}
-
-
-/**
- * Reads the asked value from the sensor.
- * @param data The data to request.
- * @return The value read.
- */
-uint8_t Color::read(uint8_t data) {
-  I2C_1.beginTransmission(COLORADDRESS);
-  I2C_1.write(data);
-  I2C_1.endTransmission();
-  I2C_1.requestFrom(COLORADDRESS, 1);
-  return I2C_1.read();
+  return 0;
+  apds.readAmbientLight(ambient_light);
+  apds.readRedLight(red_light);
+  apds.readGreenLight(green_light);
+  apds.readBlueLight(blue_light);
+  return (green_light > red_light && green_light > blue_light)?1:((ambient_light < 10)?2:0);
 }

@@ -32,10 +32,10 @@ class Moviment {
     float endAngle(float angle, bool invert, float end);
     void rotationSpeed(bool direction , float endRotation);
     void rotationSpeed(uint16_t speed, bool invert);
-    Motor motorFR = Motor(FL_IN1, FL_IN2);
-    Motor motorFL = Motor(FR_IN1, FR_IN2);
-    Motor motorRR = Motor(RL_IN1, RL_IN2);
-    Motor motorRL = Motor(RR_IN1, RR_IN2);
+    Motor motorFR = Motor(FL_IN1, FL_IN2, FL_EN);
+    Motor motorFL = Motor(FR_IN1, FR_IN2, FR_EN);
+    Motor motorRR = Motor(RL_IN1, RL_IN2, RL_EN);
+    Motor motorRL = Motor(RR_IN1, RR_IN2, RR_EN);
     IMU orientation;
     Temperature *tright;
     Temperature *tleft;

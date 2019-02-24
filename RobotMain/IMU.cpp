@@ -75,7 +75,7 @@ float IMU::inclination() {
  * @return The temperature already corrected.
  */
 float IMU::getTemperature() {
-  imu.getTemperature();
+  return imu.getTemperature();
 }
 
 /**

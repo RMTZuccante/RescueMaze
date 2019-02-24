@@ -133,7 +133,7 @@ int Moviment::rotate(bool invert , float angle) {
   if (!invert) {
     if (end > (360 - angle)) {
       rotationSpeed(ROTATION_SPEED, invert);
-      while (orientation.yaw() > 5) {};
+      while (orientation.yaw() > 1) {};
       delay(100);
     }
     while (orientation.yaw() > end) {
@@ -149,7 +149,7 @@ int Moviment::rotate(bool invert , float angle) {
   else {
     if (end < angle) {
       rotationSpeed(ROTATION_SPEED, invert);
-      while (orientation.yaw() < 355) {};
+      while (orientation.yaw() < 359) {};
       delay(100);
     }
     while (orientation.yaw() < end) {

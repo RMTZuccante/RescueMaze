@@ -137,7 +137,7 @@ int Robot::go(bool frontLaser) {
       Debug.println("salita");
       Debug.println("incl");
       sol = (incl > 0) ? 2 : -2;
-      delay(50);
+      delayr(50);
       while(abs(mov.inclination()) > 8){
         int dif=laser[2].read();
         dif=dif-laser[1].read();
@@ -210,15 +210,15 @@ void Robot::victim(int n) {
   if (!caga.isEmpty()) {
     for(int i = 0; i < n; i++) {
       caga.caga();
-      delay(50);
+      delayr(50);
     }
   }
   else {
     for(int i = 0; i < 5; i++) {
       led.set(LOW, LOW, HIGH);
-      delay(500);
+      delayr(500);
       led.set(LOW, LOW, LOW);
-      delay(500);
+      delayr(500);
     }
   }
   
@@ -240,31 +240,29 @@ void Robot::setLED(bool red, bool green, bool blue) {
  * Sets addresses to distance sensors.
  */
 void Robot::setAddresses() {
+  // initializing ToF sensors pins
   pinMode(LX_LEFT, OUTPUT_OPEN_DRAIN);
   pinMode(LX_RIGHT, OUTPUT_OPEN_DRAIN);
-  pinMode(LX_FRONTL, OUTPUT_OPEN_DRAIN);
+  pinMode(LX_FRONTR, OUTPUT_OPEN_DRAIN);
   pinMode(LX_BACK, OUTPUT_OPEN_DRAIN);
+  // turning off every ToF sensor
   digitalWrite(LX_LEFT, LOW);
   digitalWrite(LX_RIGHT, LOW);
-  digitalWrite(LX_FRONTL, LOW);
+  digitalWrite(LX_FRONTR, LOW);
   digitalWrite(LX_BACK, LOW);
-
-  laser[0].setAddress(L_FRONTR);
-  
-  digitalWrite(LX_RIGHT, HIGH);
-  delay(10);
-  laser[1].setAddress(L_RIGHT);
-  
-  digitalWrite(LX_LEFT, HIGH);
-  delay(10);
+  delay(50); // waiting for the sensor to change state
+  laser[0].setAddress(L_FRONTL);
+  digitalWrite(LX_LEFT, HIGH); // turning on left sensor
+  delay(50); // waiting for the sensor to change state
   laser[2].setAddress(L_LEFT);
-  
-  digitalWrite(LX_FRONTL, HIGH);
-  delay(10);
-  laser[3].setAddress(L_FRONTL);
-  
-  digitalWrite(LX_BACK, HIGH);
-  delay(10);
+  digitalWrite(LX_RIGHT, HIGH); // turning on right sensor
+  delay(50); // waiting for the sensor to change state
+  laser[1].setAddress(L_RIGHT);
+  digitalWrite(LX_FRONTR, HIGH); // turning on front right sensor
+  delay(50); // waiting for the sensor to change state
+  laser[3].setAddress(L_FRONTR);
+  digitalWrite(LX_BACK, HIGH); // turning on back sensor
+  delay(50); // waiting for the sensor to change state
   laser[4].setAddress(L_BACK);
 }
 
@@ -296,7 +294,7 @@ void Robot::straighten(){
       dif=difLaser();
     }while( dif > 2|| dif < -2);
     mov.stop();
-    delay(500);
+    delayr(500);
 //    do{
 //      dif=difLaser();
 //      mov.rotate((dif > 0) , 1);
@@ -333,7 +331,7 @@ float Robot::getBattery() {
  * Instead of doing nothing this function keep updating filters.
  * @param t Time in milliseconds to wait.
  */
-void Robot::delay(unsigned int t) {
+void Robot::delayr(unsigned int t) {
   unsigned int end = millis() + t;
   while (end > millis()) mov.idle();
 }

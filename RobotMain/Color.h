@@ -2,22 +2,21 @@
 #define Color_h
 
 #include <Arduino.h>
-#include "definitions.h"
 #include "Debug.h"
-#include "I2C.h"
+#include "APDS9960.h"
 
 class Color {
   public:
-    Color(byte merror, byte mcolor);
+    Color();
     void begin();
     bool check();
     uint8_t read();
-    uint8_t readIR();
-    uint8_t readColor();
   private:
-    uint8_t read(uint8_t data);
-    byte merr;
-    byte mcol;
+    APDS9960 apds;
+    uint16_t ambient_light;
+    uint16_t red_light;
+    uint16_t green_light;
+    uint16_t blue_light;
 };
 
 #endif

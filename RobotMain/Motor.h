@@ -5,13 +5,13 @@
 
 class Motor {
   public:
-    Motor(uint8_t inverter1, uint8_t inverter2);
+    Motor(uint8_t inverter1, uint8_t inverter2, uint8_t);
     void start(uint16_t speed, bool inverse);
     void setSpeed(uint16_t speed);
     void stop();
     void begin();
   private:
-    uint8_t inverter1, inverter2;
+    uint8_t inverter1, inverter2, pwm;
     bool inverse;
 };
 

@@ -45,18 +45,23 @@
 
 //Motors pins
 #define FR_IN1 PA3
-#define FR_IN2 PA2
-#define RL_IN1 PA6
-#define RL_IN2 PA7
-#define FL_IN1 PB0
-#define FL_IN2 PB1
-#define RR_IN1 PA1
-#define RR_IN2 PA0
+#define FR_IN2 PA4
+#define RL_IN1 PA7
+#define RL_IN2 PB0
+#define FL_IN1 PA7
+#define FL_IN2 PB0
+#define RR_IN1 PA3
+#define RR_IN2 PA4
+
+#define FR_EN PA1
+#define RL_EN PB1
+#define FL_EN PA6
+#define RR_EN PA2
 
 //Laser pins
-#define LX_FRONTL PA5
-#define LX_LEFT PA10
-#define LX_RIGHT PA15
+#define LX_FRONTR PA5
+#define LX_LEFT PB12
+#define LX_RIGHT PB5
 #define LX_BACK PB4
 
 //Cagamattoni
@@ -67,17 +72,17 @@
 #define MINDEL 40
 
 //RGB
-#define RED PB15
-#define GREEN PB14
-#define BLUE PB13
+#define RED PA10
+#define GREEN PA8
+#define BLUE PB15
 
 //Battery
-#define B_PIN PA4
-#define B_R1 68000
-#define B_R2 22000
+#define B_PIN PA0
+#define B_R1 180000
+#define B_R2 68000
 
 //Interrupts
-#define PUSHBUTTON PB3
+#define PUSHBUTTON PB14
 #define RASP1 PB4
 #define RASP2 PB5
 

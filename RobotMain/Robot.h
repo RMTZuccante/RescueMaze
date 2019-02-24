@@ -43,9 +43,9 @@ class Robot {
     void tempTest();
     void setLED(bool red, bool green, bool blue);
 
-    void delay(unsigned int t);
+    void delayr(unsigned int t);
   private:
-    Color color = Color(MERROR, MCOLOR);
+    Color color;
     Temperature tempL = Temperature(T_LEFT);
     Temperature tempR = Temperature(T_RIGHT);
     Moviment mov = Moviment(SPEED, &tempL, &tempR);

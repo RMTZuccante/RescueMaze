@@ -2,4 +2,16 @@
 #include <SoftWire.h>
 
 extern SoftWire I2C_1;
-extern TwoWire I2C_2;
+extern SoftWire I2C_2;
+
+#ifndef I2C_h
+#define I2C_h
+
+#include "Debug.h"
+
+class I2C {
+  public:
+    static void scan(WireBase *i2c);
+};
+
+#endif
