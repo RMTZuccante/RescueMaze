@@ -3,12 +3,17 @@
 #include "I2C.h"
 #include "Debug.h"
 #include "Robot.h"
+#include "SerialCom.h"
 
 SerialDebug Debug;
 SoftWire I2C_1(PB10, PB11, SOFT_STANDARD);
 SoftWire I2C_2(PB8, PB9, SOFT_STANDARD);
 
 Robot robot;
+
+enum Commands {
+	EMPTY, HANDSHAKE, ROTATE, GO, GETDISTANCES, GETCOLOR, GETTEMPS, VICTIM
+};
 
 void pause() {
   //TODO signal checkpoint
@@ -64,6 +69,46 @@ void setup() {
 
 }
 
-void loop() {
+void sendDistances() {
+  uint16_t* arr = robot.getDistances();
+  for(int i = 0; i<5; i++) SerialCom::writeInt(arr[i]);
+}
 
+void receiveRotate() {
+    SerialCom::waitForSerial();
+    bool dir = Serial.read();
+    SerialCom::waitForSerial();
+    byte angle = Serial.read();
+    robot.rotate(angle, dir);
+    Serial.write((byte)1);
+}
+
+void loop() {
+  SerialCom::waitForSerial();
+  switch(Serial.read()) {
+    case HANDSHAKE:
+      SerialCom::waitForSerial();
+      Serial.write(Serial.read()*2);
+      break;
+    case ROTATE:
+      receiveRotate();
+      break;
+    case GO:
+      Serial.write(robot.go());
+      break;
+    case GETDISTANCES:
+      sendDistances();
+      break;
+    case GETCOLOR:
+      Serial.write(robot.getColor());
+      break;
+    case GETTEMPS:
+      SerialCom::writeFloat(robot.getTempLeft());
+      SerialCom::writeFloat(robot.getTempRight());
+      break;
+    case VICTIM:
+      robot.victim(Serial.read());
+      Serial.write((byte)1);
+      break;
+  }
 }
