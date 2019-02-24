@@ -74,22 +74,6 @@ bool Robot::checkBattery() {
   return ok;
 }
 
-/**
- * Reads all the data from the robot.
- * @return Pointer to struct containing the data.
- */
-RobotData* Robot::read() {
-  RobotData *data = new RobotData();
-  for (int i = 0; i < 3; i++) data->dist[i] = laser[i].read();
-  data->color = color.read();
-  //float tempAmb = (tempL.readAmb() + tempR.readAmb()) / 2;
-  data->tempL = isVictimL ? 10 : (tempL.read());
-  data->tempR = isVictimR ? 10 : (tempR.read());
-  isVictimL = isVictimR = false;
-  data->pitch = mov.inclination();
-  return data;
-}
-
 uint16_t* Robot::getDistances() {
 	uint16_t out[5];
 	for(int i = 0; i<5; i++) out[i] = laser[i].read();

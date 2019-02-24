@@ -14,23 +14,12 @@
 #include "RGB.h"
 #include "VL53L0X.h"
 
-
-struct RobotData {
-  uint16_t dist[3];
-  uint8_t color;
-  float tempL;
-  float tempR;
-  float pitch;
-};
-
 class Robot {
   public:
     void setup();
     void begin();
     bool check();
     bool checkBattery();
-    
-    RobotData* read();
 
     uint16_t* getDistances();
     uint8_t getColor();

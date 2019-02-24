@@ -3,17 +3,15 @@
 #include "I2C.h"
 #include "Debug.h"
 #include "Robot.h"
-#include "Matrix.h"
 
 SerialDebug Debug;
 SoftWire I2C_1(PB10, PB11, SOFT_STANDARD);
 SoftWire I2C_2(PB8, PB9, SOFT_STANDARD);
 
 Robot robot;
-Matrix matrix;
 
 void pause() {
-  matrix.checkpoint();
+  //TODO signal checkpoint
   nvic_sys_reset();
 }
 
@@ -31,7 +29,7 @@ void setup() {
   Debug.println("Hardware initialization done.", LVL_INFO);
 
   //Check that everything is working
-  bool ok = matrix.check() && robot.check() && robot.checkBattery();
+  bool ok = robot.check() && robot.checkBattery();
   Debug.println("Check done.", LVL_INFO);
   if (!ok) Debug.println("Something is not working correctly. Proceed at your own risk!", LVL_WARN);
 
@@ -43,7 +41,7 @@ void setup() {
 
   //Software initialization
   robot.begin();
-  Debug.setLevel(matrix.getDebug());
+  //TODO Debug.setLevel(matrix.getDebug());
   Debug.println("Software initialization done.", LVL_INFO);
 
   //Waiting user start command
@@ -57,66 +55,15 @@ void setup() {
   attachInterrupt(PUSHBUTTON, pause, FALLING);
 
   Debug.println("STARTING!", LVL_INFO);
-
+  /* TODO
   if (matrix.wasPaused()) {
     while (!matrix.isOriented(robot.read())) {
       robot.rotate(false);
     }
-  }
+  }*/
 
 }
 
 void loop() {
-  matrix.update(robot.read());
 
-  if (matrix.end()) {
-    matrix.die();
-    digitalWrite(LED_BUILTIN, LOW);
-    while (1);
-  }
-
-  else if (matrix.black) {
-    robot.back();
-    matrix.move(false);
-  }
-
-  else {
-    switch (matrix.getDir()) {
-      case RIGHT:
-        robot.rotate(false);
-        matrix.update(robot.read());
-        break;
-      case LEFT :
-        robot.rotate(true);
-        matrix.update(robot.read());
-        break;
-      case BACK :
-        robot.rotate(false);
-        robot.rotate(false);
-        break;
-    }
-
-    Debug.println(String("Found victims: ") + matrix.victim);
-    if (matrix.victim) robot.victim(matrix.victim);
-
-
-    matrix.move(true);
-
-    int res = robot.go();
-
-    switch (res) {
-      case 1:
-        //update matrix with black cell
-        matrix.sendBlack();
-        matrix.move(false);
-        break;
-      case 2:
-        matrix.sendRise(true);
-        break;
-      case -2:
-        matrix.sendRise(false);
-        break;
-    }
-  }
-  delay(1000);
 }
