@@ -32,6 +32,11 @@ class Robot {
     
     RobotData* read();
 
+    uint16_t* getDistances();
+    uint8_t getColor();
+    float getTempLeft();
+    float getTempRight();
+
     void straighten();
     int go();
     int go(bool frontLaser);

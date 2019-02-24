@@ -90,6 +90,28 @@ RobotData* Robot::read() {
   return data;
 }
 
+uint16_t* Robot::getDistances() {
+	uint16_t out[5];
+	for(int i = 0; i<5; i++) out[i] = laser[i].read();
+	return out;
+}
+
+uint8_t Robot::getColor() {
+	return color.read();
+}
+
+float Robot::getTempLeft() {
+	float out = isVictimL ? 10 : (tempL.read());
+	isVictimL = false;
+	return out;
+}
+
+float Robot::getTempRight() {
+	float out = isVictimR ? 10 : (tempR.read());
+	isVictimR = false;
+	return out;
+}
+
 int Robot::go(){
   return go(laser[0].read()<1000);
 }
