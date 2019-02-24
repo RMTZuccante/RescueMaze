@@ -204,12 +204,8 @@ void Robot::back() {
   mov.stop();
 }
 
-/**
- * Rotates the robot by 90 degrees.
- * @param dir TRUE to turn right, false to turn left
- */
-void Robot::rotate(bool dir) {
-  switch(mov.rotate(dir)){
+void Robot::rotate(bool dir, float angle) {
+  switch(mov.rotate(dir, 90)){
     case 1: 
       isVictimL=true;
       break;
@@ -218,6 +214,14 @@ void Robot::rotate(bool dir) {
       break;
   }
   straighten();  
+}
+
+/**
+ * Rotates the robot by 90 degrees.
+ * @param dir TRUE to turn right, false to turn left
+ */
+void Robot::rotate(bool dir) {
+	rotate(dir, 90);
 }
 
 /**
