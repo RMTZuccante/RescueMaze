@@ -46,7 +46,7 @@ class Robot {
     Moviment mov = Moviment(SPEED, &tempL, &tempR);
     RGB led = RGB(RED, GREEN, BLUE);
     VL53L0X laser[5] = {VL53L0X(), VL53L0X(), VL53L0X(), VL53L0X(), VL53L0X()};
-    Cagamattoni caga = Cagamattoni(5,&laser[4]);
+    Cagamattoni caga = Cagamattoni(0); //TODO change if needed
 
     float tempk;
     int difLaser();

@@ -7,16 +7,13 @@
 
 class Cagamattoni {
   public :
-    Cagamattoni(int ntappi, VL53L0X* laser);
+    Cagamattoni(int ntappi);
     void caga();
     bool isEmpty();
-    void turnOut();
-    void turnIn();
     void stop();
     void begin();
   private :
     byte kits;
-    VL53L0X* laser;
 };
 
 #endif
