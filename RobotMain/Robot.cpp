@@ -122,7 +122,7 @@ int Robot::go(bool frontLaser) {
     if (i == 100) {
       uint16_t now = laser[dist].read();
       if ( ( (before > now) ? before - now : now - before ) < 5) {
-        mov.impennati(65535);
+        mov.impennati(MAXSPEED);
         while( ( (before > now) ? before - now : now - before ) < 5){
           now = laser[dist].read();
         }
@@ -163,7 +163,7 @@ int Robot::go(bool frontLaser) {
     Debug.println(String("Call to back"));
     back();
   }
-  mov.endGo();
+  //mov.endGo();
   mov.stop();
   
   Debug.println(String("stop "));

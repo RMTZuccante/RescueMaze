@@ -2,11 +2,13 @@
 #define definitions_h
 
 //Moviment
-#define SPEED 20000
-#define FIRST_K 5000
-#define SECOND_K 5000
-#define ROTATION_P 1500
-#define ROTATION_SPEED 60000
+
+#define MAXSPEED 65535
+#define SPEED 2000
+#define FIRST_K 500
+#define SECOND_K 500
+#define ROTATION_P 150
+#define ROTATION_SPEED 6000
 #define ROTATION_K 1
 #define CLIMB_K 100
 
