@@ -36,16 +36,16 @@ bool Moviment::check() {
  */
 void Moviment::climb(int k) {
   k=-k*CLIMB_K;
-  motorsR.start(bound(50000+k,65535), false);
-  motorsL.start(bound(50000-k,65535), false);
+  motorsR.start(bound(50000+k,MAXSPEED), false);
+  motorsL.start(bound(50000-k,MAXSPEED), false);
 }
 
 /**
  * Makes the robot IMPENNARSI!!!
  */
 void Moviment::impennati(uint16_t speed){
-  motorsR.startDiff(0, bound(speed, 65535), false);
-  motorsL.startDiff(0, bound(speed, 65535), false);
+  motorsR.startDiff(0, bound(speed, MAXSPEED), false);
+  motorsL.startDiff(0, bound(speed, MAXSPEED), false);
 }
  
 /**
@@ -62,8 +62,8 @@ void Moviment::go() {
 void Moviment::go(bool invert) {
   orientation.start(20);
   direzione = orientation.yaw();
-  motorsR.start(bound(speed, 65535), invert);
-  motorsL.start(bound(speed, 65535), invert);
+  motorsR.start(bound(speed, MAXSPEED), invert);
+  motorsL.start(bound(speed, MAXSPEED), invert);
 }
 
 /**
@@ -71,8 +71,8 @@ void Moviment::go(bool invert) {
  */
 void Moviment::straight() {
   float fix = direzione - orientation.yaw();
-  motorsR.start(bound(speed - fix * 5000, 65535), false);
-  motorsL.start(bound(speed + fix * 5000, 65535), false);
+  motorsR.start(bound(speed + fix * 5000, MAXSPEED), false);
+  motorsL.start(bound(speed - fix * 5000, MAXSPEED), false);
 }
 
 /**
@@ -116,17 +116,25 @@ int Moviment::rotate(bool invert) {
 int Moviment::rotate(bool invert , float angle) {
   Debug.println("rotate start");
   orientation.start(100);
+  
+  Debug.println(String("startAngle")+String(orientation.yaw()));
   float end = endAngle(orientation.yaw(), invert , angle);
+  
+  Debug.println(String("endAngle")+String(end));
   bool isVictimL = false;
   bool isVictimR = false;
   end-=fill;
-  if (!invert) {
+  if (invert) {
     if (end > (360 - angle)) {
       rotationSpeed(ROTATION_SPEED, invert);
-      while (orientation.yaw() > 1) {};
+      while (orientation.yaw() > 1) {
+        Debug.println(String(orientation.yaw()));
+      }
       delay(100);
     }
     while (orientation.yaw() > end) {
+      
+      Debug.println(String(orientation.yaw()));
       rotationSpeed(ROTATION_SPEED, invert);
       isVictimL |= (tleft->read()) > TEMP_K;
       isVictimR |= (tright->read()) > TEMP_K;
@@ -139,10 +147,13 @@ int Moviment::rotate(bool invert , float angle) {
   else {
     if (end < angle) {
       rotationSpeed(ROTATION_SPEED, invert);
-      while (orientation.yaw() < 359) {};
+      while (orientation.yaw() < 359) {
+        Debug.println(String(orientation.yaw()));  
+      };
       delay(100);
     }
     while (orientation.yaw() < end) {
+      Debug.println(String(orientation.yaw()));
       rotationSpeed(ROTATION_SPEED, invert);
       isVictimL |= (tleft->read()) > TEMP_K;
       isVictimR |= (tright->read()) > TEMP_K;
@@ -174,7 +185,7 @@ void Moviment::stop() {
  * @param speed The speed, from 0 to 65535.
  */
 void Moviment::setSpeed(uint16_t speed) {
-  this->speed = bound((speed) , 65535);
+  this->speed = bound((speed) , MAXSPEED);
   motorsR.setSpeed(speed);
   motorsL.setSpeed(speed);
 }
@@ -217,8 +228,8 @@ void Moviment::rotationSpeed(bool invert, float endRotation) {
   direzione = orientation.yaw();
   if (endRotation - direzione > 0) setK(FIRST_K + ((endRotation - direzione) * ROTATION_P), SECOND_K + ((endRotation - direzione) * ROTATION_P));
   else setK(SECOND_K + ((direzione - endRotation) * ROTATION_P), FIRST_K + ((direzione - endRotation) * ROTATION_P));
-  motorsR.start(bound((speed + kR) , 65535), invert);
-  motorsL.start(bound((speed + kL) , 65535), !invert);
+  motorsR.start(bound((speed + kR) , MAXSPEED), invert);
+  motorsL.start(bound((speed + kL) , MAXSPEED), !invert);
 }
 
 /**
