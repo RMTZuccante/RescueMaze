@@ -21,7 +21,7 @@ class Robot {
     bool check();
     bool checkBattery();
 
-    uint16_t* getDistances();
+    uint16_t getDistance(int sensor);
     uint8_t getColor();
     float getTempLeft();
     float getTempRight();

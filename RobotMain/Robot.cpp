@@ -74,10 +74,8 @@ bool Robot::checkBattery() {
   return ok;
 }
 
-uint16_t* Robot::getDistances() {
-	uint16_t out[5];
-	for(int i = 0; i<5; i++) out[i] = laser[i].read();
-	return out;
+uint16_t Robot::getDistance(int sensor) {
+	return laser[sensor].read();
 }
 
 uint8_t Robot::getColor() {
