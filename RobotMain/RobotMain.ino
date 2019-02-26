@@ -86,12 +86,15 @@ void receiveRotate() {
 }
 
 void loop() {
+  Debug.println("Waiting for command");
   SerialCom::waitForSerial();
   switch (Serial.read()) {
     case ROTATE:
+      Debug.println("Rotate");
       receiveRotate();
       break;
     case GO:
+      Debug.println("Go");
       Serial.write(robot.go());
       break;
     case GETDISTANCES:
