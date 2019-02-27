@@ -6,30 +6,15 @@
 #include "SerialCom.h"
 
 SerialDebug Debug;
+SerialCom Com;
+
 SoftWire I2C_1(PB10, PB11, SOFT_STANDARD);
 SoftWire I2C_2(PB8, PB9, SOFT_STANDARD);
 
 Robot robot;
 
-enum Commands {
-  EMPTY, HANDSHAKE, ROTATE, GO, GETDISTANCES, GETCOLOR, GETTEMPS, VICTIM, READY
-};
-
 void reset() {
   nvic_sys_reset();
-}
-
-bool handshake() {
-  boolean connected = false;
-  while (!connected) {
-    SerialCom::waitForSerial();
-    if (Serial.read() == HANDSHAKE) {
-      Serial.write(Serial.read() * 2);
-      connected = true;
-    }
-    else while (Serial.available()) Serial.read();
-    return connected;
-  }
 }
 
 void setup() {
@@ -39,18 +24,15 @@ void setup() {
   digitalWrite(LED_BUILTIN, LOW);
 
   //Hardware initialization
-  Serial.begin(115200);
-
-  Debug.setLevel(LVL_OFF);
-  
+  Com.begin();
   I2C_1.begin();
   I2C_2.begin();
   robot.setup();
 
   //Check that everything is working
-  bool ok = handshake() && robot.check() && robot.checkBattery();
-  Debug.println("Check done.", LVL_INFO);
-  if (!ok) Debug.println("Something is not working correctly. Proceed at your own risk!", LVL_WARN);
+  bool ok = Com.check() && robot.check() && robot.checkBattery();
+  Debug.println("Check done.", Levels::INFO);
+  if (!ok) Debug.println("Something is not working correctly. Proceed at your own risk!", Levels::WARN);
 
   //I2C::scan(&I2C_1);
   //I2C::scan(&I2C_2);
@@ -60,10 +42,10 @@ void setup() {
 
   //Software initialization
   robot.begin();
-  Debug.println("Software initialization done.", LVL_INFO);
+  Debug.println("Software initialization done.", Levels::INFO);
 
   //Waiting user start command
-  Debug.println("Waiting for the user to press the button...", LVL_INFO);
+  Debug.println("Waiting for the user to press the button...", Levels::INFO);
   robot.setLED(0, 1, 0);
   while (digitalRead(PUSHBUTTON));
   delay(250);
@@ -72,44 +54,44 @@ void setup() {
   //Attaching interrupts
   attachInterrupt(PUSHBUTTON, reset, FALLING);
 
-  Serial.write(READY);
-  Debug.println("STARTING!", LVL_INFO);
+  Com.writeReady();
+  Debug.println("STARTING!", Levels::INFO);
 }
 
 void receiveRotate() {
-  SerialCom::waitForSerial();
+  Com.waitForSerial();
   bool dir = Serial.read();
-  SerialCom::waitForSerial();
+  Com.waitForSerial();
   byte angle = Serial.read();
   robot.rotate(angle, dir);
-  Serial.write((byte)1);
+  Com.writeRes(1);
 }
 
 void loop() {
   Debug.println("Waiting for command");
-  SerialCom::waitForSerial();
-  switch (Serial.read()) {
-    case ROTATE:
+  Com.waitForSerial();
+  switch (Com.getCommand()) {
+    case Commands::ROTATE:
       Debug.println("Rotate");
       receiveRotate();
       break;
-    case GO:
+    case Commands::GO:
       Debug.println("Go");
-      Serial.write(robot.go());
+      Com.writeRes(robot.go());
       break;
-    case GETDISTANCES:
-      for (int i = 0; i < 5; i++) SerialCom::writeInt(robot.getDistance(i));
+    case Commands::GETDISTANCES:
+      for (int i = 0; i < 5; i++) Com.writeInt(robot.getDistance(i));
       break;
-    case GETCOLOR:
+    case Commands::GETCOLOR:
       Serial.write(robot.getColor());
       break;
-    case GETTEMPS:
-      SerialCom::writeFloat(robot.getTempLeft());
-      SerialCom::writeFloat(robot.getTempRight());
+    case Commands::GETTEMPS:
+      Com.writeFloat(robot.getTempLeft());
+      Com.writeFloat(robot.getTempRight());
       break;
-    case VICTIM:
+    case Commands::VICTIM:
       robot.victim(Serial.read());
-      Serial.write((byte)1);
+      Com.writeRes(1);
       break;
   }
 }

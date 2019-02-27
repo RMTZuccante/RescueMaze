@@ -48,7 +48,7 @@ void Robot::laserTest() {
 }
 
 void Robot::climb(int k) {
-  Debug.println(String("climb"),LVL_INFO);
+  Debug.println(String("climb"), Levels::INFO);
   mov.climb(k);
 }
 
@@ -69,8 +69,8 @@ bool Robot::check() {
 bool Robot::checkBattery() {
   float battery = getBattery();
   bool ok = getBattery()>11.f;
-  Debug.println(String("Battery voltage: ")+battery+"v.",LVL_INFO);
-  if(!ok) Debug.println("Critical battery level!", LVL_WARN);
+  Debug.println(String("Battery voltage: ")+battery+"v.",Levels::INFO);
+  if(!ok) Debug.println("Critical battery level!", Levels::WARN);
   return ok;
 }
 

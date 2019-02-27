@@ -15,7 +15,7 @@ Temperature::Temperature(uint8_t address) {
 bool Temperature::check() {
   I2C_1.beginTransmission(address);
   bool ok = !I2C_1.endTransmission();
-  if(!ok) Debug.println(String("Temperature sensor at address ") + String(address, HEX) + " not found.", LVL_WARN);
+  if(!ok) Debug.println(String("Temperature sensor at address ") + String(address, HEX) + " not found.", Levels::WARN);
   return ok;
 }
 

@@ -47,7 +47,7 @@ bool APDS9960::init()
     }
      
     /* Set ENABLE register to 0 (disable all features) */
-    if( !setMode(ALL, OFF) ) {
+    if( !setMode(ALL, false) ) {
         return false;
     }
     

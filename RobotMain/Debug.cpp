@@ -6,10 +6,12 @@
  * @param st String to print.
  * @param level Debug level.
  */
-void SerialDebug::print(String st, int level) {
+void SerialDebug::print(String st, Levels level) {
 	if (level <= this->level) {
-		if (ended) Serial.print(getLevel(level));
-		Serial.print(st);
+    String toPrint = "";
+		if (ended) toPrint += getLevel(level);
+		toPrint += st;
+    Com.writeString(toPrint);
 		ended = st.endsWith("\n");
 	}
 }
@@ -20,7 +22,7 @@ void SerialDebug::print(String st, int level) {
  * @param st String to print.
  * @param level Debug level.
  */
-void SerialDebug::println(String st, int level) {
+void SerialDebug::println(String st, Levels level) {
   print(st+"\n", level);
 }
 
@@ -30,7 +32,7 @@ void SerialDebug::println(String st, int level) {
  * @param st String to print.
  */
 void SerialDebug::print(String st) {
-  print(st, LVL_DEBUG);
+  print(st, Levels::DEBUG);
 }
 
 /**
@@ -39,22 +41,22 @@ void SerialDebug::print(String st) {
  * @param st String to print.
  */
 void SerialDebug::println(String st) {
-  println(st, LVL_DEBUG);
+  println(st, Levels::DEBUG);
 }
 
 /**
  * Delay used only in debug. This should be used to avoid errors while running in competition.
  * @param t Time to wait in microseconds.
  */
-void SerialDebug::delay(int t) {
-  if(level>=LVL_DEBUG) delay(t);
+void SerialDebug::delayd(int t) {
+  if(level>=Levels::DEBUG) delay(t);
 }
 
 /**
  * Sets the level to be used for the debug.
  * @param lvl Debug level.
  */
-void SerialDebug::setLevel(int level) {
+void SerialDebug::setLevel(Levels level) {
   this->level = level;
 }
 
@@ -63,40 +65,11 @@ void SerialDebug::setLevel(int level) {
  * @param level Debug level.
  * @return The string representing the level.
  */
-String SerialDebug::getLevel(int level) {
+String SerialDebug::getLevel(Levels level) {
   switch (level) {
-    case LVL_DEBUG: return "debug ";
-    case LVL_INFO: return "information ";
-    case LVL_WARN: return "warning ";
+    case Levels::DEBUG: return "debug ";
+    case Levels::INFO: return "information ";
+    case Levels::WARN: return "warning ";
     default: return "";
   }
-}
-
-/**
- * Waits until "ok" is read from the serial port.
- */
-void SerialDebug::wait() {
-  if(level>=LVL_DEBUG) {
-    Serial.println("Waiting...");
-    String m;
-    do {
-      m = readLine();
-    } while (m != "ok");
-  }
-}
-
-/**
- * Reads a single line from the serial port.
- * @return The line read.
- */
-String SerialDebug::readLine() {
-  while (!Serial.available());
-  String s;
-  char c = Serial.read();
-  do {
-    s += c;
-    while (!Serial.available());
-    c = Serial.read();
-  } while (c != '\n');
-  return s;
 }

@@ -2,26 +2,27 @@
 #define DEBUG_H
 
 #include <Arduino.h>
-#include "definitions.h"
+#include "SerialCom.h"
+
+enum class Levels{
+  OFF, WARN, INFO, DEBUG
+};
 
 class SerialDebug {
 public:
-  SerialDebug() : ended(true), level(LVL_DEBUG) {}
+  SerialDebug() : ended(true), level(Levels::DEBUG) {}
   
-  void print(String st, int level);
-  void println(String st, int level);
+  void print(String st, Levels level);
+  void println(String st, Levels level);
   void print(String st);
   void println(String st);
 
-  void delay(int t);
-  void wait();
-  void setLevel(int lvl);
+  void delayd(int t);
+  void setLevel(Levels lvl);
 private:
-  String getLevel(int level);
-  String readLine();
+  String getLevel(Levels level);
   bool ended;
-  int level;
-  String buffer;
+  Levels level;
 };
 
 extern SerialDebug Debug;

@@ -13,7 +13,7 @@ void IMU::begin() {
  */
 bool IMU::check() {
   bool ok = imu.check();
-  if (!ok) Debug.println(String("IMU not found."), LVL_WARN);
+  if (!ok) Debug.println(String("IMU not found."), Levels::WARN);
   return imu.check();
 }
 

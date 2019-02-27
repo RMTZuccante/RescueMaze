@@ -86,10 +86,6 @@
 #define APDS9960_GEN            0b01000000
 #define APDS9960_GVALID         0b00000001
 
-/* On/Off definitions */
-#define OFF                     0
-#define ON                      1
-
 /* Acceptable parameters for setMode */
 #define POWER                   0
 #define AMBIENT_LIGHT           1

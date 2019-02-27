@@ -25,12 +25,6 @@
 #define MERROR 70
 #define MCOLOR 35
 
-//Debug
-#define LVL_OFF 0
-#define LVL_WARN 1
-#define LVL_INFO 2
-#define LVL_DEBUG 3
-
 //Color address
 #define COLORADDRESS 0x42
 
