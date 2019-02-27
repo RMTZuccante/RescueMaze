@@ -7,7 +7,7 @@ void SerialCom::begin() {
 bool SerialCom::check() {
   boolean connected = false;
   while (!connected) {
-    waitForSerial();
+    wait();
     if (getCommand() == Commands::HANDSHAKE) {
       Serial.write(Serial.read() * 2);
       connected = true;
@@ -17,17 +17,17 @@ bool SerialCom::check() {
   }
 }
 
-void SerialCom::waitForSerial() {
+void SerialCom::wait() {
   while(!Serial.available());
 }
 
-void SerialCom::writeString(String s) {
+void SerialCom::write(String s) {
     Serial.write(STX);
     Serial.print(s);
     Serial.write(ETX);
 }
 
-void SerialCom::writeFloat(float f) {
+void SerialCom::write(float f) {
   byte * b = (byte *) &f;
   Serial.write(b[0]);
   Serial.write(b[1]);
@@ -35,20 +35,25 @@ void SerialCom::writeFloat(float f) {
   Serial.write(b[3]);
 }
 
-void SerialCom::writeInt(int i) {
+void SerialCom::write(int i) {
   byte * b = (byte *) &i;
   Serial.write(b[0]);
   Serial.write(b[1]);
 }
 
-void SerialCom::writeRes(byte res) {
+void SerialCom::notifyRes(byte res) {
   Serial.write(RES | res);
 }
 
-void SerialCom::writeReady() {
+void SerialCom::notifyReady() {
   Serial.write(READY);
 }
 
+byte SerialCom::read() {
+  wait();
+  return Serial.read();
+}
+
 Commands SerialCom::getCommand() {
-  return static_cast<Commands>(Serial.read());
+  return static_cast<Commands>(read());
 }

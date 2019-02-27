@@ -54,22 +54,19 @@ void setup() {
   //Attaching interrupts
   attachInterrupt(PUSHBUTTON, reset, FALLING);
 
-  Com.writeReady();
+  Com.notifyReady();
   Debug.println("STARTING!", Levels::INFO);
 }
 
 void receiveRotate() {
-  Com.waitForSerial();
-  bool dir = Serial.read();
-  Com.waitForSerial();
-  byte angle = Serial.read();
+  bool dir = Com.read();
+  byte angle = Com.read();
   robot.rotate(angle, dir);
-  Com.writeRes(1);
+  Com.notifyRes(1);
 }
 
 void loop() {
   Debug.println("Waiting for command");
-  Com.waitForSerial();
   switch (Com.getCommand()) {
     case Commands::ROTATE:
       Debug.println("Rotate");
@@ -77,21 +74,21 @@ void loop() {
       break;
     case Commands::GO:
       Debug.println("Go");
-      Com.writeRes(robot.go());
+      Com.notifyRes(robot.go());
       break;
     case Commands::GETDISTANCES:
-      for (int i = 0; i < 5; i++) Com.writeInt(robot.getDistance(i));
+      for (int i = 0; i < 5; i++) Com.write(robot.getDistance(i));
       break;
     case Commands::GETCOLOR:
       Serial.write(robot.getColor());
       break;
     case Commands::GETTEMPS:
-      Com.writeFloat(robot.getTempLeft());
-      Com.writeFloat(robot.getTempRight());
+      Com.write(robot.getTempLeft());
+      Com.write(robot.getTempRight());
       break;
     case Commands::VICTIM:
-      robot.victim(Serial.read());
-      Com.writeRes(1);
+      robot.victim(Com.read());
+      Com.notifyRes(1);
       break;
   }
 }

@@ -16,12 +16,13 @@ class SerialCom {
 public:
   void begin();
   boolean check();
-  void waitForSerial();
-  void writeString(String s);
-	void writeFloat(float f);
-	void writeInt(int i);
-  void writeRes(byte res);
-  void writeReady();
+  void wait();
+  void write(String s);
+	void write(float f);
+	void write(int i);
+  void notifyRes(byte res);
+  void notifyReady();
+  byte read();
   Commands getCommand();
 };
 
