@@ -90,5 +90,8 @@ void loop() {
       robot.victim(Com.read());
       Com.notifyRes(1);
       break;
+    case Commands::SETDEBUG:
+      Debug.setLevel(static_cast<Levels>(Com.read()));
+      break;
   }
 }
