@@ -29,6 +29,7 @@ class Robot {
     void straighten();
     int go();
     int go(bool frontLaser);
+    void back(uint16_t length);
     void back();
     void rotate(bool dir, float angle);
     void rotate(bool dir);

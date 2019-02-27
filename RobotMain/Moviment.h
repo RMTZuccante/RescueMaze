@@ -21,17 +21,19 @@ class Moviment {
     void climb(int k);
     void rotation(bool invert);
     int rotate (bool invert);
-    int rotate (bool invert, float angle);
+    int rotate (bool invert, float angle, byte type);
+    
     void stop();
     void setSpeed(uint16_t speed);
     void setK(int rightK, int leftK);
     float inclination();
     void idle();
+    void delayr(unsigned int t);
   private:
     uint16_t bound (uint32_t n, uint16_t max);
     float endAngle(float angle, bool invert, float end);
     void rotationSpeed(bool direction , float endRotation);
-    void rotationSpeed(uint16_t speed, bool invert);
+    void rotationSpeed(uint16_t speed, bool invert,byte type);
 
     SideMotors motorsR = SideMotors(FR_IN1, FR_IN2, FR_EN, RR_EN);
     SideMotors motorsL = SideMotors(FL_IN1, FL_IN2, FL_EN, RL_EN);

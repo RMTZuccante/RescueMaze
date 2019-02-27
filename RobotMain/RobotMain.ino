@@ -30,7 +30,9 @@ void setup() {
   robot.setup();
 
   //Check that everything is working
-  bool ok = Com.check() && robot.check() && robot.checkBattery();
+  bool ok = Com.check() && robot.check() && robot.checkBattery();  
+  Debug.println("notifyALL");
+  Com.notifyReady();
   Debug.println("Check done.", Levels::INFO);
   if (!ok) Debug.println("Something is not working correctly. Proceed at your own risk!", Levels::WARN);
 
@@ -48,20 +50,24 @@ void setup() {
   Debug.println("Waiting for the user to press the button...", Levels::INFO);
   robot.setLED(0, 1, 0);
   while (digitalRead(PUSHBUTTON));
+  
+  Debug.println("Button pushed");
   delay(250);
   robot.setLED(0, 0, 0);
 
   //Attaching interrupts
+  Debug.println("Attaching interrupts");
   attachInterrupt(PUSHBUTTON, reset, FALLING);
 
-  Com.notifyReady();
+  
+
   Debug.println("STARTING!", Levels::INFO);
 }
 
 void receiveRotate() {
   bool dir = Com.read();
   byte angle = Com.read();
-  robot.rotate(angle, dir);
+  robot.rotate(dir, angle);
   Com.notifyRes(1);
 }
 

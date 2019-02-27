@@ -80,7 +80,7 @@ void Moviment::straight() {
  */
 void Moviment::endGo() {
   float now = orientation.yaw();
-  (direzione > now) ? rotate(true, direzione - now) : rotate(false, now - direzione);
+  (direzione > now) ? rotate(true, direzione - now,BASIC) : rotate(false, now - direzione,BASIC);
 }
 
 /**
@@ -104,8 +104,7 @@ void Moviment::rotation(bool invert){
  * @param invert Rotates right if FALSE, left if TRUE.
  */
 int Moviment::rotate(bool invert) {
-  return rotate(invert, 90);
-  //delay(1000);
+  return rotate(invert, 90, BASIC);
 }
 
 /**
@@ -113,23 +112,20 @@ int Moviment::rotate(bool invert) {
  * @param invert Rotates right if FALSE, left if TRUE.
  * @param angle The angle by.
  */
-int Moviment::rotate(bool invert , float angle) {
-  Debug.println("rotate start");
+int Moviment::rotate(bool invert , float angle , byte type) {
+  Debug.println(String("type :")+String(type));
   orientation.start(100);
-  
-  Debug.println(String("startAngle ")+String(orientation.yaw()));
   float end = endAngle(orientation.yaw(), invert , angle);
-  
-  Debug.println(String("endAngle ")+String(end));
-  
   bool isVictimL = false;
   bool isVictimR = false;
   end-=fill;
+  Debug.println(String("startAngle ")+String(orientation.yaw()));
+  Debug.println(String("endAngle ")+String(end));
   if (invert) {
     Debug.print("left ");
     if (end < angle) {
       Debug.print("Out of range rotation ");
-      rotationSpeed(ROTATION_SPEED, invert);
+      rotationSpeed(ROTATION_SPEED, invert, type);
       while (orientation.yaw() < 359) {
         //Debug.println(String(orientation.yaw()));  
       };
@@ -138,7 +134,7 @@ int Moviment::rotate(bool invert , float angle) {
     Debug.print("Normal rotation");
     while (orientation.yaw() < end) {
       //Debug.println(String(orientation.yaw()));
-      rotationSpeed(ROTATION_SPEED, invert);
+      rotationSpeed(ROTATION_SPEED, invert, type);
       isVictimL |= (tleft->read()) > TEMP_K;
       isVictimR |= (tright->read()) > TEMP_K;
     }
@@ -152,17 +148,16 @@ int Moviment::rotate(bool invert , float angle) {
     Debug.print("right ");
     if (end > (360 - angle)) {
       Debug.print("Out of range rotation ");
-      rotationSpeed(ROTATION_SPEED, invert);
+      rotationSpeed(ROTATION_SPEED, invert, type);
       while (orientation.yaw() > 1) {
         //Debug.println(String(orientation.yaw()));
       }
       delay(100);
     }
-     
     Debug.print("Normal rotation");
     while (orientation.yaw() > end) {     
       //Debug.println(String(orientation.yaw()));
-      rotationSpeed(ROTATION_SPEED, invert);
+      rotationSpeed(ROTATION_SPEED, invert, type);
       isVictimL |= (tleft->read()) > TEMP_K;
       isVictimR |= (tright->read()) > TEMP_K;
     }
@@ -245,9 +240,18 @@ void Moviment::rotationSpeed(bool invert, float endRotation) {
  * @param speed Speed of the motors, from 0 to 65535.
  * @param invert Rotates right if FALSE, left if TRUE.
  */
-void Moviment::rotationSpeed(uint16_t speed, bool invert) {
-  motorsR.start(speed, !invert);
-  motorsL.start(speed, invert);
+void Moviment::rotationSpeed(uint16_t speed, bool invert,byte type) {
+  uint16_t speedR=speed;
+  uint16_t speedL=speed;
+  
+  if(type == FRONT_WALL){
+    invert?speedL/=2:speedR/=2;
+  }
+  else if(type == BACK_WALL){
+    invert?speedR/=2:speedL/=2;
+  }
+  motorsR.start(speedR, !invert);
+  motorsL.start(speedL, invert);
 }
 
 /**
@@ -274,4 +278,13 @@ float Moviment::inclination() {
  */
 void Moviment::idle() {
   orientation.update();
+}
+/**
+ * Idles for the given time.
+ * Instead of doing nothing this function keep updating filters.
+ * @param t Time in milliseconds to wait.
+ */
+void Moviment::delayr(unsigned int t) {
+  unsigned int end = millis() + t;
+  while (end > millis()) idle();
 }

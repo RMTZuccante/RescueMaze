@@ -141,7 +141,7 @@ int Robot::go(bool frontLaser) {
       Debug.println("salita");
       Debug.println("incl");
       sol = (incl > 0) ? 2 : -2;
-      delayr(50);
+      mov.delayr(50);
       while(abs(mov.inclination()) > 8){
         int dif=laser[2].read();
         dif=dif-laser[1].read();
@@ -175,9 +175,16 @@ int Robot::go(bool frontLaser) {
  * Goes back to the center of the cell.
  */
 void Robot::back() {
+  back(CELL_DIM);
+}
+/**
+ * Goes back
+ * @param length The distance the robot has to back in millimeters
+ */
+void Robot::back(uint16_t length){
   int dist = ( (laser[0].read()<2000) ? ( (laser[0].read()<laser[3].read()) ? 0 : 3 ) : 4);
   Debug.println(String("back"));
-  uint16_t end = endDist(laser[dist].read(), dist!=4) + CELL_DIM;
+  uint16_t end = endDist(laser[dist].read(), dist!=4) + length;
   Debug.println(String("end ") + String(end));
   mov.go(true);
   uint16_t distance = laser[dist].read();
@@ -187,7 +194,20 @@ void Robot::back() {
 }
 
 void Robot::rotate(bool dir, float angle) {
-  switch(mov.rotate(dir, angle)){
+  byte type=BASIC;
+  Debug.println(String("Back: ")+String(laser[4].read()));
+  Debug.println(String("Front: ")+String(laser[0].read()));
+  if(laser[4].read()<100){
+    type=BACK_WALL;
+    back(10);
+    delay(1000);
+  }
+  else if(laser[0].read()<100){
+    type=FRONT_WALL;
+    back(10);
+    delay(1000);
+  }
+  switch(mov.rotate(dir, angle, type)){
     case 1: 
       isVictimL=true;
       break;
@@ -218,15 +238,15 @@ void Robot::victim(int n) {
   if (!caga.isEmpty()) {
     for(int i = 0; i < n; i++) {
       caga.caga();
-      delayr(50);
+      mov.delayr(50);
     }
   }
   else {
     for(int i = 0; i < 5; i++) {
       led.set(LOW, LOW, HIGH);
-      delayr(500);
+      mov.delayr(500);
       led.set(LOW, LOW, LOW);
-      delayr(500);
+      mov.delayr(500);
     }
   }
   
@@ -301,8 +321,9 @@ void Robot::straighten(){
     do{
       dif=difLaser();
     }while( dif > 2|| dif < -2);
+    Debug.println("End Straighten");
     mov.stop();
-    delayr(500);
+    mov.delayr(500);
 //    do{
 //      dif=difLaser();
 //      mov.rotate((dif > 0) , 1);
@@ -331,15 +352,4 @@ int Robot::difLaser(){
  */
 float Robot::getBattery() {
   return ((analogRead(B_PIN) * (3.3f / 4095.0f)) * (B_R1+B_R2))/B_R2;
-}
-
-
-/**
- * Idles for the given time.
- * Instead of doing nothing this function keep updating filters.
- * @param t Time in milliseconds to wait.
- */
-void Robot::delayr(unsigned int t) {
-  unsigned int end = millis() + t;
-  while (end > millis()) mov.idle();
 }
