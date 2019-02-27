@@ -49,19 +49,15 @@ void setup() {
   robot.setLED(0, 1, 0);
   while (digitalRead(PUSHBUTTON));
   
-  Debug.println("Button pushed");
+  Debug.println("Button has been pushed!");
   delay(250);
   robot.setLED(0, 0, 0);
-
-
-  Com.notifyReady();
   
   //Attaching interrupts
   Debug.println("Attaching interrupts");
   attachInterrupt(PUSHBUTTON, reset, FALLING);
 
-  
-
+  Com.notifyReady();
   Debug.println("STARTING!", Levels::INFO);
 }
 
@@ -69,7 +65,6 @@ void receiveRotate() {
   bool dir = Com.read();
   byte angle = Com.read();
   robot.rotate(dir, angle);
-  Debug.println("Notify");
   Com.notifyRes(1);
 }
 
