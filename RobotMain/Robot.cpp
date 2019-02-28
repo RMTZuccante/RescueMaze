@@ -204,6 +204,7 @@ void Robot::rotate(bool dir, float angle) {
   byte type=BASIC;
   Debug.println(String("Back: ")+String(laser[4].read()));
   Debug.println(String("Front: ")+String(laser[0].read()));
+  /*
   if(laser[4].read()<100){
     type=BACK_WALL;
     back(10);
@@ -213,7 +214,7 @@ void Robot::rotate(bool dir, float angle) {
     type=FRONT_WALL;
     back(10);
     delay(1000);
-  }
+  }*/
   switch(mov.rotate(dir, angle, type)){
     case 1: 
       isVictimL=true;
@@ -347,7 +348,6 @@ int Robot::difLaser(){
   //for(int i = 0 ; i<3; i++){
   dif=dif+laser[0].read();
   dif=dif-laser[3].read();
-  dif=dif+LASER_DIF;
   //dif=dif/3;
   Debug.println(String("dif ")+String(dif));
   return dif;

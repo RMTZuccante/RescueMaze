@@ -18,6 +18,7 @@
 #define BLACK 1
 #define OBSTACLE 2
 #define RISE 3
+
 //Measurements
 #define CENTRED 60 //distance of the robot from the wall to be centered
 #define CENTRED2 100
