@@ -119,6 +119,8 @@ int Moviment::rotate(bool invert , float angle , byte type) {
   bool isVictimL = false;
   bool isVictimR = false;
   end-=fill;
+  if(end==0)end+=1;
+  if(end==360)end-=1;
   Debug.println(String("startAngle ")+String(orientation.yaw()));
   Debug.println(String("endAngle ")+String(end));
   if (invert) {
