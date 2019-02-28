@@ -97,7 +97,7 @@ float Robot::getTempRight() {
 int Robot::go(){
   uint16_t zero=laser[0].read();
   uint16_t three=laser[3].read();
-  uint16_t four=laser[4].read();
+  uint16_t four=laser[4].read()+300;
   return go((zero>three?three:zero)<four);
 }
 
@@ -109,7 +109,9 @@ int Robot::go(){
 int Robot::go(bool frontLaser) {
   int dist = frontLaser ? ( (laser[0].read()<laser[3].read()) ? 0 : 3 ) : 4;
   uint16_t end = endDist(laser[dist].read(),frontLaser);
+  
   Debug.println(String("End")+String(end));
+  Debug.println(String(dist==4?"using back laser":"using front laser"));
   int i = 0;
   int salita = 0;
   uint16_t front = laser[dist].read();
@@ -153,7 +155,7 @@ int Robot::go(bool frontLaser) {
       }
       uint16_t zero=laser[0].read();
       uint16_t three=laser[3].read();
-      uint16_t four=laser[4].read();
+      uint16_t four=laser[4].read()+300;
       dist=(four<(zero>three?three:zero))?4:(zero<three?0:3);
       end = endDist(laser[dist].read(),front);
     }
