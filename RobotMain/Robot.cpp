@@ -95,7 +95,10 @@ float Robot::getTempRight() {
 }
 
 int Robot::go(){
-  return go(laser[0].read()<1000);
+  uint16_t zero=laser[0].read();
+  uint16_t three=laser[3].read();
+  uint16_t four=laser[4].read();
+  return go((zero>three?three:zero)<four);
 }
 
 /**
@@ -124,6 +127,7 @@ int Robot::go(bool frontLaser) {
       if ( ( (before > now) ? before - now : now - before ) < 5) {
         mov.impennati(MAXSPEED);
         while( ( (before > now) ? before - now : now - before ) < 5){
+          sol = OBSTACLE;
           now = laser[dist].read();
         }
       }
@@ -140,17 +144,20 @@ int Robot::go(bool frontLaser) {
     if(salita >= 10){
       Debug.println("salita");
       Debug.println("incl");
-      sol = (incl > 0) ? 2 : -2;
+      sol = RISE;
       mov.delayr(50);
       while(abs(mov.inclination()) > 8){
         int dif=laser[2].read();
         dif=dif-laser[1].read();
         climb(dif);
       }
+      uint16_t zero=laser[0].read();
+      uint16_t three=laser[3].read();
+      uint16_t four=laser[4].read();
+      dist=(four<(zero>three?three:zero))?4:(zero<three?0:3);
       end = endDist(laser[dist].read(),front);
     }
-    if(color.read() == 2) sol=1;
-    
+    if(color.read() == 2) sol=BLACK;    
     float tempAmb = (tempL.readAmb() + tempR.readAmb()) / 2;
     if( abs(start-front) > CENTRED){
       Debug.println(String("is Victim?"));
@@ -159,7 +166,7 @@ int Robot::go(bool frontLaser) {
     }
   }
   mov.stop();
-  if(sol==1){
+  if(sol==BLACK){
     Debug.println(String("Call to back"));
     back();
   }
