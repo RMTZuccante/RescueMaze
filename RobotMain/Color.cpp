@@ -34,10 +34,9 @@ bool Color::check() {
  * @return 0 if it detects a white cell, 1 for mirror and 2 for black.
  */
 uint8_t Color::read() {
-  return 0;
   apds.readAmbientLight(ambient_light);
   apds.readRedLight(red_light);
   apds.readGreenLight(green_light);
   apds.readBlueLight(blue_light);
-  return (green_light > red_light && green_light > blue_light)?1:((ambient_light < 10)?2:0);
+  return (green_light > red_light && green_light > blue_light)?1:((ambient_light < 50)?2:0);
 }
