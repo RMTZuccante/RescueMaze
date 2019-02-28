@@ -97,7 +97,7 @@ float Robot::getTempRight() {
 int Robot::go(){
   uint16_t zero=laser[0].read();
   uint16_t three=laser[3].read();
-  uint16_t four=laser[4].read()+300;
+  uint16_t four=laser[4].read();
   return go((zero>three?three:zero)<four);
 }
 
@@ -155,7 +155,7 @@ int Robot::go(bool frontLaser) {
       }
       uint16_t zero=laser[0].read();
       uint16_t three=laser[3].read();
-      uint16_t four=laser[4].read()+300;
+      uint16_t four=laser[4].read();
       dist=(four<(zero>three?three:zero))?4:(zero<three?0:3);
       end = endDist(laser[dist].read(),front);
     }
@@ -315,7 +315,7 @@ uint16_t Robot::endDist(uint16_t distance, bool front) {
     return distance - ((distance) % CELL_DIM) + ((distance<CELL_DIM) ? CENTRED : CENTRED2);
   }
   distance = distance + CELL;
-  return distance - ((distance) % CELL_DIM) + ((distance<CELL_DIM) ? CENTRED : CENTRED2) + CELL_DIM;
+  return distance - ((distance) % CELL_DIM) + Centered + CELL_DIM;
   
 }
 

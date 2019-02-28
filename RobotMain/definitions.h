@@ -20,7 +20,7 @@
 #define RISE 3
 
 //Measurements
-#define CENTRED 60 //distance of the robot from the wall to be centered
+#define CENTRED 30 //distance of the robot from the wall to be centered
 #define CENTRED2 100
 #define CELL_DIM 320
 #define CELL 200
@@ -85,7 +85,6 @@
 #define B_R2 68000
 
 //Interrupts
-#define RESETBUTTON PB13
 #define PUSHBUTTON PB14
 #define RASP1 PB4
 #define RASP2 PB5
