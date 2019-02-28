@@ -21,7 +21,11 @@ void setup() {
   //I/O initialization
   pinMode(LED_BUILTIN, OUTPUT);
   pinMode(PUSHBUTTON, INPUT_PULLUP);
+  pinMode(RESETBUTTON, INPUT_PULLUP);
   digitalWrite(LED_BUILTIN, LOW);
+
+  //Attaching interrupts
+  attachInterrupt(RESETBUTTON, reset, FALLING);
 
   //Hardware initialization
   Com.begin();
@@ -52,10 +56,6 @@ void setup() {
   Debug.println("Button has been pushed!");
   delay(250);
   robot.setLED(0, 0, 0);
-  
-  //Attaching interrupts
-  Debug.println("Attaching interrupts");
-  attachInterrupt(PUSHBUTTON, reset, FALLING);
 
   Com.notifyReady();
   Debug.println("STARTING!", Levels::INFO);

@@ -80,6 +80,7 @@
 #define B_R2 68000
 
 //Interrupts
+#define RESETBUTTON PB13
 #define PUSHBUTTON PB14
 #define RASP1 PB4
 #define RASP2 PB5
