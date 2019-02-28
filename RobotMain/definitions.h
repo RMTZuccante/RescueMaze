@@ -86,6 +86,7 @@
 
 //Interrupts
 #define PUSHBUTTON PB14
+#define RESETBUTTON PB13
 #define RASP1 PB4
 #define RASP2 PB5
 

@@ -97,7 +97,7 @@ float Robot::getTempRight() {
 int Robot::go(){
   uint16_t zero=laser[0].read();
   uint16_t three=laser[3].read();
-  uint16_t four=laser[4].read();
+  uint16_t four=laser[4].read()+300;
   return go((zero>three?three:zero)<four);
 }
 
@@ -138,7 +138,7 @@ int Robot::go(bool frontLaser) {
     }
     i++;
     front = laser[dist].read();
-    Debug.println(String("Laser read: ")+front);
+    //Debug.println(String("Laser read: ")+front);
     mov.setSpeed(((front - end) * 10) + SPEED);
     mov.straight();
     float incl=mov.inclination();
@@ -155,14 +155,14 @@ int Robot::go(bool frontLaser) {
       }
       uint16_t zero=laser[0].read();
       uint16_t three=laser[3].read();
-      uint16_t four=laser[4].read();
+      uint16_t four=laser[4].read()+300;
       dist=(four<(zero>three?three:zero))?4:(zero<three?0:3);
       end = endDist(laser[dist].read(),front);
     }
     if(color.read() == 2) sol=BLACK;    
     float tempAmb = (tempL.readAmb() + tempR.readAmb()) / 2;
     if( abs(start-front) > CENTRED){
-      Debug.println(String("is Victim?"));
+      //Debug.println(String("is Victim?"));
       isVictimL |= (tempL.read()) > tempk;
       isVictimR |= (tempR.read()) > tempk;
     }
@@ -315,7 +315,7 @@ uint16_t Robot::endDist(uint16_t distance, bool front) {
     return distance - ((distance) % CELL_DIM) + ((distance<CELL_DIM) ? CENTRED : CENTRED2);
   }
   distance = distance + CELL;
-  return distance - ((distance) % CELL_DIM) + Centered + CELL_DIM;
+  return distance - ((distance) % CELL_DIM) + ((distance<CELL_DIM) ? CENTRED : CENTRED2) + CELL_DIM;
   
 }
 
