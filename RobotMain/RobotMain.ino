@@ -57,7 +57,6 @@ void setup() {
   delay(250);
   robot.setLED(0, 0, 0);
 
-  Com.notifyReady();
   Debug.println("STARTING!", Levels::INFO);
 }
 
@@ -70,6 +69,7 @@ void receiveRotate() {
 
 void loop() {
   Debug.println("Waiting for command");
+  Com.notifyReady();
   switch (Com.getCommand()) {
     case Commands::ROTATE:
       Debug.println("Rotate");
