@@ -348,8 +348,7 @@ void Robot::straighten(){
 int Robot::difLaser(){
   int dif=0;
   //for(int i = 0 ; i<3; i++){
-  dif=dif+laser[0].read();
-  dif=dif-laser[3].read();
+  dif=laser[0].read()-laser[3].read()+LASER_DIF;
   //dif=dif/3;
   Debug.println(String("dif ")+String(dif));
   return dif;

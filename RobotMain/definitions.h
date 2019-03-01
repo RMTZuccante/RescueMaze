@@ -24,7 +24,7 @@
 #define CENTRED2 100
 #define CELL_DIM 320
 #define CELL 200
-#define LASER_DIF -1
+#define LASER_DIF 5
 #define TEMP_DIF 1.0
 #define TEMP_K 23
 
