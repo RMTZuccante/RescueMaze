@@ -1,3 +1,4 @@
+
 #include <Arduino.h>
 #include "definitions.h"
 #include "I2C.h"
@@ -51,8 +52,9 @@ void setup() {
   //Waiting user start command
   Debug.println("Waiting for the user to press the button...", Levels::INFO);
   robot.setLED(0, 1, 0);
-  while (digitalRead(PUSHBUTTON));
-  
+  //while (digitalRead(PUSHBUTTON));
+  Debug.println("Waiting for the delay to end");
+  delay(1000);
   Debug.println("Button has been pushed!");
   delay(250);
   robot.setLED(0, 0, 0);

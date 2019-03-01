@@ -1,6 +1,13 @@
 #ifndef definitions_h
 #define definitions_h
 
+//Laser positions
+#define LASER_FL 0
+#define LASER_FR 3
+#define LASER_R 1
+#define LASER_L  2
+#define LASER_B 4
+
 //Moviment
 #define BASIC 0
 #define BACK_WALL 1
