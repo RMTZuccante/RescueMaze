@@ -327,7 +327,7 @@ void Robot::straighten(){
   int dif;
   dif=difLaser();
   if(((laser[0].read() <= CENTRED<<1)&&(laser[3].read() <= CENTRED<<1)) && (dif > 6 ||  dif < -6)){
-    mov.rotation(dif>0);
+    mov.rotation(dif<0);
     do{
       dif=difLaser();
     }while( dif > 2|| dif < -2);
