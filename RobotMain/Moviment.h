@@ -13,6 +13,7 @@ class Moviment {
     void begin();
     bool check();
     void go();
+    float getDistortion();
     void go (bool invert);
     void impennati(uint16_t speed);    
     void straight();

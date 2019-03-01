@@ -16,7 +16,7 @@
 #define SPEED 20000
 #define FIRST_K 5000
 #define SECOND_K 5000
-#define ROTATION_P 1500
+#define ROTATION_P 500
 #define ROTATION_SPEED 60000
 #define ROTATION_K 1
 #define CLIMB_K 100
@@ -25,10 +25,12 @@
 #define BLACK 1
 #define OBSTACLE 2
 #define RISE 3
-
+#define DISTORTION 30
 //Measurements
-#define CENTRED 30 //distance of the robot from the wall to be centered
-#define CENTRED2 100
+#define CENTRED 45 //distance of the robot from the wall to be centered
+#define CENTRED_BACK 30
+#define CENTRED2 60
+
 #define CELL_DIM 320
 #define CELL 200
 #define LASER_DIF 5

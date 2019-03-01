@@ -48,14 +48,12 @@ class Robot {
     RGB led = RGB(RED, GREEN, BLUE);
     VL53L0X laser[5] = {VL53L0X(), VL53L0X(), VL53L0X(), VL53L0X(), VL53L0X()};
     Cagamattoni caga = Cagamattoni(0); //TODO change if needed
-
-    float tempk;
     int difLaser();
     float getBattery();
     void setAddresses();
     uint16_t endDist(uint16_t distance, bool front);
-    bool isVictimL;
-    bool isVictimR;
+    float isVictimL;
+    float isVictimR;
 };
 
 #endif

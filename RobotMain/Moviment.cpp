@@ -65,7 +65,12 @@ void Moviment::go(bool invert) {
   motorsR.start(bound(speed, MAXSPEED), invert);
   motorsL.start(bound(speed, MAXSPEED), invert);
 }
-
+/**
+ * @return The difference of the initial angle and the angle of the actual direction 
+ */
+float Moviment::getDistortion(){
+  return orientation.yaw()-direzione;
+}
 /**
  * Moves the robot forward in a straight line.
  */
@@ -140,6 +145,11 @@ int Moviment::rotate(bool invert , float angle , byte type) {
       isVictimL |= (tleft->read()) > TEMP_K;
       isVictimR |= (tright->read()) > TEMP_K;
     }
+    stop();
+    Debug.println(" Correction");
+    while (orientation.yaw() > (end)) {
+      rotationSpeed(!invert, end);
+    }
   }
   else {
     Debug.print("right ");
@@ -158,10 +168,16 @@ int Moviment::rotate(bool invert , float angle , byte type) {
       isVictimL |= (tleft->read()) > TEMP_K;
       isVictimR |= (tright->read()) > TEMP_K;
     }
+    stop();
+    Debug.println(" Correction");
+    while (orientation.yaw() < (end)) {
+      rotationSpeed(!invert, end);
+    }
   }
   stop();
   setK(0, 0);
-  //fill=(orientation.yaw()-end);
+  delayr(50);
+  fill=(orientation.yaw()-end);
   Debug.println("rotate end");
   if(isVictimL)return 1;
   if(isVictimR)return 2;
