@@ -38,5 +38,5 @@ uint8_t Color::read() {
   apds.readRedLight(red_light);
   apds.readGreenLight(green_light);
   apds.readBlueLight(blue_light);
-  return (green_light > red_light && green_light > blue_light)?1:((ambient_light < 50)?2:0);
+  return (green_light > red_light && green_light > blue_light)?0:((ambient_light < 50)?1:0);
 }
