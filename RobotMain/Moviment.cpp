@@ -140,11 +140,6 @@ int Moviment::rotate(bool invert , float angle , byte type) {
       isVictimL |= (tleft->read()) > TEMP_K;
       isVictimR |= (tright->read()) > TEMP_K;
     }
-    stop();
-    Debug.println(" Correction");
-    while (orientation.yaw() > (end)) {
-      rotationSpeed(!invert, end);
-    }
   }
   else {
     Debug.print("right ");
@@ -162,10 +157,6 @@ int Moviment::rotate(bool invert , float angle , byte type) {
       rotationSpeed(ROTATION_SPEED, invert, type);
       isVictimL |= (tleft->read()) > TEMP_K;
       isVictimR |= (tright->read()) > TEMP_K;
-    }
-    stop();
-    while (orientation.yaw() < (end)) {
-      rotationSpeed(!invert, end);
     }
   }
   stop();
