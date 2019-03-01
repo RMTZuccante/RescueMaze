@@ -124,11 +124,11 @@ int Robot::go(bool frontLaser) {
   Debug.println(String("start go "));
   Debug.println(String("First read: ")+front);
   while ( ( (frontLaser) ? (front > end) : (front < end)) && sol!=1) {
-    if (i == 100) {
+    if (i == 20) {
       uint16_t now = laser[dist].read();
       if ( ( (before > now) ? before - now : now - before ) < 5) {
         mov.impennati(MAXSPEED);
-        while( ( (before > now) ? before - now : now - before ) < 5){
+        while( ( (before > now) ? before - now : now - before ) < 10){
           sol = OBSTACLE;
           now = laser[dist].read();
         }
