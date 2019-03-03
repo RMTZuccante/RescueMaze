@@ -28,8 +28,7 @@ void MPU6050::begin() {
  * @return TRUE if the sensor works.
  */
 bool MPU6050::check() {
-  I2C_2.beginTransmission(MPU6050_ADDRESS);
-  if (I2C_2.endTransmission()) return false;
+  if(!I2C::check(&I2C_2, MPU6050_ADDRESS)) return false;
 
   I2C_2.beginTransmission(MPU6050_ADDRESS);
   I2C_2.write(MPU6050_WHO_AM_I);

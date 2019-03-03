@@ -12,8 +12,6 @@ void IMU::begin() {
  * @return TRUE if the IMU works.
  */
 bool IMU::check() {
-  bool ok = imu.check();
-  if (!ok) Debug.println(String("IMU not found."), Levels::WARN);
   return imu.check();
 }
 

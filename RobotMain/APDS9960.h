@@ -112,6 +112,7 @@ public:
 
     /* Initialization methods */
     bool init();
+    bool check();
     uint8_t getMode();
     bool setMode(uint8_t mode, uint8_t enable);
 

@@ -12,6 +12,7 @@ extern SoftWire I2C_2;
 class I2C {
   public:
     static void scan(WireBase *i2c);
+    static bool check(WireBase *i2c, uint8_t device);
 };
 
 #endif

@@ -23,10 +23,7 @@ void Color::begin() {
  * @return TRUE if it works.
  */
 bool Color::check() {
-  I2C_1.beginTransmission(0x39);
-  bool ok = !I2C_1.endTransmission();
-  if(!ok) Debug.println(String("Color sensor at address ") + String(0x39, HEX) + " not found.", Levels::WARN);
-  return ok;
+  return apds.check();
 }
 
 /**

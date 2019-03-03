@@ -23,3 +23,10 @@ void I2C::scan(WireBase *i2c) {
   if (nDevices == 0) Debug.println("No I2C devices found");
   else Debug.println("done");
 }
+
+bool I2C::check(WireBase *i2c, uint8_t device) {
+    i2c->beginTransmission(device);
+    bool ok = !i2c->endTransmission();
+    if(!ok) Debug.println(String("Device at address ") + String(device, HEX) + " not found.", Levels::WARN);
+    return ok;
+}

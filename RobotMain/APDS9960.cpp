@@ -28,6 +28,10 @@ bool APDS9960::init() {
     return true;
 }
 
+bool APDS9960::check() {
+  return I2C::check(&I2C_1, APDS9960_I2C_ADDR);
+}
+
 uint8_t APDS9960::getMode() {
     uint8_t enable_value;
     if (!wireReadData8Bit(APDS9960_ENABLE, enable_value)) return ERROR;
