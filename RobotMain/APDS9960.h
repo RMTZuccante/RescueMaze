@@ -133,15 +133,15 @@ public:
     void setProximityGain(uint8_t gain);
 
     /* Get and set light interrupt thresholds */
-    void getLightIntLowThreshold(uint16_t &threshold);
+    uint16_t getLightIntLowThreshold();
     void setLightIntLowThreshold(uint16_t threshold);
-    void getLightIntHighThreshold(uint16_t &threshold);
+    uint16_t getLightIntHighThreshold();
     void setLightIntHighThreshold(uint16_t threshold);
 
     /* Get and set proximity interrupt thresholds */
-    void getProximityIntLowThreshold(uint8_t &threshold);
+    uint8_t getProximityIntLowThreshold();
     void setProximityIntLowThreshold(uint8_t threshold);
-    void getProximityIntHighThreshold(uint8_t &threshold);
+    uint8_t getProximityIntHighThreshold();
     void setProximityIntHighThreshold(uint8_t threshold);
 
     /* Get and set interrupt enables */
@@ -155,13 +155,13 @@ public:
     void clearProximityInt();
 
     /* Ambient light methods */
-    void readAmbientLight(uint16_t &val);
-    void readRedLight(uint16_t &val);
-    void readGreenLight(uint16_t &val);
-    void readBlueLight(uint16_t &val);
+    uint16_t readAmbientLight();
+    uint16_t readRedLight();
+    uint16_t readGreenLight();
+    uint16_t readBlueLight();
 
     /* Proximity methods */
-    void readProximity(uint8_t &val);
+    uint8_t readProximity();
 
 private:
 
@@ -184,9 +184,9 @@ private:
     /* Raw I2C Commands */
     void wireWrite8Bit(uint8_t val);
     void wireWriteData8Bit(uint8_t reg, uint8_t val);
-    void wireReadData8Bit(uint8_t reg, uint8_t &val);
+    uint8_t wireReadData8Bit(uint8_t reg);
     void wireWriteData16Bit(uint8_t reg, uint16_t val);
-    void wireReadData16Bit(uint8_t reg, uint16_t &val);
+    uint16_t wireReadData16Bit(uint8_t reg);
 };
 
 #endif

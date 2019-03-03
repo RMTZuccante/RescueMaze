@@ -1,16 +1,6 @@
 #include "Color.h"
 
 /**
- * Sets the color sensor parameters.
- */
-Color::Color() {
-  ambient_light = 0;
-  red_light = 0;
-  green_light = 0;
-  blue_light = 0;
-}
-
-/**
  * Starts the sensor and makes it ready to be read.
  */
 void Color::begin() {
@@ -31,9 +21,10 @@ bool Color::check() {
  * @return 0 if it detects a white cell, 1 for mirror and 2 for black.
  */
 uint8_t Color::read() {
-  apds.readAmbientLight(ambient_light);
-  apds.readRedLight(red_light);
-  apds.readGreenLight(green_light);
-  apds.readBlueLight(blue_light);
+  uint16_t ambient_light = apds.readAmbientLight();
+  uint16_t red_light = apds.readRedLight();
+  uint16_t green_light = apds.readGreenLight();
+  uint16_t blue_light = apds.readBlueLight();
+
   return (green_light > red_light && green_light > blue_light)?0:((ambient_light < 50)?1:0);
 }
