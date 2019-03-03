@@ -107,7 +107,7 @@ class APDS9960 {
 public:
 
     /* Initialization methods */
-    void init();
+    void begin();
     bool check();
     uint8_t getMode();
     void setMode(uint8_t mode, uint8_t enable);

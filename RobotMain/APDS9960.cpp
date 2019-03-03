@@ -1,7 +1,6 @@
 #include "APDS9960.h"
 
-void APDS9960::init() {
-
+void APDS9960::begin() {
     /* Set ENABLE register to 0 (disable all features) */
     setMode(ALL, false);
 
@@ -296,17 +295,11 @@ uint8_t APDS9960::wireReadData8Bit(uint8_t reg) {
 
 void APDS9960::wireWriteData16Bit(uint8_t reg, uint16_t val) {
     /* Break 16-bit threshold into 2 8-bit values */
-    uint8_t val_low = val & 0x00FF;
-    uint8_t val_high = (val & 0xFF00) >> 8;
-    wireWriteData8Bit(reg, val_low);
-    wireWriteData8Bit(reg+1, val_high);
+    wireWriteData8Bit(reg, val & 0x00FF);
+    wireWriteData8Bit(reg+1, (val & 0xFF00) >> 8);
 }
 
 uint16_t APDS9960::wireReadData16Bit(uint8_t reg) {
-    uint16_t val;
-    uint8_t val_byte = wireReadData8Bit(reg);
-    val = val_byte;
-    val_byte = wireReadData8Bit(reg+1);
-    val = val + ((uint16_t) val_byte << 8);
-    return val;
+    uint16_t val = wireReadData8Bit(reg);
+    return val | (wireReadData8Bit(reg+1) << 8);
 }

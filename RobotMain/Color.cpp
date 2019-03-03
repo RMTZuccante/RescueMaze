@@ -4,7 +4,7 @@
  * Starts the sensor and makes it ready to be read.
  */
 void Color::begin() {
-  apds.init();
+  apds.begin();
   apds.enableLightSensor(false);
 }
 
