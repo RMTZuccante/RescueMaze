@@ -37,13 +37,6 @@
 #define TEMP_DIF 1.0
 #define TEMP_K 23
 
-//Color
-#define MERROR 70
-#define MCOLOR 35
-
-//Color address
-#define COLORADDRESS 0x42
-
 //Temperature addresses
 #define T_LEFT 0x5A
 #define T_RIGHT 0x5B
@@ -76,13 +69,6 @@
 #define LX_RIGHT PB5
 #define LX_BACK PB4
 
-//Cagamattoni
-#define CAGA1 9
-#define CAGA2 8
-#define CAGADEL 1000
-#define CAGADIST 30
-#define MINDEL 40
-
 //RGB
 #define RED PA10
 #define GREEN PA8
@@ -96,7 +82,5 @@
 //Interrupts
 #define PUSHBUTTON PB14
 #define RESETBUTTON PB13
-#define RASP1 PB4
-#define RASP2 PB5
 
 #endif
