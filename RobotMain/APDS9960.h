@@ -51,10 +51,6 @@
 #define APDS9960_CICLEAR        0xE6
 #define APDS9960_AICLEAR        0xE7
 
-/* On/Off definitions */
-#define OFF                     0
-#define ON                      1
-
 /* Acceptable parameters for setMode */
 #define POWER                   0
 #define AMBIENT_LIGHT           1
@@ -111,86 +107,86 @@ class APDS9960 {
 public:
 
     /* Initialization methods */
-    bool init();
+    void init();
     bool check();
     uint8_t getMode();
-    bool setMode(uint8_t mode, uint8_t enable);
+    void setMode(uint8_t mode, uint8_t enable);
 
     /* Turn the APDS-9960 on and off */
-    bool enablePower();
-    bool disablePower();
+    void enablePower();
+    void disablePower();
 
     /* Enable or disable specific sensors */
-    bool enableLightSensor(bool interrupts = false);
-    bool disableLightSensor();
-    bool enableProximitySensor(bool interrupts = false);
-    bool disableProximitySensor();
+    void enableLightSensor(bool interrupts = false);
+    void disableLightSensor();
+    void enableProximitySensor(bool interrupts = false);
+    void disableProximitySensor();
 
     /* LED drive strength control */
     uint8_t getLEDDrive();
-    bool setLEDDrive(uint8_t drive);
+    void setLEDDrive(uint8_t drive);
 
     /* Gain control */
     uint8_t getAmbientLightGain();
-    bool setAmbientLightGain(uint8_t gain);
+    void setAmbientLightGain(uint8_t gain);
     uint8_t getProximityGain();
-    bool setProximityGain(uint8_t gain);
+    void setProximityGain(uint8_t gain);
 
     /* Get and set light interrupt thresholds */
-    bool getLightIntLowThreshold(uint16_t &threshold);
-    bool setLightIntLowThreshold(uint16_t threshold);
-    bool getLightIntHighThreshold(uint16_t &threshold);
-    bool setLightIntHighThreshold(uint16_t threshold);
+    void getLightIntLowThreshold(uint16_t &threshold);
+    void setLightIntLowThreshold(uint16_t threshold);
+    void getLightIntHighThreshold(uint16_t &threshold);
+    void setLightIntHighThreshold(uint16_t threshold);
 
     /* Get and set proximity interrupt thresholds */
-    bool getProximityIntLowThreshold(uint8_t &threshold);
-    bool setProximityIntLowThreshold(uint8_t threshold);
-    bool getProximityIntHighThreshold(uint8_t &threshold);
-    bool setProximityIntHighThreshold(uint8_t threshold);
+    void getProximityIntLowThreshold(uint8_t &threshold);
+    void setProximityIntLowThreshold(uint8_t threshold);
+    void getProximityIntHighThreshold(uint8_t &threshold);
+    void setProximityIntHighThreshold(uint8_t threshold);
 
     /* Get and set interrupt enables */
     uint8_t getAmbientLightIntEnable();
-    bool setAmbientLightIntEnable(uint8_t enable);
+    void setAmbientLightIntEnable(uint8_t enable);
     uint8_t getProximityIntEnable();
-    bool setProximityIntEnable(uint8_t enable);
+    void setProximityIntEnable(uint8_t enable);
 
     /* Clear interrupts */
-    bool clearAmbientLightInt();
-    bool clearProximityInt();
+    void clearAmbientLightInt();
+    void clearProximityInt();
 
     /* Ambient light methods */
-    bool readAmbientLight(uint16_t &val);
-    bool readRedLight(uint16_t &val);
-    bool readGreenLight(uint16_t &val);
-    bool readBlueLight(uint16_t &val);
+    void readAmbientLight(uint16_t &val);
+    void readRedLight(uint16_t &val);
+    void readGreenLight(uint16_t &val);
+    void readBlueLight(uint16_t &val);
 
     /* Proximity methods */
-    bool readProximity(uint8_t &val);
+    void readProximity(uint8_t &val);
 
 private:
 
     /* Proximity Interrupt Threshold */
     uint8_t getProxIntLowThresh();
-    bool setProxIntLowThresh(uint8_t threshold);
+    void setProxIntLowThresh(uint8_t threshold);
     uint8_t getProxIntHighThresh();
-    bool setProxIntHighThresh(uint8_t threshold);
+    void setProxIntHighThresh(uint8_t threshold);
 
     /* LED Boost Control */
     uint8_t getLEDBoost();
-    bool setLEDBoost(uint8_t boost);
+    void setLEDBoost(uint8_t boost);
 
     /* Proximity photodiode select */
     uint8_t getProxGainCompEnable();
-    bool setProxGainCompEnable(uint8_t enable);
+    void setProxGainCompEnable(uint8_t enable);
     uint8_t getProxPhotoMask();
-    bool setProxPhotoMask(uint8_t mask);
+    void setProxPhotoMask(uint8_t mask);
 
     /* Raw I2C Commands */
-    bool wireWrite8Bit(uint8_t val);
-    bool wireWriteData8Bit(uint8_t reg, uint8_t val);
-    bool wireReadData8Bit(uint8_t reg, uint8_t &val);
-    bool wireWriteData16Bit(uint8_t reg, uint16_t val);
-    bool wireReadData16Bit(uint8_t reg, uint16_t &val);
+    void wireWrite8Bit(uint8_t val);
+    void wireWriteData8Bit(uint8_t reg, uint8_t val);
+    void wireReadData8Bit(uint8_t reg, uint8_t &val);
+    void wireWriteData16Bit(uint8_t reg, uint16_t val);
+    void wireReadData16Bit(uint8_t reg, uint16_t &val);
 };
 
 #endif
