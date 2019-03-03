@@ -227,34 +227,34 @@ void APDS9960::setProxPhotoMask(uint8_t mask) {
 }
 
 void APDS9960::getLightIntLowThreshold(uint16_t &threshold) {
-    return wireReadData16Bit(APDS9960_AILTL, threshold);
+    wireReadData16Bit(APDS9960_AILTL, threshold);
 }
 
 void APDS9960::setLightIntLowThreshold(uint16_t threshold) {
-    return wireWriteData16Bit(APDS9960_AILTL, threshold);
+    wireWriteData16Bit(APDS9960_AILTL, threshold);
 }
 
 void APDS9960::getLightIntHighThreshold(uint16_t &threshold) {
     threshold = 0;
-    return wireReadData16Bit(APDS9960_AIHTL, threshold);
+    wireReadData16Bit(APDS9960_AIHTL, threshold);
 }
 
 void APDS9960::setLightIntHighThreshold(uint16_t threshold) {
-    return wireWriteData16Bit(APDS9960_AIHTL, threshold);
+    wireWriteData16Bit(APDS9960_AIHTL, threshold);
 }
 
 void APDS9960::getProximityIntLowThreshold(uint8_t &threshold) {
     threshold = 0;
-    return wireReadData8Bit(APDS9960_PILT, threshold);
+    wireReadData8Bit(APDS9960_PILT, threshold);
 }
 
 void APDS9960::setProximityIntLowThreshold(uint8_t threshold) {
-    return wireWriteData8Bit(APDS9960_PILT, threshold);
+    wireWriteData8Bit(APDS9960_PILT, threshold);
 }
 
 void APDS9960::getProximityIntHighThreshold(uint8_t &threshold) {
     threshold = 0;
-    return wireReadData8Bit(APDS9960_PIHT, threshold);
+    wireReadData8Bit(APDS9960_PIHT, threshold);
 }
 
 void APDS9960::setProximityIntHighThreshold(uint8_t threshold) {
