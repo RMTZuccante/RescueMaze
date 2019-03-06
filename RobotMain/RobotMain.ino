@@ -67,6 +67,13 @@ void receiveRotate() {
   Com.notifyRes(1);
 }
 
+void sendColor(ColorData cd) {
+  Com.write(cd.red);
+  Com.write(cd.green);
+  Com.write(cd.blue);
+  Com.write(cd.ambient);
+}
+
 void loop() {
   Com.notifyReady();
   switch (Com.getCommand()) {
@@ -82,7 +89,7 @@ void loop() {
       for (int i = 0; i < 5; i++) Com.write(robot.getDistance(i));
       break;
     case Commands::GETCOLOR:
-      Serial.write(robot.getColor());
+      sendColor(robot.getColor());
       break;
     case Commands::GETTEMPS:
       Com.write(robot.getTempLeft());

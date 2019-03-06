@@ -77,7 +77,7 @@ uint16_t Robot::getDistance(int sensor) {
 	return laser[sensor].read();
 }
 
-uint8_t Robot::getColor() {
+ColorData Robot::getColor() {
 	return color.read();
 }
 
@@ -114,7 +114,7 @@ int Robot::go(bool frontLaser) {
   int salita = 0;
   uint16_t front = laser[dist].read();
   uint16_t before = front;
-  int sol = (color.read() == 2);
+  int sol = color.isBlack();
   int start = front;
   Debug.println(String(sol));
   mov.go();
@@ -163,7 +163,7 @@ int Robot::go(bool frontLaser) {
       dist=(four<(zero>three?three:zero))?4:(zero<three?0:3);
       end = endDist(laser[dist].read(),front);
     }
-    if(color.read() == 2) sol=BLACK;    
+    if(color.isBlack()) sol=BLACK;    
     float tempAmb = (tempL.readAmb() + tempR.readAmb()) / 2;
     if( abs(start-front) > CENTRED){
       float l=tempL.read();
