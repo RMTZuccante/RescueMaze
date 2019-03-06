@@ -68,7 +68,6 @@ void receiveRotate() {
 }
 
 void loop() {
-  Debug.println("Waiting for command");
   Com.notifyReady();
   switch (Com.getCommand()) {
     case Commands::ROTATE:

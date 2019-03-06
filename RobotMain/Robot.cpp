@@ -82,13 +82,13 @@ uint8_t Robot::getColor() {
 }
 
 float Robot::getTempLeft() {
-	float out = isVictimL;
+	float out = max(tempL.read(), isVictimL);
 	isVictimL = 0;
 	return out;
 }
 
 float Robot::getTempRight() {
-	float out = isVictimR;
+	float out = max(tempR.read(), isVictimR);
 	isVictimR = 0;
 	return out;
 }
