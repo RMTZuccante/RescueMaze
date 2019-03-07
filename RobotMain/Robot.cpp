@@ -81,6 +81,10 @@ ColorData Robot::getColor() {
 	return color.read();
 }
 
+void Robot::setBlackThreshold(uint8_t black_threshold) {
+  color.setBlack(black_threshold);
+}
+
 float Robot::getTempLeft() {
 	float out = max(tempL.read(), isVictimL);
 	isVictimL = 0;

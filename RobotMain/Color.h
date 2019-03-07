@@ -19,6 +19,7 @@ class Color {
     bool check();
     ColorData read();
     bool isBlack();
+    void setBlack(uint8_t black_threshold);
   private:
     APDS9960 apds;
     uint8_t black_threshold;

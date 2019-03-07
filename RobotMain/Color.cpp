@@ -34,3 +34,7 @@ ColorData Color::read() {
 bool Color::isBlack() {
   return apds.readAmbientLight() < black_threshold;
 }
+
+void Color::setBlack(uint8_t black_threshold) {
+  this->black_threshold = black_threshold;
+}

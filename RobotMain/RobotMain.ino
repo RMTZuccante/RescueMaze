@@ -102,5 +102,8 @@ void loop() {
     case Commands::SETDEBUG:
       Debug.setLevel(static_cast<Levels>(Com.read()));
       break;
+    case Commands::SETBLACK:
+      robot.setBlackThreshold(Com.read());
+      break;
   }
 }

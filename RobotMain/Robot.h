@@ -23,6 +23,7 @@ class Robot {
 
     uint16_t getDistance(int sensor);
     ColorData getColor();
+    void setBlackThreshold(uint8_t black_threshold);
     float getTempLeft();
     float getTempRight();
 
