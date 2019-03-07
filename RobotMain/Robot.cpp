@@ -110,34 +110,30 @@ int Robot::go(){
  * @return FALSE if it found a black cell
  */
 int Robot::go(bool frontLaser) {
-  int dist = frontLaser ? ( (laser[0].read()<laser[3].read()) ? 0 : 3 ) : 4;
-  uint16_t end = endDist(laser[dist].read(),frontLaser);
+  int dist = frontLaser ? ( (laser[0].read()<laser[3].read()) ? 0 : 3 ) : 4; // decido che sensore usare
+  uint16_t end = endDist(laser[dist].read(),frontLaser); // calcolo a che distanza devo arrivare
   Debug.println(String("End")+String(end));
   Debug.println(String(dist==4?"using back laser":"using front laser"));
+  int res = 0;
   int i = 0;
   int salita = 0;
   uint16_t front = laser[dist].read();
   uint16_t before = front;
-  int sol = color.isBlack();
-  int start = front;
-  Debug.println(String(sol));
-  mov.go();
+  if(color.isBlack()) res=BLACK; // controllo il colore
+  uint16_t start = front;
+  Debug.println(String(res));
+  mov.go(); // inizio a muovermi
   Debug.println(String("start go "));
   Debug.println(String("First read: ")+front);
-  while ( ( (frontLaser) ? (front > end) : (front < end)) && sol!=1) {
-    int dif = laser[LASER_FL].read()-laser[LASER_FR].read();
-    if(dif>DISTORTION){
-      
-    }
-    else if(dif<- DISTORTION){
-      
-    }
+  
+  while (((frontLaser) ? (front > end) : (front < end)) && res!=BLACK) {
+    // ogni 20 iterazioni controllo l'ostacolo
     if (i == 20) {
       uint16_t now = laser[dist].read();
-      if ( ( (before > now) ? before - now : now - before ) < 5) {
+      if (((before > now) ? before - now : now - before) < 5) {
         mov.impennati(MAXSPEED);
-        while( ( (before > now) ? before - now : now - before ) < 10){
-          sol = OBSTACLE;
+        while(((before > now) ? before - now : now - before) < 10){
+          res = OBSTACLE;
           now = laser[dist].read();
         }
       }
@@ -149,44 +145,52 @@ int Robot::go(bool frontLaser) {
     //Debug.println(String("Laser read: ")+front);
     mov.setSpeed(((front - end) * 10) + SPEED);
     mov.straight();
-    float incl=mov.inclination();
-    (abs(incl) > 10) ? salita++ : salita=0;
+
+    // controllo salita
+    float incl = mov.inclination();
+    if (abs(incl) > 10) salita++;
+    else salita = 0;
+
+    // se rilevata eseguo salita
     if(salita >= 10){
       Debug.println("salita");
-      Debug.println("incl");
-      sol = RISE;
+      res = RISE;
       mov.delayr(50);
       while(abs(mov.inclination()) > 8){
-        dif=laser[2].read();
-        dif=dif-laser[1].read();
-        climb(dif);
+        climb(laser[2].read()-laser[1].read());
       }
+      
       uint16_t zero=laser[0].read();
       uint16_t three=laser[3].read();
       uint16_t four=laser[4].read()+CELL_DIM;
-      dist=(four<(zero>three?three:zero))?4:(zero<three?0:3);
-      end = endDist(laser[dist].read(),front);
+      
+      dist = (four < min(zero,three)) ? 4 : (zero < three ? 0 : 3); 
+      
+      end = endDist(laser[dist].read(),dist!=4);
     }
-    if(color.isBlack()) sol=BLACK;    
-    float tempAmb = (tempL.readAmb() + tempR.readAmb()) / 2;
-    if( abs(start-front) > CENTRED){
-      float l=tempL.read();
-      float r=tempR.read();
-      isVictimL = (l) > isVictimL ? l : isVictimL;
-      isVictimL = (r) > isVictimR ? r : isVictimR;
+
+    // controllo colore
+    if(color.isBlack()) res=BLACK;
+
+    // controllo temperature
+    if(abs(start-front) > CENTRED){
+      isVictimL = max(isVictimL, tempL.read());
+      isVictimL = max(isVictimR, tempR.read());
     }
   }
   mov.stop();
-  if(sol==BLACK){
+  
+  // se rilevato nero torno indietro
+  if(res==BLACK){
     Debug.println(String("Call to back"));
     back();
   }
   //mov.endGo();
   mov.stop();
   
-  Debug.println(String("stop "));
+  Debug.println(String("stop"));
   straighten();
-  return sol;
+  return res;
 }
 
 /**
