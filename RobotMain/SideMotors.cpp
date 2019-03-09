@@ -1,17 +1,17 @@
 #include "SideMotors.h"
 
-#include <Arduino.h>
-
 /**
  * Sets the motor pins.
  * @param inverter1 First inverter pin.
  * @param inverter2 Second inverter pin.
+ * @param pwmFront 
+ * @param pwmRear 
  */
-SideMotors::SideMotors(uint8_t inverter1, uint8_t inverter2, uint8_t pwmFront, uint8_t pwmBack) {
+SideMotors::SideMotors(uint8_t inverter1, uint8_t inverter2, uint8_t pwmFront, uint8_t pwmRear) {
   this->inverter1 = inverter1;
   this->inverter2 = inverter2;
   this->pwmFront = pwmFront;
-  this->pwmRear = pwmBack;
+  this->pwmRear = pwmRear;
   this->inverse = false;
 }
 

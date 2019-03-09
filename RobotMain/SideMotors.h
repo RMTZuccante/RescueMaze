@@ -5,7 +5,7 @@
 
 class SideMotors {
   public:
-    SideMotors(uint8_t inverter1, uint8_t inverter2, uint8_t pwmFront, uint8_t pwmBack);
+    SideMotors(uint8_t inverter1, uint8_t inverter2, uint8_t pwmFront, uint8_t pwmRear);
     void startDiff(uint16_t frontSpeed, uint16_t rearSpeed, bool inverse);
     void start(uint16_t speed, bool inverse);
     void setSpeed(uint16_t speed);
