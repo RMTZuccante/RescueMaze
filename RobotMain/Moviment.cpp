@@ -125,7 +125,7 @@ int Moviment::rotate(bool invert , float angle , byte type) {
   bool isVictimR = false;
   end-=fill;
   if(end==0)end+=1;
-  if(end==360)end-=1;
+  if(end==360)end- =1;
   Debug.println(String("startAngle ")+String(orientation.yaw()));
   Debug.println(String("endAngle ")+String(end));
   if (invert) {
@@ -136,7 +136,7 @@ int Moviment::rotate(bool invert , float angle , byte type) {
       while (orientation.yaw() < 359) {
         //Debug.println(String(orientation.yaw()));  
       };
-      delay(100);
+      delayr(100);
     }
     Debug.print("Normal rotation");
     while (orientation.yaw() < end) {
@@ -159,7 +159,7 @@ int Moviment::rotate(bool invert , float angle , byte type) {
       while (orientation.yaw() > 1) {
         //Debug.println(String(orientation.yaw()));
       }
-      delay(100);
+      delayr(100);
     }
     Debug.print("Normal rotation");
     while (orientation.yaw() > end) {     
