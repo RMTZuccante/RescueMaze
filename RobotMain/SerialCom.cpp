@@ -41,6 +41,10 @@ void SerialCom::write(int i) {
   Serial.write(b[1]);
 }
 
+void SerialCom::write(Commands c) {
+  Serial.write(static_cast<byte>(c));
+}
+
 void SerialCom::notifyRes(byte res) {
   Serial.write(RES | res);
 }

@@ -86,12 +86,15 @@ void loop() {
       Com.notifyRes(robot.go());
       break;
     case Commands::GETDISTANCES:
+      Com.write(Commands::GETDISTANCES);
       for (int i = 0; i < 5; i++) Com.write(robot.getDistance(i));
       break;
     case Commands::GETCOLOR:
+      Com.write(Commands::GETCOLOR);
       sendColor(robot.getColor());
       break;
     case Commands::GETTEMPS:
+      Com.write(Commands::GETTEMPS);
       Com.write(robot.getTempLeft());
       Com.write(robot.getTempRight());
       break;

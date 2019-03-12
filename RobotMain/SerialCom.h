@@ -20,6 +20,7 @@ public:
   void write(String s);
 	void write(float f);
 	void write(int i);
+  void write(Commands c);
   void notifyRes(byte res);
   void notifyReady();
   byte read();
