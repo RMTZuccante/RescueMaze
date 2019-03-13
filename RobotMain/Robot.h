@@ -14,6 +14,34 @@
 #include "RGB.h"
 #include "VL53L0X.h"
 
+struct Distances {
+  VL53L0X frontL;
+  VL53L0X frontR;
+  VL53L0X left;
+  VL53L0X right;
+  VL53L0X back;
+
+  bool check() {
+    return frontL.check() && frontR.check() && left.check() && right.check() && back.check();
+  }
+
+  void begin() {
+    frontL.begin();
+    frontR.begin();
+    left.begin();
+    right.begin();
+    back.begin();
+  }
+
+  void start() {
+    frontL.start();
+    frontR.start();
+    left.start();
+    right.start();
+    back.start();
+  }
+};
+
 struct Temps {
   Temperature left;
   Temperature right;
@@ -52,11 +80,11 @@ class Robot {
     void delayr(unsigned int t);
   private:
     Color color;
+    Distances distances;
     Temps temps;
 
     Moviment mov = Moviment(SPEED, &temps.left, &temps.right);
     RGB led = RGB(RED, GREEN, BLUE);
-    VL53L0X laser[5] = {VL53L0X(), VL53L0X(), VL53L0X(), VL53L0X(), VL53L0X()};
     Cagamattoni caga = Cagamattoni(0); //TODO change if needed
     int difLaser();
     float getBattery();

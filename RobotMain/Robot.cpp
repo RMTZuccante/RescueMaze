@@ -15,8 +15,8 @@ void Robot::begin() {
   color.begin();
   caga.begin();
   mov.begin();
-  for (int i = 0 ; i < 5 ; i++) laser[i].begin();
-  for (int i = 0 ; i < 5 ; i++) laser[i].start();
+  distances.begin();
+  distances.start();
   //tempk = (temps.left.read()+temps.left.read())/2+TEMP_DIF;
 }
 
@@ -33,17 +33,17 @@ void Robot::tempTest(){
  */
 void Robot::laserTest() {
   Debug.print(" 0: ");
-  Debug.print(String(laser[0].read()));
+  Debug.print(String(distances.frontL.read()));
   Debug.print(" 1: ");
-  Debug.print(String(laser[1].read()));
+  Debug.print(String(distances.right.read()));
   Debug.print(" 2: ");
-  Debug.print(String(laser[2].read()));
+  Debug.print(String(distances.left.read()));
   Debug.print(" 3: ");
-  Debug.print(String(laser[3].read()));
+  Debug.print(String(distances.frontR.read()));
   Debug.print(" 4: ");
-  Debug.println(String(laser[4].read()));
-  //Debug.println(String(laser[0].read()-laser[3].read()));
-  //Debug.println(String(laser[1].read()-laser[0].read()));
+  Debug.println(String(distances.back.read()));
+  //Debug.println(String(distances.frontL.read()-distances.frontR.read()));
+  //Debug.println(String(distances.right.read()-distances.frontL.read()));
 }
 
 void Robot::climb(int k) {
@@ -56,9 +56,7 @@ void Robot::climb(int k) {
  * @return TRUE if everything is ok
  */
 bool Robot::check() {
-  bool ok = temps.check() && color.check() && mov.check();
-  for (int i = 0 ; i < 5 ; i++) ok &= laser[i].check();
-  return ok;
+  return temps.check() && color.check() && mov.check() && distances.check();
 }
 
 /**
@@ -74,7 +72,24 @@ bool Robot::checkBattery() {
 }
 
 uint16_t Robot::getDistance(int sensor) {
-	return laser[sensor].read();
+  switch (sensor) {
+    case LASER_FL:
+      return distances.frontL.read();
+      break;
+    case LASER_FR:
+      return distances.frontR.read();
+      break;
+    case LASER_R:
+      return distances.right.read();
+      break;
+    case LASER_L:
+      return distances.left.read();
+      break;
+    case LASER_B:
+      return distances.back.read();
+      break;
+  }
+
 }
 
 ColorData Robot::getColor() {
@@ -98,9 +113,9 @@ float Robot::getTempRight() {
 }
 
 int Robot::go(){
-  uint16_t zero=laser[0].read();
-  uint16_t three=laser[3].read();
-  uint16_t four=laser[4].read()+CELL_DIM;
+  uint16_t zero=distances.frontL.read();
+  uint16_t three=distances.frontR.read();
+  uint16_t four=distances.back.read()+CELL_DIM;
   return go((zero>three?three:zero)<four);
 }
 
@@ -110,14 +125,14 @@ int Robot::go(){
  * @return FALSE if it found a black cell
  */
 int Robot::go(bool frontLaser) {
-  int dist = frontLaser ? ( (laser[0].read()<laser[3].read()) ? 0 : 3 ) : 4; // decido che sensore usare
-  uint16_t end = endDist(laser[dist].read(),frontLaser); // calcolo a che distanza devo arrivare
+  VL53L0X* dist = &(frontLaser?((distances.frontL.read()<distances.frontR.read()) ? distances.frontL : distances.frontR ) : distances.back);
+  uint16_t end = endDist(dist->read(),frontLaser); // calcolo a che distanza devo arrivare
   Debug.println(String("End")+String(end));
-  Debug.println(String(dist==4?"using back laser":"using front laser"));
+  Debug.println(String(frontLaser?"using front laser":"using back laser"));
   int res = 0;
   int i = 0;
   int salita = 0;
-  uint16_t front = laser[dist].read();
+  uint16_t front = dist->read();
   uint16_t before = front;
   if(color.isBlack()) res=BLACK; // controllo il colore
   uint16_t start = front;
@@ -129,19 +144,19 @@ int Robot::go(bool frontLaser) {
   while (((frontLaser) ? (front > end) : (front < end)) && res!=BLACK) {
     // ogni 20 iterazioni controllo l'ostacolo
     if (i == 20) {
-      uint16_t now = laser[dist].read();
+      uint16_t now = dist->read();
       if (((before > now) ? before - now : now - before) < 5) {
         mov.impennati(MAXSPEED);
         while(((before > now) ? before - now : now - before) < 10){
           res = OBSTACLE;
-          now = laser[dist].read();
+          now = dist->read();
         }
       }
       before = now;
       i = 0;
     }
     i++;
-    front = laser[dist].read();
+    front = dist->read();
     //Debug.println(String("Laser read: ")+front);
     mov.setSpeed(((front - end) * 10) + SPEED);
     mov.straight();
@@ -157,16 +172,13 @@ int Robot::go(bool frontLaser) {
       res = RISE;
       mov.delayr(50);
       while(abs(mov.inclination()) > 8){
-        climb(laser[2].read()-laser[1].read());
+        climb(distances.left.read()-distances.right.read());
       }
 
-      uint16_t zero=laser[0].read();
-      uint16_t three=laser[3].read();
-      uint16_t four=laser[4].read()+CELL_DIM;
+      bool front = (distances.frontL.read()<2000);
+      dist = &(front?((distances.frontL.read()<distances.frontR.read()) ? distances.frontL : distances.frontR ) : distances.back);
 
-      dist = (four < min(zero,three)) ? 4 : (zero < three ? 0 : 3);
-
-      end = endDist(laser[dist].read(),dist!=4);
+      end = endDist(dist->read(),front);
     }
 
     // controllo colore
@@ -204,28 +216,30 @@ void Robot::back() {
  * @param length The distance the robot has to back in millimeters
  */
 void Robot::back(uint16_t length){
-  int dist = ( (laser[0].read()<2000) ? ( (laser[0].read()<laser[3].read()) ? 0 : 3 ) : 4);
+  bool front = (distances.frontL.read()<2000);
+  VL53L0X* dist = &(front?((distances.frontL.read()<distances.frontR.read()) ? distances.frontL : distances.frontR ) : distances.back);
+
   Debug.println(String("back"));
-  uint16_t end = endDist(laser[dist].read(), dist!=4) + length;
+  uint16_t end = endDist(dist->read(), front) + length;
   Debug.println(String("end ") + String(end));
   mov.go(true);
-  uint16_t distance = laser[dist].read();
-  if (dist!=4)while (laser[dist].read() < end)distance = laser[dist].read();
-  else while (laser[dist].read() > end)distance = laser[dist].read();
+  uint16_t distance = dist->read();
+  if (front) while (dist->read() < end) distance = dist->read();
+  else while (dist->read() > end)distance = dist->read();
   mov.stop();
 }
 
 void Robot::rotate(bool dir, float angle) {
   byte type=BASIC;
-  Debug.println(String("Back: ")+String(laser[4].read()));
-  Debug.println(String("Front: ")+String(laser[0].read()));
+  Debug.println(String("Back: ")+String(distances.back.read()));
+  Debug.println(String("Front: ")+String(distances.frontL.read()));
   /*
-  if(laser[4].read()<100){
+  if(distances.back.read()<100){
     type=BACK_WALL;
     back(10);
     delay(1000);
   }
-  else if(laser[0].read()<100){
+  else if(distances.frontL.read()<100){
     type=FRONT_WALL;
     back(10);
     delay(1000);
@@ -302,19 +316,19 @@ void Robot::setAddresses() {
   digitalWrite(LX_FRONTR, LOW);
   digitalWrite(LX_BACK, LOW);
   delay(50); // waiting for the sensor to change state
-  laser[0].setAddress(L_FRONTL);
+  distances.frontL.setAddress(L_FRONTL);
   digitalWrite(LX_LEFT, HIGH); // turning on left sensor
   delay(50); // waiting for the sensor to change state
-  laser[2].setAddress(L_LEFT);
+  distances.left.setAddress(L_LEFT);
   digitalWrite(LX_RIGHT, HIGH); // turning on right sensor
   delay(50); // waiting for the sensor to change state
-  laser[1].setAddress(L_RIGHT);
+  distances.right.setAddress(L_RIGHT);
   digitalWrite(LX_FRONTR, HIGH); // turning on front right sensor
   delay(50); // waiting for the sensor to change state
-  laser[3].setAddress(L_FRONTR);
+  distances.frontR.setAddress(L_FRONTR);
   digitalWrite(LX_BACK, HIGH); // turning on back sensor
   delay(50); // waiting for the sensor to change state
-  laser[4].setAddress(L_BACK);
+  distances.back.setAddress(L_BACK);
 
   temps.left.setAddress(T_LEFT);
   temps.right.setAddress(T_RIGHT);
@@ -342,7 +356,7 @@ uint16_t Robot::endDist(uint16_t distance, bool front) {
 void Robot::straighten(){
   int dif;
   dif=difLaser();
-  if(((laser[0].read() <= CENTRED<<1)&&(laser[3].read() <= CENTRED<<1)) && (dif > 6 ||  dif < -6)){
+  if(((distances.frontL.read() <= CENTRED<<1)&&(distances.frontR.read() <= CENTRED<<1)) && (dif > 6 ||  dif < -6)){
     mov.rotation(dif<0);
     do{
       dif=difLaser();
@@ -364,7 +378,7 @@ void Robot::straighten(){
 int Robot::difLaser(){
   int dif=0;
   //for(int i = 0 ; i<3; i++){
-  dif=laser[0].read()-laser[3].read()+LASER_DIF;
+  dif=distances.frontL.read()-distances.frontR.read()+LASER_DIF;
   //dif=dif/3;
   Debug.println(String("dif ")+String(dif));
   return dif;
