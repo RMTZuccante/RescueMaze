@@ -10,7 +10,7 @@ void Robot::setup() {
 /**
  * Begins all sensors.
  */
-void Robot::begin() {  
+void Robot::begin() {
   led.begin();
   color.begin();
   caga.begin();
@@ -125,7 +125,7 @@ int Robot::go(bool frontLaser) {
   mov.go(); // inizio a muovermi
   Debug.println(String("start go "));
   Debug.println(String("First read: ")+front);
-  
+
   while (((frontLaser) ? (front > end) : (front < end)) && res!=BLACK) {
     // ogni 20 iterazioni controllo l'ostacolo
     if (i == 20) {
@@ -159,13 +159,13 @@ int Robot::go(bool frontLaser) {
       while(abs(mov.inclination()) > 8){
         climb(laser[2].read()-laser[1].read());
       }
-      
+
       uint16_t zero=laser[0].read();
       uint16_t three=laser[3].read();
       uint16_t four=laser[4].read()+CELL_DIM;
-      
-      dist = (four < min(zero,three)) ? 4 : (zero < three ? 0 : 3); 
-      
+
+      dist = (four < min(zero,three)) ? 4 : (zero < three ? 0 : 3);
+
       end = endDist(laser[dist].read(),dist!=4);
     }
 
@@ -179,7 +179,7 @@ int Robot::go(bool frontLaser) {
     }
   }
   mov.stop();
-  
+
   // se rilevato nero torno indietro
   if(res==BLACK){
     Debug.println(String("Call to back"));
@@ -187,7 +187,7 @@ int Robot::go(bool frontLaser) {
   }
   //mov.endGo();
   mov.stop();
-  
+
   Debug.println(String("stop"));
   straighten();
   return res;
@@ -231,14 +231,14 @@ void Robot::rotate(bool dir, float angle) {
     delay(1000);
   }*/
   switch(mov.rotate(dir, angle, type)){
-    case 1: 
+    case 1:
       isVictimL=true;
       break;
     case 2:
       isVictimR=true;
       break;
   }
-  straighten();  
+  straighten();
 }
 
 /**
@@ -257,7 +257,7 @@ void Robot::victim(int n) {
   led.set(LOW, LOW, HIGH);
 
   int time = millis()+5000;
-  
+
   if (!caga.isEmpty()) {
     for(int i = 0; i < n; i++) {
       caga.caga();
@@ -272,7 +272,7 @@ void Robot::victim(int n) {
       mov.delayr(500);
     }
   }
-  
+
   while(millis() < time);
   led.set(LOW, LOW, LOW);
 }
@@ -329,7 +329,7 @@ uint16_t Robot::endDist(uint16_t distance, bool front) {
   }
   distance = distance + CELL;
   return distance - ((distance) % CELL_DIM) + ((distance<CELL_DIM) ? CENTRED_BACK : CENTRED2) + CELL_DIM;
-  
+
 }
 
 /**
@@ -355,7 +355,7 @@ void Robot::straighten(){
 }
 
 /**
- * Returns the difference of the front lasers 
+ * Returns the difference of the front lasers
  */
 
 int Robot::difLaser(){
@@ -366,7 +366,7 @@ int Robot::difLaser(){
   Debug.println(String("dif ")+String(dif));
   return dif;
 }
- 
+
 /**
  * Reads the battery current voltage.
  * @return The already corrected battery voltage in Volts.
