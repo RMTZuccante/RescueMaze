@@ -17,14 +17,14 @@ void Robot::begin() {
   mov.begin();
   for (int i = 0 ; i < 5 ; i++) laser[i].begin();
   for (int i = 0 ; i < 5 ; i++) laser[i].start();
-  //tempk = (tempL.read()+tempL.read())/2+TEMP_DIF;
+  //tempk = (temps.left.read()+temps.left.read())/2+TEMP_DIF;
 }
 
 void Robot::tempTest(){
   Debug.print(" tempL: ");
-  Debug.print(String(tempL.read()));
+  Debug.print(String(temps.left.read()));
   Debug.print(" tempR: ");
-  Debug.println(String(tempR.read()));
+  Debug.println(String(temps.right.read()));
 }
 
 
@@ -86,13 +86,13 @@ void Robot::setBlackThreshold(uint8_t black_threshold) {
 }
 
 float Robot::getTempLeft() {
-	float out = max(tempL.read(), isVictimL);
+	float out = max(temps.left.read(), isVictimL);
 	isVictimL = 0;
 	return out;
 }
 
 float Robot::getTempRight() {
-	float out = max(tempR.read(), isVictimR);
+	float out = max(temps.right.read(), isVictimR);
 	isVictimR = 0;
 	return out;
 }
@@ -174,8 +174,8 @@ int Robot::go(bool frontLaser) {
 
     // controllo temperature
     if(abs(start-front) > CENTRED){
-      isVictimL = max(isVictimL, tempL.read());
-      isVictimL = max(isVictimR, tempR.read());
+      isVictimL = max(isVictimL, temps.left.read());
+      isVictimL = max(isVictimR, temps.right.read());
     }
   }
   mov.stop();
@@ -316,8 +316,8 @@ void Robot::setAddresses() {
   delay(50); // waiting for the sensor to change state
   laser[4].setAddress(L_BACK);
 
-  tempL.setAddress(T_LEFT);
-  tempR.setAddress(T_RIGHT);
+  temps.left.setAddress(T_LEFT);
+  temps.right.setAddress(T_RIGHT);
 }
 
 /**
