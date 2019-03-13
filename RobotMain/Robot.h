@@ -43,8 +43,8 @@ class Robot {
     void delayr(unsigned int t);
   private:
     Color color;
-    Temperature tempL = Temperature(T_LEFT);
-    Temperature tempR = Temperature(T_RIGHT);
+    Temperature tempL;
+    Temperature tempR;
     Moviment mov = Moviment(SPEED, &tempL, &tempR);
     RGB led = RGB(RED, GREEN, BLUE);
     VL53L0X laser[5] = {VL53L0X(), VL53L0X(), VL53L0X(), VL53L0X(), VL53L0X()};

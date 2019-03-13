@@ -315,6 +315,9 @@ void Robot::setAddresses() {
   digitalWrite(LX_BACK, HIGH); // turning on back sensor
   delay(50); // waiting for the sensor to change state
   laser[4].setAddress(L_BACK);
+
+  tempL.setAddress(T_LEFT);
+  tempR.setAddress(T_RIGHT);
 }
 
 /**

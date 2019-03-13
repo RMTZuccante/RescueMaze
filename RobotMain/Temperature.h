@@ -4,12 +4,14 @@
 #include <Arduino.h>
 #include "I2C.h"
 
+#define MLX90614_DEFADDR 0x5A
 #define MLX90614_TA 0x06
 #define MLX90614_TOBJ1 0x07
 
 class Temperature  {
   public:
-    Temperature(uint8_t address);
+    Temperature(uint8_t address = MLX90614_DEFADDR);
+    void setAddress(uint8_t address);
     bool check();
     float read();
     float readAmb();

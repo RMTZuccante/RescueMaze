@@ -1,10 +1,18 @@
 #include "Temperature.h"
 
 /**
- * Sets the sensors parameters.
+ * Sets the sensor parameters.
  * @param address Address of the sensor.
  */
 Temperature::Temperature(uint8_t address) {
+  this->address = address;
+}
+
+/**
+ * Sets the sensor address.
+ * @param address Address of the sensor.
+ */
+void Temperature::setAddress(uint8_t address) {
   this->address = address;
 }
 
