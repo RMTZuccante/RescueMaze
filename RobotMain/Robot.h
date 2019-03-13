@@ -17,6 +17,10 @@
 struct Temps {
   Temperature left;
   Temperature right;
+
+  bool check() {
+    return left.check() && right.check();
+  }
 };
 
 class Robot {

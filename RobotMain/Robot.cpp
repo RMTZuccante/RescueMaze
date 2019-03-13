@@ -56,9 +56,9 @@ void Robot::climb(int k) {
  * @return TRUE if everything is ok
  */
 bool Robot::check() {
-  bool ok = true;
+  bool ok = temps.check() && color.check() && mov.check();
   for (int i = 0 ; i < 5 ; i++) ok &= laser[i].check();
-  return ok && color.check() && mov.check();
+  return ok;
 }
 
 /**
