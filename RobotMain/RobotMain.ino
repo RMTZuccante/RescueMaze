@@ -108,5 +108,8 @@ void loop() {
     case Commands::SETBLACK:
       robot.setBlackThreshold(Com.read());
       break;
+    case Commands::RESET:
+      reset();
+      break;
   }
 }
