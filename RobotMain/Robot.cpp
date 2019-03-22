@@ -1,4 +1,5 @@
-#include "Robot.h";
+#include "Robot.h"
+
 /**
  * Sets sensors to be used.
  * This function has to be called before doing everything else or the robot will crash.

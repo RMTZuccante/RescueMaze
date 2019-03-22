@@ -39,6 +39,14 @@ void SideMotors::start(uint16_t speed, bool inverse) {
 }
 
 /**
+ * Starts the motor rotation.
+ * @param speed Speed of the motor, from -65535 to 65535.
+ */
+void SideMotors::start(int32_t speed) {
+  startDiff(abs(speed), abs(speed), speed < 0);
+}
+
+/**
  * Makes the motor ready to rotate.
  */
 void SideMotors::begin() {

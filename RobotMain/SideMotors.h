@@ -8,6 +8,7 @@ class SideMotors {
     SideMotors(uint8_t inverter1, uint8_t inverter2, uint8_t pwmFront, uint8_t pwmRear);
     void startDiff(uint16_t frontSpeed, uint16_t rearSpeed, bool inverse);
     void start(uint16_t speed, bool inverse);
+    void start(int32_t speed);
     void setSpeed(uint16_t speed);
     void setSpeeds(uint16_t frontSpeed, uint16_t rearSpeed);
     void stop();
