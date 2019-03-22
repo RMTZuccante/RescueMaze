@@ -1,4 +1,3 @@
-
 #include <Arduino.h>
 #include "definitions.h"
 #include "I2C.h"
