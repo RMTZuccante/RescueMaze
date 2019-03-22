@@ -244,7 +244,7 @@ void Robot::rotate(bool dir, float angle) {
     back(10);
     delay(1000);
   }*/
-  switch(mov.rotate(dir, angle, type)){
+  switch(mov.rotate(dir, angle)){
     case 1:
       isVictimL=true;
       break;

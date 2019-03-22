@@ -35,7 +35,8 @@ void setup() {
   robot.setup();
 
   //Check that everything is working
-  bool ok = Com.check() && robot.check() && robot.checkBattery();
+  delay(5000);
+  bool ok = /*Com.check() &&*/ robot.check() && robot.checkBattery();
   Debug.println("Check done.", Levels::INFO);
   if (!ok) Debug.println("Something is not working correctly. Proceed at your own risk!", Levels::WARN);
 
@@ -52,7 +53,7 @@ void setup() {
   //Waiting user start command
   Debug.println("Waiting for the user to press the button...", Levels::INFO);
   robot.setLED(0, 1, 0);
-  while (digitalRead(PUSHBUTTON));
+  //while (digitalRead(PUSHBUTTON));
   Debug.println("Button has been pushed!");
   delay(250);
   robot.setLED(0, 0, 0);
@@ -75,7 +76,10 @@ void sendColor(ColorData cd) {
 }
 
 void loop() {
-  Com.notifyReady();
+  Debug.println("ruoto");
+  robot.rotate(true, 90);
+  delay(1000);
+  /*Com.notifyReady();
   switch (Com.getCommand()) {
     case Commands::ROTATE:
       Debug.println("Rotate");
@@ -111,5 +115,5 @@ void loop() {
     case Commands::RESET:
       reset();
       break;
-  }
+  }*/
 }
