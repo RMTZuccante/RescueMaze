@@ -118,8 +118,8 @@ int Moviment::rotate(bool invert , float angle) {
   while (orientation.yaw() != to) {
     speed = map(orientation.yaw(), 180, to, 60000, 30000);
     if (angle < 0) speed = -speed;
-    rSpeed(-speed);
-    lSpeed(speed);
+    motorsR.start(-speed);
+    motorsL.start(speed);
     delayr(100);
   }
   /*float end = endAngle(orientation.yaw(), invert , angle);
@@ -185,24 +185,6 @@ int Moviment::rotate(bool invert , float angle) {
     if (isVictimR)return 2;
     return 0;*/
   return 0;
-}
-
-void Moviment::rSpeed(int speed) {
-  bool inv = false;
-  if (speed < 0) {
-    inv = true;
-    speed = -speed;
-  }
-  motorsR.start(speed, inv);
-}
-
-void Moviment::lSpeed(int speed) {
-  bool inv = false;
-  if (speed < 0) {
-    inv = true;
-    speed = -speed;
-  }
-  motorsL.start(speed, inv);
 }
 
 /**
