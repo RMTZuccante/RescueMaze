@@ -75,9 +75,7 @@ float Moviment::getDistortion(){
  * Moves the robot forward in a straight line.
  */
 void Moviment::straight() {
-  float fix = direzione - orientation.yaw();
-  motorsR.start(bound(speed + fix * 5000, MAXSPEED), false);
-  motorsL.start(bound(speed - fix * 5000, MAXSPEED), false);
+  if(abs(direzione - orientation.yaw())>5)fill=0;
 }
 
 /**
@@ -118,7 +116,6 @@ int Moviment::rotate(bool invert) {
  * @param angle The angle by.
  */
 int Moviment::rotate(bool invert , float angle , byte type) {
-  Debug.println(String("type :")+String(type));
   orientation.start(100);
   float end = endAngle(orientation.yaw(), invert , angle);
   bool isVictimL = false;
@@ -128,51 +125,17 @@ int Moviment::rotate(bool invert , float angle , byte type) {
   if(end==360)end-=1;
   Debug.println(String("startAngle ")+String(orientation.yaw()));
   Debug.println(String("endAngle ")+String(end));
-  if (invert) {
-    Debug.print("left ");
-    if (end < angle) {
-      Debug.print("Out of range rotation ");
-      rotationSpeed(ROTATION_SPEED, invert, type);
-      while (orientation.yaw() < 359) {
-        //Debug.println(String(orientation.yaw()));  
-      };
-      delayr(100);
-    }
-    Debug.print("Normal rotation");
-    while (orientation.yaw() < end) {
+  Debug.print("left ");
+  while (invert ? orientation.yaw() < end : orientation.yaw() > end) {
       //Debug.println(String(orientation.yaw()));
       rotationSpeed(ROTATION_SPEED, invert, type);
       isVictimL |= (tleft->read()) > TEMP_K;
       isVictimR |= (tright->read()) > TEMP_K;
-    }
-    stop();
-    Debug.println(" Correction");
-    while (orientation.yaw() > (end)) {
-      rotationSpeed(!invert, end);
-    }
   }
-  else {
-    Debug.print("right ");
-    if (end > (360 - angle)) {
-      Debug.print("Out of range rotation ");
-      rotationSpeed(ROTATION_SPEED, invert, type);
-      while (orientation.yaw() > 1) {
-        //Debug.println(String(orientation.yaw()));
-      }
-      delayr(100);
-    }
-    Debug.print("Normal rotation");
-    while (orientation.yaw() > end) {     
-      //Debug.println(String(orientation.yaw()));
-      rotationSpeed(ROTATION_SPEED, invert, type);
-      isVictimL |= (tleft->read()) > TEMP_K;
-      isVictimR |= (tright->read()) > TEMP_K;
-    }
-    stop();
-    Debug.println(" Correction");
-    while (orientation.yaw() < (end)) {
-      rotationSpeed(!invert, end);
-    }
+  stop();
+  Debug.println(" Correction");
+  while (invert ? orientation.yaw() > end : orientation.yaw() < end) {
+    rotationSpeed(!invert, end);
   }
   stop();
   setK(0, 0);
@@ -296,4 +259,8 @@ void Moviment::idle() {
 void Moviment::delayr(unsigned int t) {
   unsigned int end = millis() + t;
   while (end > millis()) idle();
+}
+
+void Moviment::resetFill(){
+  fill=0;
 }

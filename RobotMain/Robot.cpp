@@ -141,7 +141,6 @@ int Robot::go(bool frontLaser) {
   mov.go(); // inizio a muovermi
   Debug.println(String("start go "));
   Debug.println(String("First read: ")+front);
-
   while (((frontLaser) ? (front > end) : (front < end)) && res!=BLACK) {
     // ogni 20 iterazioni controllo l'ostacolo
     if (i == 20) {
@@ -364,11 +363,7 @@ void Robot::straighten(){
     }while( dif > 2|| dif < -2);
     Debug.println("End Straighten");
     mov.stop();
-    mov.delayr(500);
-//    do{
-//      dif=difLaser();
-//      mov.rotate((dif > 0) , 1);
-//    }while( dif > 2|| dif < -2);
+    mov.resetFill();
   }
 }
 

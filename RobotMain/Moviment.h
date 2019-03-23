@@ -23,7 +23,7 @@ class Moviment {
     void rotation(bool invert);
     int rotate (bool invert);
     int rotate (bool invert, float angle, byte type);
-    
+    void resetFill();
     void stop();
     void setSpeed(uint16_t speed);
     void setK(int rightK, int leftK);
