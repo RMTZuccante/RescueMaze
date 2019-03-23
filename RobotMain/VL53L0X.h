@@ -14,6 +14,9 @@ class VL53L0X {
     uint16_t read();
     void start(uint32_t period_ms = 0);
     void stop();
+    void setHighPrecision();
+    void setDefault();
+    void setLongRange();
 
   private:
     // register addresses from API vl53l0x_device.h (ordered as listed there)
@@ -28,6 +31,10 @@ class VL53L0X {
       RESULT_RANGE_STATUS = 0x14,
       I2C_SLAVE_DEVICE_ADDRESS = 0x8A,
       MSRC_CONFIG_CONTROL = 0x60,
+      PRE_RANGE_CONFIG_VALID_PHASE_LOW = 0x56,
+      PRE_RANGE_CONFIG_VALID_PHASE_HIGH = 0x57,
+      FINAL_RANGE_CONFIG_VALID_PHASE_LOW = 0x47,
+      FINAL_RANGE_CONFIG_VALID_PHASE_HIGH = 0x48,
       FINAL_RANGE_CONFIG_MIN_COUNT_RATE_RTN_LIMIT = 0x44,
       PRE_RANGE_CONFIG_VCSEL_PERIOD = 0x50,
       PRE_RANGE_CONFIG_TIMEOUT_MACROP_HI = 0x51,
@@ -35,11 +42,14 @@ class VL53L0X {
       FINAL_RANGE_CONFIG_TIMEOUT_MACROP_HI = 0x71,
       MSRC_CONFIG_TIMEOUT_MACROP = 0x46,
       OSC_CALIBRATE_VAL = 0xF8,
+      GLOBAL_CONFIG_VCSEL_WIDTH = 0x32,
       GLOBAL_CONFIG_SPAD_ENABLES_REF_0 = 0xB0,
       GLOBAL_CONFIG_REF_EN_START_SELECT = 0xB6,
       DYNAMIC_SPAD_NUM_REQUESTED_REF_SPAD = 0x4E,
       DYNAMIC_SPAD_REF_EN_START_OFFSET = 0x4F,
       VHV_CONFIG_PAD_SCL_SDA__EXTSUP_HV = 0x89,
+      ALGO_PHASECAL_LIM = 0x30,
+      ALGO_PHASECAL_CONFIG_TIMEOUT = 0x30,
     };
     enum vcselPeriodType {
       VcselPeriodPreRange, VcselPeriodFinalRange
@@ -67,6 +77,7 @@ class VL53L0X {
     bool setSignalRateLimit(float limit_Mcps);
     bool setMeasurementTimingBudget(uint32_t budget_us);
     uint32_t getMeasurementTimingBudget();
+    bool setVcselPulsePeriod(vcselPeriodType type, uint8_t period_pclks);
     uint8_t getVcselPulsePeriod(vcselPeriodType type);
     void startContinuous(uint32_t period_ms = 0);
     void stopContinuous();
