@@ -1,5 +1,6 @@
 #include "Moviment.h"
 #include "Debug.h"
+
 /**
    Sets the movement speed and default parameters.
 */
@@ -112,17 +113,33 @@ int Moviment::rotate(bool invert) {
 */
 int Moviment::rotate(bool invert , float angle) {
   orientation.start(100);
-  if (invert) angle = -angle;
+
   float to = 180 + angle;
-  int speed = 0;
+  float half = to / 2;
+
+  motorsR.start(invert, 60000);
+  motorsL.start(inver, 60000);
+
+  motorsR.start(-speed);
+  motorsL.start(speed);
+  if (angle < 0) { 
+    speed = -speed;
+    while(orientation.yaw() > half)
+  }
+
+  while (orientation.yaw() >)
+
   while (orientation.yaw() != to) {
-    speed = map(orientation.yaw(), 180, to, 60000, 30000);
+    speed = map(orientation.yaw(), 180, to, MAXSPEED, 60000);
     if (angle < 0) speed = -speed;
-    motorsR.start(-speed);
-    motorsL.start(speed);
+    Serial.println(speed);
+    /*motorsR.start(-speed);
+    motorsL.start(speed);*/
     delayr(100);
   }
-  /*float end = endAngle(orientation.yaw(), invert , angle);
+
+
+  float end = endAngle(orientation.yaw(), invert , angle);
     bool isVictimL = false;
     bool isVictimR = false;
     end -= fill;
@@ -183,7 +200,7 @@ int Moviment::rotate(bool invert , float angle) {
     Debug.println("rotate end");
     if (isVictimL)return 1;
     if (isVictimR)return 2;
-    return 0;*/
+    return 0;
   return 0;
 }
 

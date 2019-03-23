@@ -76,7 +76,9 @@ void sendColor(ColorData cd) {
 
 void loop() {
   Debug.println("ruoto");
-  robot.rotate(true, 90);
+  //robot.go();
+  robot.rotate(false, 90);
+  Debug.println("Fatto");  
   delay(1000);
   /*Com.notifyReady();
   switch (Com.getCommand()) {
