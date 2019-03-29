@@ -8,7 +8,7 @@
 SerialDebug Debug;
 SerialCom Com;
 
-SoftWire I2C_1(PB10, PB11, SOFT_STANDARD);
+SoftWire I2C_1(PB6, PB7, SOFT_STANDARD);
 SoftWire I2C_2(PB8, PB9, SOFT_STANDARD);
 
 Robot robot;
@@ -21,11 +21,7 @@ void setup() {
   //I/O initialization
   pinMode(LED_BUILTIN, OUTPUT);
   pinMode(PUSHBUTTON, INPUT_PULLUP);
-  pinMode(RESETBUTTON, INPUT_PULLUP);
   digitalWrite(LED_BUILTIN, LOW);
-
-  //Attaching interrupts
-  attachInterrupt(RESETBUTTON, reset, FALLING);
 
   //Hardware initialization
   Com.begin();

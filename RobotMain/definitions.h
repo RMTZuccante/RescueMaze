@@ -51,36 +51,31 @@
 //Motors pins
 #define FR_IN1 PA3
 #define FR_IN2 PA4
-#define RL_IN1 PA7
-#define RL_IN2 PB0
-#define FL_IN1 PA7
-#define FL_IN2 PB0
-#define RR_IN1 PA3
-#define RR_IN2 PA4
+#define FL_IN1 PB15
+#define FL_IN2 PB14
 
 #define FR_EN PA1
-#define RL_EN PB1
-#define FL_EN PA6
+#define RL_EN PA8
+#define FL_EN PA9
 #define RR_EN PA2
 
 //Laser pins
-#define LX_FRONTR PA5
-#define LX_LEFT PB12
-#define LX_RIGHT PB5
-#define LX_BACK PB4
+#define LX_FRONTR PB12
+#define LX_LEFT PB13
+#define LX_RIGHT PA5
+#define LX_BACK PA0
 
 //RGB
-#define RED PA10
-#define GREEN PA8
-#define BLUE PB15
+#define RED PA15
+#define GREEN PB3
+#define BLUE PB4
 
 //Battery
-#define B_PIN PA0
+#define B_PIN PA6
 #define B_R1 180000
 #define B_R2 68000
 
 //Interrupts
-#define PUSHBUTTON PB14
-#define RESETBUTTON PB13
+#define PUSHBUTTON PC15
 
 #endif

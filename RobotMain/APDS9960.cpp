@@ -22,7 +22,7 @@ void APDS9960::begin() {
 
 bool APDS9960::check() {
   uint8_t id = wireReadData8Bit(ID);
-  return I2C::check(&I2C_1, APDS9960_I2C_ADDR) && (id == APDS9960_ID_1 || id == APDS9960_ID_2);
+  return I2C::check(&I2C_2, APDS9960_I2C_ADDR) && (id == APDS9960_ID_1 || id == APDS9960_ID_2);
 }
 
 uint8_t APDS9960::getMode() {
@@ -268,23 +268,23 @@ void APDS9960::clearProximityInt() {
 }
 
 void APDS9960::wireWrite8Bit(uint8_t val) {
-    I2C_1.beginTransmission(APDS9960_I2C_ADDR);
-    I2C_1.write(val);
-    I2C_1.endTransmission();
+    I2C_2.beginTransmission(APDS9960_I2C_ADDR);
+    I2C_2.write(val);
+    I2C_2.endTransmission();
 }
 
 void APDS9960::wireWriteData8Bit(uint8_t reg, uint8_t val) {
-    I2C_1.beginTransmission(APDS9960_I2C_ADDR);
-    I2C_1.write(reg);
-    I2C_1.write(val);
-    I2C_1.endTransmission();
+    I2C_2.beginTransmission(APDS9960_I2C_ADDR);
+    I2C_2.write(reg);
+    I2C_2.write(val);
+    I2C_2.endTransmission();
 }
 
 uint8_t APDS9960::wireReadData8Bit(uint8_t reg) {
     uint8_t val;
     wireWrite8Bit(reg);
-    I2C_1.requestFrom(APDS9960_I2C_ADDR, 1);
-    while (I2C_1.available()) val = I2C_1.read();
+    I2C_2.requestFrom(APDS9960_I2C_ADDR, 1);
+    while (I2C_2.available()) val = I2C_2.read();
     return val;
 }
 
