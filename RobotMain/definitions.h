@@ -51,8 +51,8 @@
 //Motors pins
 #define FR_IN1 PA3
 #define FR_IN2 PA4
-#define FL_IN1 PB15
-#define FL_IN2 PB14
+#define FL_IN1 PB14
+#define FL_IN2 PB15
 
 #define FR_EN PA1
 #define RL_EN PA8
