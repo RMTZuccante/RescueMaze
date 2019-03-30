@@ -78,4 +78,7 @@
 //Interrupts
 #define PUSHBUTTON PC15
 
+//Cagamattoni
+#define CAGAPIN PA10
+
 #endif

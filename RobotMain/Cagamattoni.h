@@ -2,7 +2,7 @@
 #define CAGAMATTONI_H
 
 #include <Arduino.h>
-#include "VL53L0X.h"
+#include <Servo.h>
 #include "definitions.h"
 
 class Cagamattoni {
@@ -14,6 +14,7 @@ class Cagamattoni {
     void begin();
   private :
     byte kits;
+    Servo cagamattoni;
 };
 
 #endif

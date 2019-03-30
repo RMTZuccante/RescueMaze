@@ -85,7 +85,7 @@ class Robot {
 
     Moviment mov = Moviment(SPEED, &temps.left, &temps.right);
     RGB led = RGB(RED, GREEN, BLUE);
-    Cagamattoni caga = Cagamattoni(0); //TODO change if needed
+    Cagamattoni caga = Cagamattoni(10);
     int difLaser();
     float getBattery();
     void setAddresses();
