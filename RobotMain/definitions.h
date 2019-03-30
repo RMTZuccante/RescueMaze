@@ -66,9 +66,9 @@
 #define LX_BACK PA0
 
 //RGB
-#define RED PA15
+#define RED PB4
 #define GREEN PB3
-#define BLUE PB4
+#define BLUE PA15
 
 //Battery
 #define B_PIN PA6
