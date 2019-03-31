@@ -11,7 +11,7 @@ bool SerialCom::check() {
     if (getCommand() == Commands::HANDSHAKE) {
       byte n = read();
       Serial3.write(n * 2);
-      connected = read() == (n / 2 + 5);
+      connected = true;
     }
     else while (Serial3.available()) Serial3.read();
     return connected;
