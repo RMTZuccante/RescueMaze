@@ -9,8 +9,9 @@ bool SerialCom::check() {
   while (!connected) {
     wait();
     if (getCommand() == Commands::HANDSHAKE) {
-      Serial3.write(Serial3.read() * 2);
-      connected = true;
+      byte n = read();
+      Serial3.write(n * 2);
+      connected = read() == (n / 2 + 5);
     }
     else while (Serial3.available()) Serial3.read();
     return connected;
