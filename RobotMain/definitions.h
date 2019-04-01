@@ -17,6 +17,7 @@
 #define FIRST_K 5000
 #define SECOND_K 5000
 #define ROTATION_P 500
+#define SLOW_ROTATION 20000
 #define ROTATION_SPEED 60000
 #define ROTATION_K 1
 #define CLIMB_K 100
@@ -28,7 +29,7 @@
 #define RISE 3
 #define DISTORTION 30
 //Measurements
-#define CENTRED 45 //distance of the robot from the wall to be centered
+#define CENTRED 60 //distance of the robot from the wall to be centered
 #define CENTRED_BACK 30
 #define CENTRED2 60
 #define LONG_RANGE 1000
