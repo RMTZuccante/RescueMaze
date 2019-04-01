@@ -25,6 +25,7 @@ void setup() {
 
   //Hardware initialization
   Com.begin();
+  Serial.begin();
   I2C_1.begin();
   I2C_2.begin();
   robot.setup();

@@ -12,6 +12,7 @@ void SerialDebug::print(String st, Levels level) {
 		if (ended) toPrint += getLevel(level);
 		toPrint += st;
     Com.write(toPrint);
+    Serial.print(toPrint);
 		ended = st.endsWith("\n");
 	}
 }
