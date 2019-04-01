@@ -59,6 +59,7 @@ class Robot {
     bool checkBattery();
 
     uint16_t getDistance(int sensor);
+    Distances getDistances();
     ColorData getColor();
     void setBlackThreshold(uint8_t black_threshold);
     float getTempLeft();

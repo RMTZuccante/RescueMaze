@@ -90,7 +90,10 @@ uint16_t Robot::getDistance(int sensor) {
       return distances.back.read();
       break;
   }
+}
 
+Distances Robot::getDistances() {
+  return distances;
 }
 
 ColorData Robot::getColor() {
