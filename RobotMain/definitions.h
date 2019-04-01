@@ -75,8 +75,9 @@
 #define B_R1 180000
 #define B_R2 68000
 
-//Interrupts
+//Buttons
 #define PUSHBUTTON PC15
+#define USBBUTTON PB5
 
 //Cagamattoni
 #define CAGAPIN PA10

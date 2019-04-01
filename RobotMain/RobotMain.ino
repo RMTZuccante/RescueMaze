@@ -15,6 +15,7 @@ void setup() {
   //I/O initialization
   pinMode(LED_BUILTIN, OUTPUT);
   pinMode(PUSHBUTTON, INPUT_PULLUP);
+  pinMode(USBBUTTON, INPUT_PULLUP);
   digitalWrite(LED_BUILTIN, LOW);
 
   //Hardware initialization
@@ -24,8 +25,9 @@ void setup() {
   I2C_2.begin();
   robot.setup();
 
+  bool usbMode = !digitalRead(USBBUTTON);
   //Check that everything is working
-  bool ok = Com.check() && robot.check() && robot.checkBattery();
+  bool ok = (usbMode || Com.check()) && robot.check() && robot.checkBattery();
   Debug.println("Check done.", Levels::INFO);
   if (!ok) Debug.println("Something is not working correctly. Proceed at your own risk!", Levels::WARN);
 
@@ -41,13 +43,15 @@ void setup() {
 
   //Waiting user start command
   Debug.println("Waiting for the user to press the button...", Levels::INFO);
-  robot.setLED(0, 1, 0);
+  robot.setLED(0, 1, usbMode);
   while (digitalRead(PUSHBUTTON));
   Debug.println("Button has been pushed!");
   delay(250);
   robot.setLED(0, 0, 0);
 
   Debug.println("STARTING!", Levels::INFO);
+
+  if(usbMode) while(1) loopUSB();
 }
 
 void receiveRotate() {
@@ -102,4 +106,8 @@ void loop() {
       reset();
       break;
   }
+}
+
+void loopUSB() {
+  
 }
