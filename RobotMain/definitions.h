@@ -22,6 +22,7 @@
 #define CLIMB_K 100
 
 //Robot
+#define LONG_RANGE 1000
 #define BLACK 1
 #define OBSTACLE 2
 #define RISE 3
