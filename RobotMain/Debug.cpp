@@ -74,3 +74,5 @@ String SerialDebug::getLevel(Levels level) {
     default: return "";
   }
 }
+
+SerialDebug Debug;

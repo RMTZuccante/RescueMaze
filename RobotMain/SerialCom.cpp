@@ -62,3 +62,5 @@ byte SerialCom::read() {
 Commands SerialCom::getCommand() {
   return static_cast<Commands>(read());
 }
+
+SerialCom Com;

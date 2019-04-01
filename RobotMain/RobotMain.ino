@@ -5,12 +5,6 @@
 #include "Robot.h"
 #include "SerialCom.h"
 
-SerialDebug Debug;
-SerialCom Com;
-
-SoftWire I2C_1(PB6, PB7, SOFT_STANDARD);
-SoftWire I2C_2(PB8, PB9, SOFT_STANDARD);
-
 Robot robot;
 
 void reset() {

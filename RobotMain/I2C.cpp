@@ -30,3 +30,6 @@ bool I2C::check(WireBase *i2c, uint8_t device) {
     if(!ok) Debug.println(String("Device at address ") + String(device, HEX) + " not found.", Levels::WARN);
     return ok;
 }
+
+SoftWire I2C_1(PB6, PB7, SOFT_STANDARD);
+SoftWire I2C_2(PB8, PB9, SOFT_STANDARD);
