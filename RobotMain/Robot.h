@@ -40,6 +40,16 @@ struct Distances {
     right.start();
     back.start();
   }
+
+  operator String() {
+    String out = "distances={";
+    out+="frontL="+frontL.read();
+    out+=",frontR="+frontR.read();
+    out+=",left="+left.read();
+    out+=",right="+right.read();
+    out+=",back="+back.read();
+    return +"}";
+  }
 };
 
 struct Temps {
@@ -48,6 +58,13 @@ struct Temps {
 
   bool check() {
     return left.check() && right.check();
+  }
+
+  operator String() {
+    String out = "temps={";
+    out+="left="+String(left.read());
+    out+=",right="+String(right.read());
+    return +"}";
   }
 };
 
