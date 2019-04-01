@@ -116,6 +116,10 @@ float Robot::getTempRight() {
 	return out;
 }
 
+Temps Robot::getTemps() {
+  return temps;
+}
+
 int Robot::go(){
   uint16_t zero=distances.frontL.read();
   uint16_t three=distances.frontR.read();

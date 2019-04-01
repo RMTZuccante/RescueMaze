@@ -64,6 +64,7 @@ class Robot {
     void setBlackThreshold(uint8_t black_threshold);
     float getTempLeft();
     float getTempRight();
+    Temps getTemps();
 
     void straighten();
     int go();
