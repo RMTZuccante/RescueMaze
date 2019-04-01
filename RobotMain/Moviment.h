@@ -15,7 +15,7 @@ class Moviment {
     void go();
     float getDistortion();
     void go (bool invert);
-    void impennati(uint16_t speed);    
+    void charge();    
     void straight();
     void endGo();
     void rotate();

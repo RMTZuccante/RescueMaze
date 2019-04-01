@@ -43,9 +43,9 @@ void Moviment::climb(int k) {
 /**
  * Makes the robot IMPENNARSI!!!
  */
-void Moviment::impennati(uint16_t speed){
-  motorsR.startDiff(0, bound(speed, MAXSPEED), false);
-  motorsL.startDiff(0, bound(speed, MAXSPEED), false);
+void Moviment::charge(){
+  motorsR.start(MAXSPEED, false);
+  motorsL.start(MAXSPEED, false);
 }
  
 /**
