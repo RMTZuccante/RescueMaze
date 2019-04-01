@@ -98,8 +98,8 @@ void Moviment::rotate() {
  * @param invert Rotates right if FALSE, left if TRUE.
  */
 void Moviment::rotation(bool invert){
-  motorsR.start(30000, invert);
-  motorsL.start(30000, !invert);
+  motorsR.start(SLOW_ROTATION, invert);
+  motorsL.start(SLOW_ROTATION, !invert);
 }
 
 /**
