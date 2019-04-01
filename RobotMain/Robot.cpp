@@ -134,7 +134,6 @@ int Robot::go(){
  */
 int Robot::go(bool frontLaser) {
   VL53L0X* dist = &(frontLaser?((distances.frontL.read()<distances.frontR.read()) ? distances.frontL : distances.frontR ) : distances.back);
-  dist->setDefault();
   uint16_t end = endDist(dist->read(),frontLaser); // calcolo a che distanza devo arrivare
   Debug.println(String("End")+String(end));
   Debug.println(String(frontLaser?"using front laser":"using back laser"));
@@ -142,7 +141,6 @@ int Robot::go(bool frontLaser) {
   int i = 0;
   int salita = 0;
   uint16_t front = dist->read();
-  if(front>LONG_RANGE)dist->setLongRange();
   uint16_t before = front;
   if(color.isBlack()) res=BLACK; // controllo il colore
   uint16_t start = front;
@@ -186,7 +184,7 @@ int Robot::go(bool frontLaser) {
 
       bool front = (distances.frontL.read()<2000);
       dist = &(front?((distances.frontL.read()<distances.frontR.read()) ? distances.frontL : distances.frontR ) : distances.back);
-      (dist->read() < LONG_RANGE) ? dist->setDefault() : dist->setLongRange();
+
       end = endDist(dist->read(),front);
     }
 
@@ -211,7 +209,6 @@ int Robot::go(bool frontLaser) {
 
   Debug.println(String("stop"));
   straighten();
-  dist->setDefault();
   return res;
 }
 
@@ -228,7 +225,7 @@ void Robot::back() {
 void Robot::back(uint16_t length){
   bool front = (distances.frontL.read()<2000);
   VL53L0X* dist = &(front?((distances.frontL.read()<distances.frontR.read()) ? distances.frontL : distances.frontR ) : distances.back);
-  dist->setDefault();
+
   Debug.println(String("back"));
   uint16_t end = endDist(dist->read(), front) + length;
   Debug.println(String("end ") + String(end));
@@ -364,8 +361,6 @@ uint16_t Robot::endDist(uint16_t distance, bool front) {
  * Using the two distance sensors tries to place the robot parallel to a wall.
  */
 void Robot::straighten(){
-  distances.frontL.setHighPrecision();
-  distances.frontR.setHighPrecision();
   int dif;
   dif=difLaser();
   if(((distances.frontL.read() <= CENTRED<<1)&&(distances.frontR.read() <= CENTRED<<1)) && (dif > 6 ||  dif < -6)){
@@ -377,8 +372,6 @@ void Robot::straighten(){
     mov.stop();
     mov.resetFill();
   }
-  distances.frontL.setDefault();
-  distances.frontR.setDefault();
 }
 
 /**
