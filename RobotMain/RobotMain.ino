@@ -109,5 +109,39 @@ void loop() {
 }
 
 void loopUSB() {
-  
+  Serial.println("Ready!");
+  while(!Serial.available());
+  String cmd = Serial.readStringUntil('\n');
+  if(cmd == "rotate") {
+    Serial.println("Angle?");
+    robot.rotate(Serial.parseInt());
+  }
+  else if (cmd == "go") {
+    Serial.println("Go ended with code: "+String(robot.go()));
+  }
+  else if (cmd == "getdistances") {
+    Serial.println(robot.getDistances());
+  }
+  else if (cmd == "getcolor") {
+    Serial.println(robot.getColor());
+  }
+  else if (cmd == "gettemps") {
+    Serial.println(robot.getTemps());
+  }
+  else if (cmd == "victim") {
+    Serial.println("Number of packets?");
+    robot.victim(Serial.parseInt());
+  }
+  else if (cmd == "setdebug") {
+    Serial.println("Debug level?");
+    Debug.setLevel(static_cast<Levels>(Serial.parseInt()));
+  }
+  else if (cmd == "setblack") {
+    Serial.println("Black threshold?");
+    robot.setBlackThreshold(Serial.parseInt());
+  }
+  else if (cmd == "reset") {
+    reset();
+  }
+  else Serial.println("Unknown command");
 }
