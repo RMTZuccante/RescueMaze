@@ -348,11 +348,11 @@ void Robot::setAddresses() {
  */
 uint16_t Robot::endDist(uint16_t distance, bool front) {
   if(front){
-    distance = distance > CELL ? distance - CELL : 0;
-    return distance - ((distance) % CELL_DIM) + ((distance<CELL_DIM) ? CENTRED : CENTRED2);
+    distance = distance > CELL_FRONT ? distance - CELL_FRONT : 0;
+    return distance - ((distance) % CELL_DIM) + CENTRED;
   }
-  distance = distance + CELL;
-  return distance - ((distance) % CELL_DIM) + ((distance<CELL_DIM) ? CENTRED_BACK : CENTRED2) + CELL_DIM;
+  distance = distance + CELL_BACK;
+  return distance - ((distance) % CELL_DIM) + CENTRED2 + CELL_DIM;
 
 }
 
