@@ -13,11 +13,11 @@ struct ColorData {
   
   operator String() {
     String out = "color={";
-    out+="red="+red;
-    out+=",green="+green;
-    out+=",blue="+blue;
-    out+=",ambient="+ambient;
-    return +"}";
+    out+="red="+String(red);
+    out+=",green="+String(green);
+    out+=",blue="+String(blue);
+    out+=",ambient="+String(ambient);
+    return out+"}";
   }
 };
 

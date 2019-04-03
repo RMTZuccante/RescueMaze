@@ -43,12 +43,12 @@ struct Distances {
 
   operator String() {
     String out = "distances={";
-    out+="frontL="+frontL.read();
-    out+=",frontR="+frontR.read();
-    out+=",left="+left.read();
-    out+=",right="+right.read();
-    out+=",back="+back.read();
-    return +"}";
+    out+="frontL="+String(frontL.read());
+    out+=",frontR="+String(frontR.read());
+    out+=",left="+String(left.read());
+    out+=",right="+String(right.read());
+    out+=",back="+String(back.read());
+    return out+"}";
   }
 };
 
@@ -64,7 +64,7 @@ struct Temps {
     String out = "temps={";
     out+="left="+String(left.read());
     out+=",right="+String(right.read());
-    return +"}";
+    return out+"}";
   }
 };
 
