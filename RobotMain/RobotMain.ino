@@ -108,12 +108,17 @@ void loop() {
   }
 }
 
+void waitUSB() {
+  while(!Serial.available());
+}
+
 void loopUSB() {
   Serial.println("Ready!");
-  while(!Serial.available());
+  waitUSB();
   String cmd = Serial.readStringUntil('\n');
   if(cmd == "rotate") {
     Serial.println("Angle?");
+    waitUSB();
     robot.rotate(Serial.parseInt());
   }
   else if (cmd == "go") {
@@ -130,14 +135,17 @@ void loopUSB() {
   }
   else if (cmd == "victim") {
     Serial.println("Number of packets?");
+    waitUSB();
     robot.victim(Serial.parseInt());
   }
   else if (cmd == "setdebug") {
     Serial.println("Debug level?");
+    waitUSB();
     Debug.setLevel(static_cast<Levels>(Serial.parseInt()));
   }
   else if (cmd == "setblack") {
     Serial.println("Black threshold?");
+    waitUSB();
     robot.setBlackThreshold(Serial.parseInt());
   }
   else if (cmd == "reset") {
