@@ -11,11 +11,11 @@ bool SerialCom::check() {
     if (getCommand() == Commands::HANDSHAKE) {
       byte n = read();
       Serial3.write(n * 2);
-      connected = true;
+      connected = read() == 'k' + n / 2;
     }
     else while (Serial3.available()) Serial3.read();
-    return connected;
   }
+  return connected;
 }
 
 void SerialCom::wait() {
