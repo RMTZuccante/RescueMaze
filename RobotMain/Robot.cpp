@@ -209,6 +209,9 @@ int Robot::go(bool frontLaser) {
 
   Debug.println(String("stop"));
   straighten();
+  if(res!=OBSTACLE){
+    center();
+  }
   return res;
 }
 
@@ -352,7 +355,7 @@ uint16_t Robot::endDist(uint16_t distance, bool front) {
     return distance - ((distance) % CELL_DIM) + CENTRED;
   }
   distance = distance + CELL_BACK;
-  return distance - ((distance) % CELL_DIM) + CENTRED2 + CELL_DIM;
+  return distance - ((distance) % CELL_DIM) + CENTRED_BACK + CELL_DIM;
 
 }
 
@@ -374,6 +377,20 @@ void Robot::straighten(){
   }
 }
 
+
+/**
+ * Centers the robot in the cell if near a wall
+ */
+void Robot::center(){
+  bool right = distances.right.read() < CENTRED2;
+  bool left = distances.left.read() < CENTRED2;
+  if(left || right){
+    rotate(left, 90);
+    back(CENTRED-distances.frontL.read());
+    rotate(!left,90);
+  }
+}
+ 
 /**
  * Returns the difference of the front lasers
  */

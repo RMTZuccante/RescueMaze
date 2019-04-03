@@ -95,6 +95,7 @@ class Robot {
     void laserTest();
     void tempTest();
     void setLED(bool red, bool green, bool blue);
+    void center();
 
     void delayr(unsigned int t);
   private:
