@@ -140,7 +140,7 @@ int Moviment::rotate(bool invert , float angle , byte type) {
   stop();
   setK(0, 0);
   delayr(50);
-  fill=(orientation.yaw()-end);
+  //fill=(orientation.yaw()-end);
   Debug.println("rotate end");
   if(isVictimL)return 1;
   if(isVictimR)return 2;
