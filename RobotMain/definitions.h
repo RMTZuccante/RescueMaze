@@ -39,7 +39,7 @@
 #define LASER_DIF -10
 #define TEMP_DIF 1.0
 #define TEMP_K 23
-#define RISEINCL 2
+#define RISEINCL 7
 
 //Temperature addresses
 #define T_LEFT 0x5A
