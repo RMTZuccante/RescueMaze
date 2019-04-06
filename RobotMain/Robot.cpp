@@ -210,7 +210,7 @@ int Robot::go(bool frontLaser) {
   Debug.println(String("stop"));
   straighten();
   if(res!=OBSTACLE){
-    center();
+    //center();
   }
   return res;
 }
