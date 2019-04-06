@@ -170,18 +170,14 @@ int Robot::go(bool frontLaser) {
 
     // controllo salita
     float incl = mov.inclination();
-    if (abs(incl) > 10) salita++;
+    if (abs(incl) > RISEINCL) salita++;
     else salita = 0;
 
     // se rilevata eseguo salita
-    if(salita >= 10){
+    if(salita >= 5){
       Debug.println("salita");
       res = RISE;
-      mov.delayr(50);
-      while(abs(mov.inclination()) > 8){
-        climb(distances.left.read()-distances.right.read());
-      }
-
+      while(abs(mov.inclination()) > RISEINCL);
       bool front = (distances.frontL.read()<2000);
       dist = &(front?((distances.frontL.read()<distances.frontR.read()) ? distances.frontL : distances.frontR ) : distances.back);
 
