@@ -390,6 +390,10 @@ void Robot::center(){
     rotate(!left,90);
   }
 }
+
+float Robot::getInclination() {
+  return mov.inclination();
+}
  
 /**
  * Returns the difference of the front lasers

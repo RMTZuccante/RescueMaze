@@ -151,5 +151,8 @@ void loopUSB() {
   else if (cmd == "reset") {
     reset();
   }
+  else if (cmd == "getinclination") {
+    Serial.println("Inclination: "+String(robot.getInclination()));
+  }
   else Serial.println("Unknown command");
 }

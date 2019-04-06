@@ -82,6 +82,7 @@ class Robot {
     float getTempLeft();
     float getTempRight();
     Temps getTemps();
+    float getInclination();
 
     void straighten();
     int go();
