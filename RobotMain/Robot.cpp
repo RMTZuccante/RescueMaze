@@ -165,6 +165,7 @@ int Robot::go(bool frontLaser) {
       isVictimL = max(isVictimL, temps.left.read());
       isVictimL = max(isVictimR, temps.right.read());
     }
+    mov.idle();
   }
   mov.stop();
 
@@ -173,7 +174,7 @@ int Robot::go(bool frontLaser) {
     Debug.println(String("Call to back"));
     back();
   }
-  //mov.endGo();
+  else mov.endGo();
   mov.stop();
 
   Debug.println(String("stop"));
