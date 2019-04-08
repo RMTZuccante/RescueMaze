@@ -15,15 +15,13 @@ class Moviment {
     void go();
     float getDistortion();
     void go (bool invert);
-    void charge();    
-    void straight();
+    void charge();
     void endGo();
     void rotate();
     void climb(int k);
     void rotation(bool invert);
     int rotate (bool invert);
     int rotate (bool invert, float angle, byte type);
-    void resetFill();
     void stop();
     void setSpeed(uint16_t speed);
     void setK(int rightK, int leftK);
@@ -45,7 +43,6 @@ class Moviment {
     int kR;
     int kL;
     float direzione;
-    float fill;
 };
 
 #endif

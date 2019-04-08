@@ -166,7 +166,6 @@ int Robot::go(bool frontLaser) {
     front = dist->read();
     //Debug.println(String("Laser read: ")+front);
     mov.setSpeed(((front - end) * 10) + SPEED);
-    mov.straight();
 
     // controllo salita
     float incl = mov.inclination();
@@ -371,7 +370,6 @@ void Robot::straighten(){
     }while( dif > 2|| dif < -2);
     Debug.println("End Straighten");
     mov.stop();
-    mov.resetFill();
   }
 }
 

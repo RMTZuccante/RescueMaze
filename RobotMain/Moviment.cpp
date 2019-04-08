@@ -7,7 +7,6 @@ Moviment::Moviment (uint16_t speed, Temperature *tl, Temperature *tr) {
   this->speed = speed;
   tleft = tl;
   tright = tr;
-  fill=0;
 }
 
 /**
@@ -71,12 +70,6 @@ void Moviment::go(bool invert) {
 float Moviment::getDistortion(){
   return orientation.yaw()-direzione;
 }
-/**
- * Moves the robot forward in a straight line.
- */
-void Moviment::straight() {
-  if(abs(direzione - orientation.yaw())>5)fill=0;
-}
 
 /**
  * Straightens the robot at the end of a movement.
@@ -120,7 +113,6 @@ int Moviment::rotate(bool invert , float angle , byte type) {
   float end = endAngle(orientation.yaw(), invert , angle);
   bool isVictimL = false;
   bool isVictimR = false;
-  end-=fill;
   if(end==0)end+=1;
   if(end==360)end-=1;
   Debug.println(String("startAngle ")+String(orientation.yaw()));
@@ -140,7 +132,6 @@ int Moviment::rotate(bool invert , float angle , byte type) {
   stop();
   setK(0, 0);
   delayr(50);
-  //fill=(orientation.yaw()-end);
   Debug.println("rotate end");
   if(isVictimL)return 1;
   if(isVictimR)return 2;
@@ -259,8 +250,4 @@ void Moviment::idle() {
 void Moviment::delayr(unsigned int t) {
   unsigned int end = millis() + t;
   while (end > millis()) idle();
-}
-
-void Moviment::resetFill(){
-  fill=0;
 }
