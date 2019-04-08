@@ -21,32 +21,6 @@ void Robot::begin() {
   //tempk = (temps.left.read()+temps.left.read())/2+TEMP_DIF;
 }
 
-void Robot::tempTest(){
-  Debug.print(" tempL: ");
-  Debug.print(String(temps.left.read()));
-  Debug.print(" tempR: ");
-  Debug.println(String(temps.right.read()));
-}
-
-
-/**
- * Prints one reading from each distance sensor.
- */
-void Robot::laserTest() {
-  Debug.print(" 0: ");
-  Debug.print(String(distances.frontL.read()));
-  Debug.print(" 1: ");
-  Debug.print(String(distances.right.read()));
-  Debug.print(" 2: ");
-  Debug.print(String(distances.left.read()));
-  Debug.print(" 3: ");
-  Debug.print(String(distances.frontR.read()));
-  Debug.print(" 4: ");
-  Debug.println(String(distances.back.read()));
-  //Debug.println(String(distances.frontL.read()-distances.frontR.read()));
-  //Debug.println(String(distances.right.read()-distances.frontL.read()));
-}
-
 void Robot::climb(int k) {
   Debug.println(String("climb"), Levels::INFO);
   mov.climb(k);

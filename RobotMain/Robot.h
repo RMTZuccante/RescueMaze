@@ -94,8 +94,6 @@ class Robot {
     void rotate(float angle);
     void victim(int n);
     void climb(int k);
-    void laserTest();
-    void tempTest();
     void setLED(bool red, bool green, bool blue);
     void center();
 
