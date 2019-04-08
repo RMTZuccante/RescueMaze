@@ -123,7 +123,7 @@ void loopUSB() {
   if(cmd == "rotate") {
     Serial.println("Angle?");
     waitUSB();
-    robot.rotate(Serial.parseInt());
+    robot.rotate(Serial.parseFloat());
   }
   else if (cmd == "go") {
     Serial.println("Go ended with code: "+String(robot.go()));

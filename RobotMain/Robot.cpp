@@ -235,6 +235,11 @@ void Robot::back(uint16_t length){
   mov.stop();
 }
 
+/**
+ * Rotates the robot
+ * @param angle degrees to rotate
+ * @param dir Rotates right if FALSE, left if TRUE
+ */
 void Robot::rotate(bool dir, float angle) {
   byte type=BASIC;
   Debug.println(String("Back: ")+String(distances.back.read()));
@@ -263,10 +268,18 @@ void Robot::rotate(bool dir, float angle) {
 
 /**
  * Rotates the robot by 90 degrees.
- * @param dir TRUE to turn right, false to turn left
+ * @param dir Rotates right if FALSE, left if TRUE.
  */
 void Robot::rotate(bool dir) {
 	rotate(dir, 90);
+}
+
+/**
+ * Rotates the robot by a given number of degrees
+ * @param angle degrees to rotate. Can be negative to rotate left
+ */
+void Robot::rotate(float angle) {
+  rotate(angle<0, abs(angle)); 
 }
 
 /**

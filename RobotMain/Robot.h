@@ -91,6 +91,7 @@ class Robot {
     void back();
     void rotate(bool dir, float angle);
     void rotate(bool dir);
+    void rotate(float angle);
     void victim(int n);
     void climb(int k);
     void laserTest();
