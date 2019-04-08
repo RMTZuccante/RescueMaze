@@ -244,23 +244,12 @@ void Robot::rotate(bool dir, float angle) {
   byte type=BASIC;
   Debug.println(String("Back: ")+String(distances.back.read()));
   Debug.println(String("Front: ")+String(distances.frontL.read()));
-  /*
-  if(distances.back.read()<100){
-    type=BACK_WALL;
-    back(10);
-    delay(1000);
-  }
-  else if(distances.frontL.read()<100){
-    type=FRONT_WALL;
-    back(10);
-    delay(1000);
-  }*/
   switch(mov.rotate(dir, angle, type)){
     case 1:
-      isVictimL=true;
+      isVictimL=50;
       break;
     case 2:
-      isVictimR=true;
+      isVictimR=50;
       break;
   }
   straighten();
