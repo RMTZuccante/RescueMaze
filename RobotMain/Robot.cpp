@@ -369,7 +369,6 @@ float Robot::getInclination() {
 /**
  * Returns the difference of the front lasers
  */
-
 int Robot::difLaser(){
   int dif=0;
   //for(int i = 0 ; i<3; i++){

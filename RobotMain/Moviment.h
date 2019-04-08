@@ -13,7 +13,6 @@ class Moviment {
     void begin();
     bool check();
     void go();
-    float getDistortion();
     void go (bool invert);
     void charge();
     void endGo();
@@ -29,7 +28,6 @@ class Moviment {
     void idle();
     void delayr(unsigned int t);
   private:
-    uint16_t bound (uint32_t n, uint16_t max);
     float endAngle(float angle, bool invert, float end);
     void rotationSpeed(bool direction , float endRotation);
     void rotationSpeed(uint16_t speed, bool invert,byte type);

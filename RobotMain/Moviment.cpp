@@ -35,8 +35,8 @@ bool Moviment::check() {
  */
 void Moviment::climb(int k) {
   k=-k*CLIMB_K;
-  motorsR.start(bound(50000+k,MAXSPEED), false);
-  motorsL.start(bound(50000-k,MAXSPEED), false);
+  motorsR.start(min(50000+k,MAXSPEED), false);
+  motorsL.start(min(50000-k,MAXSPEED), false);
 }
 
 /**
@@ -61,14 +61,8 @@ void Moviment::go() {
 void Moviment::go(bool invert) {
   orientation.start(20);
   direzione = orientation.yaw();
-  motorsR.start(bound(speed, MAXSPEED), invert);
-  motorsL.start(bound(speed, MAXSPEED), invert);
-}
-/**
- * @return The difference of the initial angle and the angle of the actual direction 
- */
-float Moviment::getDistortion(){
-  return orientation.yaw()-direzione;
+  motorsR.start(min(speed, MAXSPEED), invert);
+  motorsL.start(min(speed, MAXSPEED), invert);
 }
 
 /**
@@ -151,7 +145,7 @@ void Moviment::stop() {
  * @param speed The speed, from 0 to 65535.
  */
 void Moviment::setSpeed(uint16_t speed) {
-  this->speed = bound((speed) , MAXSPEED);
+  this->speed = min((speed) , MAXSPEED);
   motorsR.setSpeed(speed);
   motorsL.setSpeed(speed);
 }
@@ -194,8 +188,8 @@ void Moviment::rotationSpeed(bool invert, float endRotation) {
   direzione = orientation.yaw();
   if (endRotation - direzione > 0) setK(FIRST_K + ((endRotation - direzione) * ROTATION_P), SECOND_K + ((endRotation - direzione) * ROTATION_P));
   else setK(SECOND_K + ((direzione - endRotation) * ROTATION_P), FIRST_K + ((direzione - endRotation) * ROTATION_P));
-  motorsR.start(bound((speed + kR) , MAXSPEED), !invert);
-  motorsL.start(bound((speed + kL) , MAXSPEED), invert);
+  motorsR.start(min((speed + kR) , MAXSPEED), !invert);
+  motorsL.start(min((speed + kL) , MAXSPEED), invert);
 }
 
 /**
@@ -215,17 +209,6 @@ void Moviment::rotationSpeed(uint16_t speed, bool invert,byte type) {
   }
   motorsR.start(speedR, !invert);
   motorsL.start(speedL, invert);
-}
-
-/**
- * Bound n to max.
- * Cap down n to not overflow the max value.
- * @param n The number given.
- * @param max The max value that n should be.
- * @return The capped value.
- */
-uint16_t Moviment::bound(uint32_t n, uint16_t max) {
-  return (n > max) ? max : n;
 }
 
 /**
