@@ -158,5 +158,8 @@ void loopUSB() {
   else if (cmd == "getinclination") {
     Serial.println("Inclination: "+String(robot.getInclination()));
   }
+  else if (cmd == "getbattery") {
+    Serial.println("Battery: "+String(robot.getBattery())+"v.");
+  }
   else Serial.println("Unknown command");
 }

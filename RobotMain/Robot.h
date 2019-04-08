@@ -83,6 +83,7 @@ class Robot {
     float getTempRight();
     Temps getTemps();
     float getInclination();
+    float getBattery();
 
     void straighten();
     int go();
@@ -107,7 +108,6 @@ class Robot {
     RGB led = RGB(RED, GREEN, BLUE);
     Cagamattoni caga = Cagamattoni(10);
     int difLaser();
-    float getBattery();
     void setAddresses();
     uint16_t endDist(uint16_t distance, bool front);
     float isVictimL;
