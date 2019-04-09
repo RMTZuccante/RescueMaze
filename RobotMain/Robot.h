@@ -84,7 +84,6 @@ class Robot {
     Temps getTemps();
     float getInclination();
     float getBattery();
-    int getWeight();
     void straighten();
     int go();
     int go(bool frontLaser);
@@ -104,7 +103,7 @@ class Robot {
     Distances distances;
     Temps temps;
 
-    Moviment mov = Moviment(SPEED, &temps.left, &temps.right);
+    Moviment mov = Moviment(SPEED, &temps.left, &temps.right, &isVictimL, &isVictimR);
     RGB led = RGB(RED, GREEN, BLUE);
     Cagamattoni caga = Cagamattoni(10);
     int difLaser();
@@ -112,7 +111,6 @@ class Robot {
     uint16_t endDist(uint16_t distance, bool front);
     float isVictimL;
     float isVictimR;
-    int weight;
 };
 
 #endif

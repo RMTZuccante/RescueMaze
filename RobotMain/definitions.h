@@ -25,7 +25,7 @@
 //Robot
 #define LONG_RANGE 1000
 #define BLACK 1
-#define OBSTACLE 2
+#define OBSTACLE 10
 #define RISE 3
 #define DISTORTION 30
 //Measurements

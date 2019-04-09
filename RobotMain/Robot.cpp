@@ -114,7 +114,7 @@ int Robot::go(bool frontLaser) {
   int res = 0;
   int i = 0;
   int salita = 0;
-  weight = 0;
+  int weight = 0;
   uint16_t front = dist->read();
   uint16_t before = front;
   if(color.isBlack()) res=BLACK; // controllo il colore
@@ -129,7 +129,6 @@ int Robot::go(bool frontLaser) {
       uint16_t now = dist->read();
       if (((before > now) ? before - now : now - before) < 5) {
         mov.charge();
-        weight+=5;
         while(((before > now) ? before - now : now - before) < 10){
           ++weight;
           res = OBSTACLE;
@@ -148,7 +147,7 @@ int Robot::go(bool frontLaser) {
     float incl = mov.inclination();
     if (abs(incl) > RISEINCL) {
       salita++;
-      weight = 15;
+      weight = 0;
       res = OBSTACLE;
     }
     else salita = 0;
@@ -170,7 +169,7 @@ int Robot::go(bool frontLaser) {
     // controllo temperature
     if(abs(start-front) > CENTRED){
       isVictimL = max(isVictimL, temps.left.read());
-      isVictimL = max(isVictimR, temps.right.read());
+      isVictimR = max(isVictimR, temps.right.read());
     }
     mov.idle();
   }
@@ -190,7 +189,7 @@ int Robot::go(bool frontLaser) {
     //center();
   }
   if(res = OBSTACLE){
-    return weight+8;
+    return weight+OBSTACLE;
   }
   return res;
 }
@@ -228,14 +227,7 @@ void Robot::rotate(bool dir, float angle) {
   byte type=BASIC;
   Debug.println(String("Back: ")+String(distances.back.read()));
   Debug.println(String("Front: ")+String(distances.frontL.read()));
-  switch(mov.rotate(dir, angle, type)){
-    case 1:
-      isVictimL=50;
-      break;
-    case 2:
-      isVictimR=50;
-      break;
-  }
+  mov.rotate(dir, angle, type);
   straighten();
 }
 
@@ -397,11 +389,3 @@ int Robot::difLaser(){
 float Robot::getBattery() {
   return ((analogRead(B_PIN) * (3.3f / 4095.0f)) * (B_R1+B_R2))/B_R2;
 }
-
-/**
- * @return The difficulty of the cell 
- */
-
- int Robot::getWeight(){
-  return weight;
- }
