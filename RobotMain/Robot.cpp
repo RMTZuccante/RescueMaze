@@ -161,7 +161,7 @@ int Robot::go(bool frontLaser) {
         mov.idle();
         mov.delayr(100);
         incl = mov.inclination();
-        if(abs(incl) < RISEINCL) ++i;
+        if(abs(incl) < RISEINCL-5) ++i;
         else i = 0;
       }
       bool front = (distances.frontL.read()<2000);
