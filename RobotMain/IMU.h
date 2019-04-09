@@ -22,6 +22,7 @@ class IMU {
     void read();
     MPU6050 imu;
     Madgwick filter;
+    float baseIncl;
     unsigned long microsPerReading;
     unsigned long microsPrevious;
 };
