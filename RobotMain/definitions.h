@@ -14,8 +14,8 @@
 #define FRONT_WALL 2
 #define MAXSPEED 65535
 #define SPEED 20000
-#define FIRST_K 5000
-#define SECOND_K 5000
+#define FIRST_K 3000
+#define SECOND_K 3000
 #define ROTATION_P 500
 #define SLOW_ROTATION 20000
 #define ROTATION_SPEED 60000
@@ -23,6 +23,8 @@
 #define CLIMB_K 100
 
 //Robot
+
+#define MAX_RANGE 2000
 #define LONG_RANGE 1000
 #define BLACK 1
 #define OBSTACLE 10

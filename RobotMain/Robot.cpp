@@ -95,10 +95,10 @@ Temps Robot::getTemps() {
 }
 
 int Robot::go(){
-  uint16_t zero=distances.frontL.read();
-  uint16_t three=distances.frontR.read();
-  uint16_t four=distances.back.read()+CELL_DIM;
-  return go((zero>three?three:zero)<four);
+  uint16_t fl=distances.frontL.read();
+  uint16_t fr=distances.frontR.read();
+  uint16_t b=distances.back.read();
+  return go( ((fl > fr ? fr : fl) < b) && (abs(fl-fr) < CELL_DIM && b < MAX_RANGE));
 }
 
 /**
@@ -191,7 +191,7 @@ int Robot::go(bool frontLaser) {
   if(res != OBSTACLE){
     center();
   }
-  if(res = OBSTACLE){
+  else{
     return weight+OBSTACLE;
   }
   return res;
@@ -210,7 +210,6 @@ void Robot::back() {
 void Robot::back(uint16_t length){
   bool front = (distances.frontL.read()<2000);
   VL53L0X* dist = &(front?((distances.frontL.read()<distances.frontR.read()) ? distances.frontL : distances.frontR ) : distances.back);
-
   Debug.println(String("back"));
   uint16_t end = endDist(dist->read(), front) + length;
   Debug.println(String("end ") + String(end));
@@ -343,11 +342,11 @@ uint16_t Robot::endDist(uint16_t distance, bool front) {
 void Robot::straighten(){
   int dif;
   dif=difLaser();
-  if(((distances.frontL.read() <= CENTRED<<1)&&(distances.frontR.read() <= CENTRED<<1)) && (dif > 6 ||  dif < -6)){
+  if(((distances.frontL.read() <= CENTRED<<1)&&(distances.frontR.read() <= CENTRED<<1)) && abs(dif) > 10){
     mov.rotation(dif>0);
     do{
       dif=difLaser();
-    }while( dif > 2|| dif < -2);
+    }while(abs(dif)>3);
     Debug.println("End Straighten");
     mov.stop();
   }
@@ -358,15 +357,18 @@ void Robot::straighten(){
  * Centers the robot in the cell if near a wall
  */
 void Robot::center(){
+  Debug.println("Center");
   bool left =distances.left.read() < distances.right.read();
-  VL53L0X *temp= &(left ? distances.left : distances.right);
-  if(temp->read() > CENTRED2){
+  VL53L0X *laser= &(left ? distances.left : distances.right);
+  float b = distances.back.read();
+  if(laser->read() < CENTRED2 && b < LONG_RANGE){
     rotate(left, 30);
     mov.go(true);
-    while(temp->read() > CENTRED2){
-      
-    }
+    while(laser->read() < CENTRED2);
     rotate(!left,30);
+    mov.go(false);
+    while(distances.back.read() < b);
+    mov.stop();
   }
 }
 /**
