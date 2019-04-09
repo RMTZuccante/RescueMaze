@@ -2,13 +2,14 @@
 #include "Debug.h"
 
 /**
-   Sets the movement speed and default parameters.
-*/
-Moviment::Moviment (uint16_t speed, Temperature *tl, Temperature *tr) {
+ * Sets the movement speed and default parameters.
+ */
+Moviment::Moviment (uint16_t speed, Temperature *tl, Temperature *tr, float *isVictimL,float *isVictimR) {
   this->speed = speed;
   tleft = tl;
   tright = tr;
-  fill = 0;
+  this->isVictimL = isVictimL;
+  this->isVictimR = isVictimR;
 }
 
 /**
@@ -42,11 +43,11 @@ void Moviment::climb(int k) {
 }
 
 /**
-   Makes the robot IMPENNARSI!!!
-*/
-void Moviment::impennati(uint16_t speed) {
-  motorsR.startDiff(0, bound(speed, MAXSPEED), false);
-  motorsL.startDiff(0, bound(speed, MAXSPEED), false);
+ * Makes the robot CHARGE!!!
+ */
+void Moviment::charge(){
+  motorsR.start(MAXSPEED, false);
+  motorsL.start(MAXSPEED, false);
 }
 
 /**
@@ -63,24 +64,20 @@ void Moviment::go() {
 void Moviment::go(bool invert) {
   orientation.start(20);
   direzione = orientation.yaw();
-  motorsR.start(bound(speed, MAXSPEED), invert);
-  motorsL.start(bound(speed, MAXSPEED), invert);
-}
-/**
-   @return The difference of the initial angle and the angle of the actual direction
-*/
-float Moviment::getDistortion() {
-  return orientation.yaw() - direzione;
-}
-/**
-   Moves the robot forward in a straight line.
-*/
-void Moviment::straight() {
-  float fix = direzione - orientation.yaw();
-  motorsR.start(bound(speed + fix * 5000, MAXSPEED), false);
-  motorsL.start(bound(speed - fix * 5000, MAXSPEED), false);
+  motorsR.start(min(speed, MAXSPEED), invert);
+  motorsL.start(min(speed, MAXSPEED), invert);
 }
 
+/**
+ * Straightens the robot at the end of a movement.
+ */
+void Moviment::endGo() {
+  float now = orientation.yaw();
+  if (abs(direzione-now) > 1) {
+    if (direzione > now) rotate(true, direzione - now,BASIC);
+    else rotate(false, now - direzione,BASIC);
+  }
+}
 
 /**
    Rotates the robot by 90 degrees to the right.
@@ -90,28 +87,28 @@ void Moviment::rotate() {
 }
 
 /**
-   Makes the robot rotate until stop is called.
-   @param invert Rotates right if FALSE, left if TRUE.
-*/
-void Moviment::rotation(bool invert) {
-  motorsR.start(30000, invert);
-  motorsL.start(30000, !invert);
+ * Makes the robot rotate until stop is called.
+ * @param invert Rotates right if FALSE, left if TRUE.
+ */
+void Moviment::rotation(bool invert){
+  motorsR.start(SLOW_ROTATION, invert);
+  motorsL.start(SLOW_ROTATION, !invert);
 }
 
 /**
-   Rotates the robot by 90 degrees.
-   @param invert Rotates right if FALSE, left if TRUE.
-*/
-int Moviment::rotate(bool invert) {
-  return rotate(invert, 90);
+ * Rotates the robot by 90 degrees.
+ * @param invert Rotates right if FALSE, left if TRUE.
+ */
+void Moviment::rotate(bool invert) {
+  rotate(invert, 90, BASIC);
 }
 
 /**
-   Rotates the robot by a given number degrees.
-   @param invert Rotates right if FALSE, left if TRUE.
-   @param angle The angle by.
-*/
-int Moviment::rotate(bool invert , float angle) {
+ * Rotates the robot by a given number degrees.
+ * @param invert Rotates right if FALSE, left if TRUE.
+ * @param angle The angle by.
+ */
+void Moviment::rotate(bool invert , float angle , byte type) {
   orientation.start(100);
 
   float to = 180 + angle;
@@ -140,68 +137,26 @@ int Moviment::rotate(bool invert , float angle) {
 
 
   float end = endAngle(orientation.yaw(), invert , angle);
-    bool isVictimL = false;
-    bool isVictimR = false;
-    end -= fill;
-    if (end == 0)end += 1;
-    if (end == 360)end -= 1;
-    Debug.println(String("startAngle ") + String(orientation.yaw()));
-    Debug.println(String("endAngle ") + String(end));
-    if (invert) {
-    Debug.print("left ");
-    if (end < angle) {
-      Debug.print("Out of range rotation ");
-      rotationSpeed(ROTATION_SPEED, invert, type);
-      while (orientation.yaw() < 359) {
-        //Debug.println(String(orientation.yaw()));
-      };
-      delayr(100);
-    }
-    Debug.print("Normal rotation");
-    while (orientation.yaw() < end) {
+  if(end==0)end+=1;
+  if(end==360)end-=1;
+  Debug.println(String("startAngle ")+String(orientation.yaw()));
+  Debug.println(String("endAngle ")+String(end));
+  Debug.print("left ");
+  while (invert ? orientation.yaw() < end : orientation.yaw() > end) {
       //Debug.println(String(orientation.yaw()));
       rotationSpeed(ROTATION_SPEED, invert, type);
-      isVictimL |= (tleft->read()) > TEMP_K;
-      isVictimR |= (tright->read()) > TEMP_K;
-    }
-    stop();
-    Debug.println(" Correction");
-    while (orientation.yaw() > (end)) {
-      rotationSpeed(!invert, end);
-    }
-    }
-    else {
-    Debug.print("right ");
-    if (end > (360 - angle)) {
-      Debug.print("Out of range rotation ");
-      rotationSpeed(ROTATION_SPEED, invert, type);
-      while (orientation.yaw() > 1) {
-        //Debug.println(String(orientation.yaw()));
-      }
-      delayr(100);
-    }
-    Debug.print("Normal rotation");
-    while (orientation.yaw() > end) {
-      //Debug.println(String(orientation.yaw()));
-      rotationSpeed(ROTATION_SPEED, invert, type);
-      isVictimL |= (tleft->read()) > TEMP_K;
-      isVictimR |= (tright->read()) > TEMP_K;
-    }
-    stop();
-    Debug.println(" Correction");
-    while (orientation.yaw() < (end)) {
-      rotationSpeed(!invert, end);
-    }
-    }
-    stop();
-    setK(0, 0);
-    delayr(50);
-    fill = (orientation.yaw() - end);
-    Debug.println("rotate end");
-    if (isVictimL)return 1;
-    if (isVictimR)return 2;
-    return 0;
-  return 0;
+      *isVictimL = max(*isVictimL, tleft->read());
+      *isVictimR = max(*isVictimR, tright->read());
+  }
+  stop();
+  Debug.println(" Correction");
+  while (invert ? orientation.yaw() > end : orientation.yaw() < end) {
+    rotationSpeed(!invert, end);
+  }
+  stop();
+  setK(0, 0);
+  delayr(50);
+  Debug.println("rotate end");
 }
 
 /**
@@ -217,7 +172,7 @@ void Moviment::stop() {
    @param speed The speed, from 0 to 65535.
 */
 void Moviment::setSpeed(uint16_t speed) {
-  this->speed = bound((speed) , MAXSPEED);
+  this->speed = min((speed) , MAXSPEED);
   motorsR.setSpeed(speed);
   motorsL.setSpeed(speed);
 }
@@ -260,8 +215,8 @@ void Moviment::rotationSpeed(bool invert, float endRotation) {
   direzione = orientation.yaw();
   if (endRotation - direzione > 0) setK(FIRST_K + ((endRotation - direzione) * ROTATION_P), SECOND_K + ((endRotation - direzione) * ROTATION_P));
   else setK(SECOND_K + ((direzione - endRotation) * ROTATION_P), FIRST_K + ((direzione - endRotation) * ROTATION_P));
-  motorsR.start(bound((speed + kR) , MAXSPEED), !invert);
-  motorsL.start(bound((speed + kL) , MAXSPEED), invert);
+  motorsR.start(min((speed + kR) , MAXSPEED), !invert);
+  motorsL.start(min((speed + kL) , MAXSPEED), invert);
 }
 
 /**
@@ -284,20 +239,9 @@ void Moviment::rotationSpeed(uint16_t speed, bool invert, byte type) {
 }
 
 /**
-   Bound n to max.
-   Cap down n to not overflow the max value.
-   @param n The number given.
-   @param max The max value that n should be.
-   @return The capped value.
-*/
-uint16_t Moviment::bound(uint32_t n, uint16_t max) {
-  return (n > max) ? max : n;
-}
-
-/**
-   Reads the inclination from the orientation sensor.
-   @return The already corrected inclination.
-*/
+ * Reads the inclination from the orientation sensor.
+ * @return The already corrected inclination.
+ */
 float Moviment::inclination() {
   return orientation.inclination();
 }

@@ -5,12 +5,6 @@
 #include "Robot.h"
 #include "SerialCom.h"
 
-SerialDebug Debug;
-SerialCom Com;
-
-SoftWire I2C_1(PB10, PB11, SOFT_STANDARD);
-SoftWire I2C_2(PB8, PB9, SOFT_STANDARD);
-
 Robot robot;
 
 void reset() {
@@ -21,21 +15,19 @@ void setup() {
   //I/O initialization
   pinMode(LED_BUILTIN, OUTPUT);
   pinMode(PUSHBUTTON, INPUT_PULLUP);
-  pinMode(RESETBUTTON, INPUT_PULLUP);
+  pinMode(USBBUTTON, INPUT_PULLUP);
   digitalWrite(LED_BUILTIN, LOW);
-
-  //Attaching interrupts
-  attachInterrupt(RESETBUTTON, reset, FALLING);
 
   //Hardware initialization
   Com.begin();
+  Serial.begin();
   I2C_1.begin();
   I2C_2.begin();
   robot.setup();
 
+  bool usbMode = !digitalRead(USBBUTTON);
   //Check that everything is working
-  delay(5000);
-  bool ok = /*Com.check() &&*/ robot.check() && robot.checkBattery();
+  bool ok = (usbMode || Com.check()) && robot.check() && robot.checkBattery();
   Debug.println("Check done.", Levels::INFO);
   if (!ok) Debug.println("Something is not working correctly. Proceed at your own risk!", Levels::WARN);
 
@@ -51,13 +43,15 @@ void setup() {
 
   //Waiting user start command
   Debug.println("Waiting for the user to press the button...", Levels::INFO);
-  robot.setLED(0, 1, 0);
-  //while (digitalRead(PUSHBUTTON));
+  robot.setLED(0, 1, usbMode);
+  while (digitalRead(PUSHBUTTON));
   Debug.println("Button has been pushed!");
   delay(250);
   robot.setLED(0, 0, 0);
 
   Debug.println("STARTING!", Levels::INFO);
+
+  if(usbMode) while(1) loopUSB();
 }
 
 void receiveRotate() {
@@ -80,7 +74,7 @@ void loop() {
   robot.rotate(false, 90);
   Debug.println("Fatto");  
   delay(1000);
-  /*Com.notifyReady();
+  Com.notifyReady();
   switch (Com.getCommand()) {
     case Commands::ROTATE:
       Debug.println("Rotate");
@@ -103,6 +97,10 @@ void loop() {
       Com.write(robot.getTempLeft());
       Com.write(robot.getTempRight());
       break;
+    case Commands::GETINCLINATION:
+      Com.write(Commands::GETTEMPS);
+      Com.write(robot.getInclination());
+      break;
     case Commands::VICTIM:
       robot.victim(Com.read());
       Com.notifyRes(1);
@@ -116,5 +114,57 @@ void loop() {
     case Commands::RESET:
       reset();
       break;
-  }*/
+  }
+}
+
+void waitUSB() {
+  while(!Serial.available());
+}
+
+void loopUSB() {
+  Serial.println("Ready!");
+  waitUSB();
+  String cmd = Serial.readStringUntil('\n');
+  if(cmd == "rotate") {
+    Serial.println("Angle?");
+    waitUSB();
+    robot.rotate(Serial.parseFloat());
+  }
+  else if (cmd == "go") {
+    Serial.println("Go ended with code: "+String(robot.go()));
+  }
+  else if (cmd == "getdistances") {
+    Serial.println(robot.getDistances());
+  }
+  else if (cmd == "getcolor") {
+    Serial.println(robot.getColor());
+  }
+  else if (cmd == "gettemps") {
+    Serial.println(robot.getTemps());
+  }
+  else if (cmd == "victim") {
+    Serial.println("Number of packets?");
+    waitUSB();
+    robot.victim(Serial.parseInt());
+  }
+  else if (cmd == "setdebug") {
+    Serial.println("Debug level?");
+    waitUSB();
+    Debug.setLevel(static_cast<Levels>(Serial.parseInt()));
+  }
+  else if (cmd == "setblack") {
+    Serial.println("Black threshold?");
+    waitUSB();
+    robot.setBlackThreshold(Serial.parseInt());
+  }
+  else if (cmd == "reset") {
+    reset();
+  }
+  else if (cmd == "getinclination") {
+    Serial.println("Inclination: "+String(robot.getInclination()));
+  }
+  else if (cmd == "getbattery") {
+    Serial.println("Battery: "+String(robot.getBattery())+"v.");
+  }
+  else Serial.println("Unknown command");
 }

@@ -17,34 +17,8 @@ void Robot::begin() {
   caga.begin();
   mov.begin();
   distances.begin();
-  distances.start();
+  //distances.start();
   //tempk = (temps.left.read()+temps.left.read())/2+TEMP_DIF;
-}
-
-void Robot::tempTest(){
-  Debug.print(" tempL: ");
-  Debug.print(String(temps.left.read()));
-  Debug.print(" tempR: ");
-  Debug.println(String(temps.right.read()));
-}
-
-
-/**
- * Prints one reading from each distance sensor.
- */
-void Robot::laserTest() {
-  Debug.print(" 0: ");
-  Debug.print(String(distances.frontL.read()));
-  Debug.print(" 1: ");
-  Debug.print(String(distances.right.read()));
-  Debug.print(" 2: ");
-  Debug.print(String(distances.left.read()));
-  Debug.print(" 3: ");
-  Debug.print(String(distances.frontR.read()));
-  Debug.print(" 4: ");
-  Debug.println(String(distances.back.read()));
-  //Debug.println(String(distances.frontL.read()-distances.frontR.read()));
-  //Debug.println(String(distances.right.read()-distances.frontL.read()));
 }
 
 void Robot::climb(int k) {
@@ -90,7 +64,10 @@ uint16_t Robot::getDistance(int sensor) {
       return distances.back.read();
       break;
   }
+}
 
+Distances Robot::getDistances() {
+  return distances;
 }
 
 ColorData Robot::getColor() {
@@ -113,6 +90,10 @@ float Robot::getTempRight() {
 	return out;
 }
 
+Temps Robot::getTemps() {
+  return temps;
+}
+
 int Robot::go(){
   uint16_t zero=distances.frontL.read();
   uint16_t three=distances.frontR.read();
@@ -133,6 +114,7 @@ int Robot::go(bool frontLaser) {
   int res = 0;
   int i = 0;
   int salita = 0;
+  int weight = 0;
   uint16_t front = dist->read();
   uint16_t before = front;
   if(color.isBlack()) res=BLACK; // controllo il colore
@@ -141,15 +123,15 @@ int Robot::go(bool frontLaser) {
   mov.go(); // inizio a muovermi
   Debug.println(String("start go "));
   Debug.println(String("First read: ")+front);
-
   while (((frontLaser) ? (front > end) : (front < end)) && res!=BLACK) {
     // ogni 20 iterazioni controllo l'ostacolo
     if (i == 20) {
       uint16_t now = dist->read();
       if (((before > now) ? before - now : now - before) < 5) {
-        mov.impennati(MAXSPEED);
+        mov.charge();
         while(((before > now) ? before - now : now - before) < 10){
-          res = OBSTACLE;
+          ++weight;
+          if(res != RISE)res = OBSTACLE;
           now = dist->read();
         }
       }
@@ -160,25 +142,30 @@ int Robot::go(bool frontLaser) {
     front = dist->read();
     //Debug.println(String("Laser read: ")+front);
     mov.setSpeed(((front - end) * 10) + SPEED);
-    mov.straight();
 
     // controllo salita
     float incl = mov.inclination();
-    if (abs(incl) > 10) salita++;
+    if (abs(incl) > RISEINCL) {
+      salita++;
+      weight = 0;
+      if(res != RISE)res = OBSTACLE;
+    }
     else salita = 0;
 
     // se rilevata eseguo salita
-    if(salita >= 10){
+    if(salita >= 5){
       Debug.println("salita");
       res = RISE;
-      mov.delayr(50);
-      while(abs(mov.inclination()) > 8){
-        climb(distances.left.read()-distances.right.read());
+      weight = 0;
+      for(int i = 0; i < 3; ){
+        mov.idle();
+        mov.delayr(100);
+        incl = mov.inclination();
+        if(abs(incl) < RISEINCL-5) ++i;
+        else i = 0;
       }
-
       bool front = (distances.frontL.read()<2000);
       dist = &(front?((distances.frontL.read()<distances.frontR.read()) ? distances.frontL : distances.frontR ) : distances.back);
-
       end = endDist(dist->read(),front);
     }
 
@@ -188,8 +175,9 @@ int Robot::go(bool frontLaser) {
     // controllo temperature
     if(abs(start-front) > CENTRED){
       isVictimL = max(isVictimL, temps.left.read());
-      isVictimL = max(isVictimR, temps.right.read());
+      isVictimR = max(isVictimR, temps.right.read());
     }
+    mov.idle();
   }
   mov.stop();
 
@@ -198,12 +186,13 @@ int Robot::go(bool frontLaser) {
     Debug.println(String("Call to back"));
     back();
   }
-  //mov.endGo();
+  else mov.endGo();
   mov.stop();
 
   Debug.println(String("stop"));
   straighten();
-  return res;
+  //if(res != OBSTACLE) center();
+  return res == OBSTACLE ? weight+OBSTACLE : res;
 }
 
 /**
@@ -230,38 +219,33 @@ void Robot::back(uint16_t length){
   mov.stop();
 }
 
+/**
+ * Rotates the robot
+ * @param angle degrees to rotate
+ * @param dir Rotates right if FALSE, left if TRUE
+ */
 void Robot::rotate(bool dir, float angle) {
   byte type=BASIC;
   Debug.println(String("Back: ")+String(distances.back.read()));
   Debug.println(String("Front: ")+String(distances.frontL.read()));
-  /*
-  if(distances.back.read()<100){
-    type=BACK_WALL;
-    back(10);
-    delay(1000);
-  }
-  else if(distances.frontL.read()<100){
-    type=FRONT_WALL;
-    back(10);
-    delay(1000);
-  }*/
-  switch(mov.rotate(dir, angle)){
-    case 1:
-      isVictimL=true;
-      break;
-    case 2:
-      isVictimR=true;
-      break;
-  }
+  mov.rotate(dir, angle, type);
   straighten();
 }
 
 /**
  * Rotates the robot by 90 degrees.
- * @param dir TRUE to turn right, false to turn left
+ * @param dir Rotates right if FALSE, left if TRUE.
  */
 void Robot::rotate(bool dir) {
 	rotate(dir, 90);
+}
+
+/**
+ * Rotates the robot by a given number of degrees
+ * @param angle degrees to rotate. Can be negative to rotate left
+ */
+void Robot::rotate(float angle) {
+  rotate(angle<0, abs(angle));
 }
 
 /**
@@ -342,11 +326,11 @@ void Robot::setAddresses() {
  */
 uint16_t Robot::endDist(uint16_t distance, bool front) {
   if(front){
-    distance = distance > CELL ? distance - CELL : 0;
-    return distance - ((distance) % CELL_DIM) + ((distance<CELL_DIM) ? CENTRED : CENTRED2);
+    distance = distance > CELL_FRONT ? distance - CELL_FRONT : 0;
+    return distance - ((distance) % CELL_DIM) + CENTRED;
   }
-  distance = distance + CELL;
-  return distance - ((distance) % CELL_DIM) + ((distance<CELL_DIM) ? CENTRED_BACK : CENTRED2) + CELL_DIM;
+  distance = distance + CELL_BACK;
+  return distance - ((distance) % CELL_DIM) + CENTRED_BACK + CELL_DIM;
 
 }
 
@@ -358,24 +342,41 @@ void Robot::straighten(){
   int dif;
   dif=difLaser();
   if(((distances.frontL.read() <= CENTRED<<1)&&(distances.frontR.read() <= CENTRED<<1)) && (dif > 6 ||  dif < -6)){
-    mov.rotation(dif<0);
+    mov.rotation(dif>0);
     do{
       dif=difLaser();
     }while( dif > 2|| dif < -2);
     Debug.println("End Straighten");
     mov.stop();
-    mov.delayr(500);
-//    do{
-//      dif=difLaser();
-//      mov.rotate((dif > 0) , 1);
-//    }while( dif > 2|| dif < -2);
   }
+}
+
+
+/**
+ * Centers the robot in the cell if near a wall
+ */
+void Robot::center(){
+  bool left =distances.left.read() < distances.right.read();
+  VL53L0X *temp= &(left ? distances.left : distances.right);
+  if(temp->read() > CENTRED2){
+    rotate(left, 30);
+    mov.go(true);
+    while(temp->read() > CENTRED2){
+
+    }
+    rotate(!left,30);
+  }
+}
+/**
+ * @return The inclination of the robot
+ */
+float Robot::getInclination() {
+  return mov.inclination();
 }
 
 /**
  * Returns the difference of the front lasers
  */
-
 int Robot::difLaser(){
   int dif=0;
   //for(int i = 0 ; i<3; i++){

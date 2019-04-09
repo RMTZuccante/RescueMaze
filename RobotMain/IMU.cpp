@@ -30,6 +30,7 @@ void IMU::start(unsigned long refresh) {
  */
 void IMU::calibrate() {
   imu.calibrateGyro();
+  baseIncl = inclination();
 }
 
 /**
@@ -65,7 +66,7 @@ float IMU::roll() {
  */
 float IMU::inclination() {
   imu.readAccel();
-  return atan2(imu.a[0], imu.a[2])*180./PI;
+  return (atan2(imu.a[1], imu.a[2])*180./PI)-baseIncl;
 }
 
 /**

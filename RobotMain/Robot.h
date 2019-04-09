@@ -40,6 +40,16 @@ struct Distances {
     right.start();
     back.start();
   }
+
+  operator String() {
+    String out = "distances={";
+    out+="frontL="+String(frontL.read());
+    out+=",frontR="+String(frontR.read());
+    out+=",left="+String(left.read());
+    out+=",right="+String(right.read());
+    out+=",back="+String(back.read());
+    return out+"}";
+  }
 };
 
 struct Temps {
@@ -48,6 +58,13 @@ struct Temps {
 
   bool check() {
     return left.check() && right.check();
+  }
+
+  operator String() {
+    String out = "temps={";
+    out+="left="+String(left.read());
+    out+=",right="+String(right.read());
+    return out+"}";
   }
 };
 
@@ -59,11 +76,14 @@ class Robot {
     bool checkBattery();
 
     uint16_t getDistance(int sensor);
+    Distances getDistances();
     ColorData getColor();
     void setBlackThreshold(uint8_t black_threshold);
     float getTempLeft();
     float getTempRight();
-
+    Temps getTemps();
+    float getInclination();
+    float getBattery();
     void straighten();
     int go();
     int go(bool frontLaser);
@@ -71,11 +91,11 @@ class Robot {
     void back();
     void rotate(bool dir, float angle);
     void rotate(bool dir);
+    void rotate(float angle);
     void victim(int n);
     void climb(int k);
-    void laserTest();
-    void tempTest();
     void setLED(bool red, bool green, bool blue);
+    void center();
 
     void delayr(unsigned int t);
   private:
@@ -83,11 +103,10 @@ class Robot {
     Distances distances;
     Temps temps;
 
-    Moviment mov = Moviment(SPEED, &temps.left, &temps.right);
+    Moviment mov = Moviment(SPEED, &temps.left, &temps.right, &isVictimL, &isVictimR);
     RGB led = RGB(RED, GREEN, BLUE);
-    Cagamattoni caga = Cagamattoni(0); //TODO change if needed
+    Cagamattoni caga = Cagamattoni(10);
     int difLaser();
-    float getBattery();
     void setAddresses();
     uint16_t endDist(uint16_t distance, bool front);
     float isVictimL;

@@ -10,6 +10,15 @@ struct ColorData {
   uint16_t red;
   uint16_t green;
   uint16_t blue;
+  
+  operator String() {
+    String out = "color={";
+    out+="red="+String(red);
+    out+=",green="+String(green);
+    out+=",blue="+String(blue);
+    out+=",ambient="+String(ambient);
+    return out+"}";
+  }
 };
 
 class Color {

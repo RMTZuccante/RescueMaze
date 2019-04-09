@@ -28,15 +28,15 @@ void MPU6050::begin() {
  * @return TRUE if the sensor works.
  */
 bool MPU6050::check() {
-  if(!I2C::check(&I2C_2, MPU6050_ADDRESS)) return false;
+  if(!I2C::check(&I2C_1, MPU6050_ADDRESS)) return false;
 
-  I2C_2.beginTransmission(MPU6050_ADDRESS);
-  I2C_2.write(MPU6050_WHO_AM_I);
-  I2C_2.endTransmission();
-  I2C_2.beginTransmission(MPU6050_ADDRESS);
-  I2C_2.requestFrom(MPU6050_ADDRESS, 1);
-  uint8_t value = I2C_2.read();
-  I2C_2.endTransmission();
+  I2C_1.beginTransmission(MPU6050_ADDRESS);
+  I2C_1.write(MPU6050_WHO_AM_I);
+  I2C_1.endTransmission();
+  I2C_1.beginTransmission(MPU6050_ADDRESS);
+  I2C_1.requestFrom(MPU6050_ADDRESS, 1);
+  uint8_t value = I2C_1.read();
+  I2C_1.endTransmission();
   return value == MPU6050_ADDRESS;
 }
 
@@ -67,14 +67,14 @@ void MPU6050::readGyro() {
  */
 float MPU6050::getTemperature() {
   int16_t temp;
-  I2C_2.beginTransmission(MPU6050_ADDRESS);
-  I2C_2.write(MPU6050_TEMP);
-  I2C_2.endTransmission();
-  I2C_2.beginTransmission(MPU6050_ADDRESS);
-  I2C_2.requestFrom(MPU6050_ADDRESS, 2);
-  while (!I2C_2.available());
-  temp = I2C_2.read() << 8 | I2C_2.read();
-  I2C_2.endTransmission();
+  I2C_1.beginTransmission(MPU6050_ADDRESS);
+  I2C_1.write(MPU6050_TEMP);
+  I2C_1.endTransmission();
+  I2C_1.beginTransmission(MPU6050_ADDRESS);
+  I2C_1.requestFrom(MPU6050_ADDRESS, 2);
+  while (!I2C_1.available());
+  temp = I2C_1.read() << 8 | I2C_1.read();
+  I2C_1.endTransmission();
   return (float)temp / 340.0 + 36.53;
 }
 
@@ -124,10 +124,10 @@ void MPU6050::setThreshold(uint8_t multiple) {
  * @param value Byte to write.
  */
 void MPU6050::writeRegister(uint8_t reg, uint8_t value) {
-  I2C_2.beginTransmission(MPU6050_ADDRESS);
-  I2C_2.write(reg);
-  I2C_2.write(value);
-  I2C_2.endTransmission();
+  I2C_1.beginTransmission(MPU6050_ADDRESS);
+  I2C_1.write(reg);
+  I2C_1.write(value);
+  I2C_1.endTransmission();
 }
 
 /**
@@ -136,11 +136,11 @@ void MPU6050::writeRegister(uint8_t reg, uint8_t value) {
  * @param arr The array containing the words.
  */
 void MPU6050::readData(uint8_t reg, int16_t *arr) {
-  I2C_2.beginTransmission(MPU6050_ADDRESS);
-  I2C_2.write(reg);
-  I2C_2.endTransmission();
-  I2C_2.beginTransmission(MPU6050_ADDRESS);
-  I2C_2.requestFrom(MPU6050_ADDRESS, 6);
-  while (I2C_2.available() < 6);
-  FORTHREE arr[i] = I2C_2.read() << 8 | I2C_2.read();
+  I2C_1.beginTransmission(MPU6050_ADDRESS);
+  I2C_1.write(reg);
+  I2C_1.endTransmission();
+  I2C_1.beginTransmission(MPU6050_ADDRESS);
+  I2C_1.requestFrom(MPU6050_ADDRESS, 6);
+  while (I2C_1.available() < 6);
+  FORTHREE arr[i] = I2C_1.read() << 8 | I2C_1.read();
 }
