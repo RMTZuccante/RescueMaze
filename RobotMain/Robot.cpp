@@ -160,7 +160,8 @@ int Robot::go(bool frontLaser) {
       for(int i = 0; i < 3; ){
         mov.idle();
         mov.delayr(100);
-        if(abs(mov.inclination()) < RISEINCL) ++i;
+        incl = mov.inclination();
+        if(abs(incl) < RISEINCL) ++i;
         else i = 0;
       }
       bool front = (distances.frontL.read()<2000);
@@ -190,13 +191,8 @@ int Robot::go(bool frontLaser) {
 
   Debug.println(String("stop"));
   straighten();
-  if(res != OBSTACLE){
-    //center();
-  }
-  if(res == OBSTACLE){
-    return weight+OBSTACLE;
-  }
-  return res;
+  //if(res != OBSTACLE) center();
+  return res == OBSTACLE ? weight+OBSTACLE : res;
 }
 
 /**
