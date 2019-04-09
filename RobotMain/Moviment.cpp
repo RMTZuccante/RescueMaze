@@ -115,8 +115,8 @@ void Moviment::rotate(bool invert , float angle , byte type) {
   while (invert ? orientation.yaw() < end : orientation.yaw() > end) {
       //Debug.println(String(orientation.yaw()));
       rotationSpeed(ROTATION_SPEED, invert, type);
-      isVictimL[0] = max(isVictimL[0], tleft->read());
-      isVictimR[0] = max(isVictimR[0], tright->read());
+      *isVictimL = max(*isVictimL, tleft->read());
+      *isVictimR = max(*isVictimR, tright->read());
   }
   stop();
   Debug.println(" Correction");

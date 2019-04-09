@@ -148,7 +148,7 @@ int Robot::go(bool frontLaser) {
     if (abs(incl) > RISEINCL) {
       salita++;
       weight = 0;
-      res = OBSTACLE;
+      if(res != RISE)res = OBSTACLE;
     }
     else salita = 0;
 
@@ -157,7 +157,10 @@ int Robot::go(bool frontLaser) {
       Debug.println("salita");
       res = RISE;
       weight = 0;
-      while(abs(mov.inclination()) > RISEINCL);
+      for(int i = 0; i < 3; ){
+        if(abs(mov.inclination()) < RISEINCL)++i;
+        else --i;
+      }
       bool front = (distances.frontL.read()<2000);
       dist = &(front?((distances.frontL.read()<distances.frontR.read()) ? distances.frontL : distances.frontR ) : distances.back);
       end = endDist(dist->read(),front);
@@ -185,8 +188,8 @@ int Robot::go(bool frontLaser) {
 
   Debug.println(String("stop"));
   straighten();
-  if(res!=OBSTACLE){
-    //center();
+  if(res != OBSTACLE){
+    center();
   }
   if(res = OBSTACLE){
     return weight+OBSTACLE;
@@ -355,12 +358,15 @@ void Robot::straighten(){
  * Centers the robot in the cell if near a wall
  */
 void Robot::center(){
-  bool right = distances.right.read() < CENTRED2;
-  bool left = distances.left.read() < CENTRED2;
-  if(left || right){
-    rotate(left, 90);
-    back(CENTRED-distances.frontL.read());
-    rotate(!left,90);
+  bool left =distances.left.read() < distances.right.read();
+  VL53L0X *temp= &(left ? distances.left : distances.right);
+  if(temp->read() > CENTRED2){
+    rotate(left, 30);
+    mov.go(true);
+    while(temp->read() > CENTRED2){
+      
+    }
+    rotate(!left,30);
   }
 }
 /**
