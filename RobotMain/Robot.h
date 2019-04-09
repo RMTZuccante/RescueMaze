@@ -84,7 +84,7 @@ class Robot {
     Temps getTemps();
     float getInclination();
     float getBattery();
-
+    int getWeight();
     void straighten();
     int go();
     int go(bool frontLaser);
@@ -112,6 +112,7 @@ class Robot {
     uint16_t endDist(uint16_t distance, bool front);
     float isVictimL;
     float isVictimR;
+    int weight;
 };
 
 #endif

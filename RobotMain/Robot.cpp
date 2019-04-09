@@ -114,6 +114,7 @@ int Robot::go(bool frontLaser) {
   int res = 0;
   int i = 0;
   int salita = 0;
+  weight = 0;
   uint16_t front = dist->read();
   uint16_t before = front;
   if(color.isBlack()) res=BLACK; // controllo il colore
@@ -128,7 +129,9 @@ int Robot::go(bool frontLaser) {
       uint16_t now = dist->read();
       if (((before > now) ? before - now : now - before) < 5) {
         mov.charge();
+        weight+=5;
         while(((before > now) ? before - now : now - before) < 10){
+          ++weight;
           res = OBSTACLE;
           now = dist->read();
         }
@@ -143,17 +146,21 @@ int Robot::go(bool frontLaser) {
 
     // controllo salita
     float incl = mov.inclination();
-    if (abs(incl) > RISEINCL) salita++;
+    if (abs(incl) > RISEINCL) {
+      salita++;
+      weight = 15;
+      res = OBSTACLE;
+    }
     else salita = 0;
 
     // se rilevata eseguo salita
     if(salita >= 5){
       Debug.println("salita");
       res = RISE;
+      weight = 0;
       while(abs(mov.inclination()) > RISEINCL);
       bool front = (distances.frontL.read()<2000);
       dist = &(front?((distances.frontL.read()<distances.frontR.read()) ? distances.frontL : distances.frontR ) : distances.back);
-
       end = endDist(dist->read(),front);
     }
 
@@ -181,6 +188,9 @@ int Robot::go(bool frontLaser) {
   straighten();
   if(res!=OBSTACLE){
     //center();
+  }
+  if(res = OBSTACLE){
+    return weight+8;
   }
   return res;
 }
@@ -361,7 +371,9 @@ void Robot::center(){
     rotate(!left,90);
   }
 }
-
+/**
+ * @return The inclination of the robot
+ */
 float Robot::getInclination() {
   return mov.inclination();
 }
@@ -385,3 +397,11 @@ int Robot::difLaser(){
 float Robot::getBattery() {
   return ((analogRead(B_PIN) * (3.3f / 4095.0f)) * (B_R1+B_R2))/B_R2;
 }
+
+/**
+ * @return The difficulty of the cell 
+ */
+
+ int Robot::getWeight(){
+  return weight;
+ }
