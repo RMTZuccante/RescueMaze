@@ -157,7 +157,10 @@ int Robot::go(bool frontLaser) {
       Debug.println("salita");
       res = RISE;
       weight = 0;
-      while(abs(mov.inclination()) > RISEINCL);
+      while(abs(mov.inclination()) > RISEINCL) {
+        mov.idle();
+        mov.delayr(20);
+      }
       bool front = (distances.frontL.read()<2000);
       dist = &(front?((distances.frontL.read()<distances.frontR.read()) ? distances.frontL : distances.frontR ) : distances.back);
       end = endDist(dist->read(),front);
