@@ -31,7 +31,7 @@
 //Measurements
 #define CENTRED 70 //distance of the robot from the wall to be centered
 #define CENTRED_BACK 80
-#define CENTRED2 50
+#define CENTRED2 40
 #define LONG_RANGE 1000
 #define CELL_DIM 300
 #define CELL_FRONT 200
@@ -39,7 +39,7 @@
 #define LASER_DIF -10
 #define TEMP_DIF 1.0
 #define TEMP_K 23
-#define RISEINCL 5
+#define RISEINCL 10
 
 //Temperature addresses
 #define T_LEFT 0x5A
