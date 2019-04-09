@@ -72,7 +72,10 @@ void Moviment::go(bool invert) {
  */
 void Moviment::endGo() {
   float now = orientation.yaw();
-  (direzione > now) ? rotate(true, direzione - now,BASIC) : rotate(false, now - direzione,BASIC);
+  if (abs(direzione-now) > 1) {
+    if (direzione > now) rotate(true, direzione - now,BASIC);
+    else rotate(false, now - direzione,BASIC);
+  }
 }
 
 /**

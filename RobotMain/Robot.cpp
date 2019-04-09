@@ -131,7 +131,7 @@ int Robot::go(bool frontLaser) {
         mov.charge();
         while(((before > now) ? before - now : now - before) < 10){
           ++weight;
-          res = OBSTACLE;
+          if(res != RISE)res = OBSTACLE;
           now = dist->read();
         }
       }
@@ -158,8 +158,11 @@ int Robot::go(bool frontLaser) {
       res = RISE;
       weight = 0;
       for(int i = 0; i < 3; ){
-        if(abs(mov.inclination()) < RISEINCL)++i;
-        else --i;
+        mov.idle();
+        mov.delayr(100);
+        incl = mov.inclination();
+        if(abs(incl) < RISEINCL-5) ++i;
+        else i = 0;
       }
       bool front = (distances.frontL.read()<2000);
       dist = &(front?((distances.frontL.read()<distances.frontR.read()) ? distances.frontL : distances.frontR ) : distances.back);
@@ -188,13 +191,8 @@ int Robot::go(bool frontLaser) {
 
   Debug.println(String("stop"));
   straighten();
-  if(res != OBSTACLE){
-    center();
-  }
-  else{
-    return weight+OBSTACLE;
-  }
-  return res;
+  //if(res != OBSTACLE) center();
+  return res == OBSTACLE ? weight+OBSTACLE : res;
 }
 
 /**
@@ -246,7 +244,7 @@ void Robot::rotate(bool dir) {
  * @param angle degrees to rotate. Can be negative to rotate left
  */
 void Robot::rotate(float angle) {
-  rotate(angle<0, abs(angle)); 
+  rotate(angle<0, abs(angle));
 }
 
 /**
@@ -377,7 +375,7 @@ void Robot::center(){
 float Robot::getInclination() {
   return mov.inclination();
 }
- 
+
 /**
  * Returns the difference of the front lasers
  */
