@@ -31,10 +31,9 @@
 #define RISE 3
 #define DISTORTION 30
 //Measurements
-#define CENTRED 70 //distance of the robot from the wall to be centered
-#define CENTRED_BACK 80
 #define CENTRED2 40
 #define LONG_RANGE 1000
+#define ROBOT_DIM
 #define CELL_DIM 320
 #define CELL_FRONT 200
 #define CELL_BACK 100
