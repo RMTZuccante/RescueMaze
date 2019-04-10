@@ -93,7 +93,7 @@ void loop() {
       Com.write(robot.getTempRight());
       break;
     case Commands::GETINCLINATION:
-      Com.write(Commands::GETTEMPS);
+      Com.write(Commands::GETINCLINATION);
       Com.write(robot.getInclination());
       break;
     case Commands::VICTIM:
