@@ -13,7 +13,7 @@
 #define BACK_WALL 1
 #define FRONT_WALL 2
 #define MAXSPEED 65535
-#define SPEED 20000
+#define SPEED 30000
 #define FIRST_K 3000
 #define SECOND_K 3000
 #define ROTATION_P 500

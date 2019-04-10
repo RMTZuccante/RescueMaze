@@ -96,7 +96,7 @@ class Robot {
     void climb(int k);
     void setLED(bool red, bool green, bool blue);
     void center();
-
+    void charge();
     void delayr(unsigned int t);
   private:
     Color color;

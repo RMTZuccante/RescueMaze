@@ -41,13 +41,6 @@ void Moviment::climb(int k) {
   motorsL.start(min(50000-k,MAXSPEED), false);
 }
 
-/**
- * Makes the robot IMPENNARSI!!!
- */
-void Moviment::charge(){
-  motorsR.start(MAXSPEED, false);
-  motorsL.start(MAXSPEED, false);
-}
  
 /**
  * Moves the robot forward.

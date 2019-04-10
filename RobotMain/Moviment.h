@@ -14,7 +14,6 @@ class Moviment {
     bool check();
     void go();
     void go (bool invert);
-    void charge();
     void endGo();
     void rotate();
     void climb(int k);

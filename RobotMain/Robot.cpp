@@ -107,6 +107,7 @@ int Robot::go(){
  * @return FALSE if it found a black cell
  */
 int Robot::go(bool frontLaser) {
+  mov.setSpeed(SPEED);
   VL53L0X* dist = &(frontLaser?((distances.frontL.read()<distances.frontR.read()) ? distances.frontL : distances.frontR ) : distances.back);
   uint16_t end = endDist(dist->read(),frontLaser); // calcolo a che distanza devo arrivare
   Debug.println(String("End")+String(end));
@@ -128,7 +129,7 @@ int Robot::go(bool frontLaser) {
     if (i == 20) {
       uint16_t now = dist->read();
       if (((before > now) ? before - now : now - before) < 5) {
-        mov.charge();
+        charge();
         while(((before > now) ? before - now : now - before) < 10){
           ++weight;
           if(res != RISE)res = OBSTACLE;
@@ -141,8 +142,6 @@ int Robot::go(bool frontLaser) {
     i++;
     front = dist->read();
     //Debug.println(String("Laser read: ")+front);
-    mov.setSpeed(((front - end) * 10) + SPEED);
-
     // controllo salita
     float incl = mov.inclination();
     if (abs(incl) > RISEINCL) {
@@ -179,6 +178,7 @@ int Robot::go(bool frontLaser) {
     }
     mov.idle();
   }
+  mov.setSpeed(SPEED);
   mov.stop();
 
   // se rilevato nero torno indietro
@@ -369,6 +369,15 @@ void Robot::center(){
     mov.stop();
   }
 }
+
+/**
+ * Makes the robot charge on the obstacle 
+ */
+void Robot::charge(){
+  mov.setSpeed(MAXSPEED);
+  back(50);
+}
+ 
 /**
  * @return The inclination of the robot
  */
