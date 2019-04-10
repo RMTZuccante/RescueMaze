@@ -1,14 +1,6 @@
 #include "Robot.h"
 
 /**
- * Sets sensors to be used.
- * This function has to be called before doing everything else or the robot will crash.
- */
-void Robot::setup() {
-  setAddresses();
-}
-
-/**
  * Begins all sensors.
  */
 void Robot::begin() {
@@ -31,7 +23,7 @@ void Robot::climb(int k) {
  * @return TRUE if everything is ok
  */
 bool Robot::check() {
-  return temps.check() && color.check() && mov.check() && distances.check();
+  return distances.check() && temps.check() && color.check() && mov.check(); // check order is vital
 }
 
 /**
@@ -283,39 +275,6 @@ void Robot::victim(int n) {
  */
 void Robot::setLED(bool red, bool green, bool blue) {
   led.set(red, green, blue);
-}
-
-/**
- * Sets addresses to distance sensors.
- */
-void Robot::setAddresses() {
-  // initializing ToF sensors pins
-  pinMode(LX_LEFT, OUTPUT_OPEN_DRAIN);
-  pinMode(LX_RIGHT, OUTPUT_OPEN_DRAIN);
-  pinMode(LX_FRONTR, OUTPUT_OPEN_DRAIN);
-  pinMode(LX_BACK, OUTPUT_OPEN_DRAIN);
-  // turning off every ToF sensor
-  digitalWrite(LX_LEFT, LOW);
-  digitalWrite(LX_RIGHT, LOW);
-  digitalWrite(LX_FRONTR, LOW);
-  digitalWrite(LX_BACK, LOW);
-  delay(50); // waiting for the sensor to change state
-  distances.frontL.setAddress(L_FRONTL);
-  digitalWrite(LX_LEFT, HIGH); // turning on left sensor
-  delay(50); // waiting for the sensor to change state
-  distances.left.setAddress(L_LEFT);
-  digitalWrite(LX_RIGHT, HIGH); // turning on right sensor
-  delay(50); // waiting for the sensor to change state
-  distances.right.setAddress(L_RIGHT);
-  digitalWrite(LX_FRONTR, HIGH); // turning on front right sensor
-  delay(50); // waiting for the sensor to change state
-  distances.frontR.setAddress(L_FRONTR);
-  digitalWrite(LX_BACK, HIGH); // turning on back sensor
-  delay(50); // waiting for the sensor to change state
-  distances.back.setAddress(L_BACK);
-
-  temps.left.setAddress(T_LEFT);
-  temps.right.setAddress(T_RIGHT);
 }
 
 /**

@@ -22,7 +22,39 @@ struct Distances {
   VL53L0X back;
 
   bool check() {
-    return frontL.check() && frontR.check() && left.check() && right.check() && back.check();
+    bool ok = true;
+  
+    // initializing ToF sensors pins
+    pinMode(LX_LEFT, OUTPUT_OPEN_DRAIN);
+    pinMode(LX_RIGHT, OUTPUT_OPEN_DRAIN);
+    pinMode(LX_FRONTR, OUTPUT_OPEN_DRAIN);
+    pinMode(LX_BACK, OUTPUT_OPEN_DRAIN);
+    // turning off every ToF sensor
+    digitalWrite(LX_LEFT, LOW);
+    digitalWrite(LX_RIGHT, LOW);
+    digitalWrite(LX_FRONTR, LOW);
+    digitalWrite(LX_BACK, LOW);
+    delay(50); // waiting for the sensor to change state
+    frontL.setAddress(L_FRONTL);
+    ok &= frontL.check();
+    digitalWrite(LX_LEFT, HIGH); // turning on left sensor
+    delay(50); // waiting for the sensor to change state
+    left.setAddress(L_LEFT);
+    ok &= left.check();
+    digitalWrite(LX_RIGHT, HIGH); // turning on right sensor
+    delay(50); // waiting for the sensor to change state
+    right.setAddress(L_RIGHT);
+    ok &= right.check();
+    digitalWrite(LX_FRONTR, HIGH); // turning on front right sensor
+    delay(50); // waiting for the sensor to change state
+    frontR.setAddress(L_FRONTR);
+    ok &= frontR.check();
+    digitalWrite(LX_BACK, HIGH); // turning on back sensor
+    delay(50); // waiting for the sensor to change state
+    back.setAddress(L_BACK);
+    ok &= back.check();
+    
+    return ok;
   }
 
   void begin() {
@@ -57,6 +89,8 @@ struct Temps {
   Temperature right;
 
   bool check() {
+    left.setAddress(T_LEFT);
+    right.setAddress(T_RIGHT);
     return left.check() && right.check();
   }
 

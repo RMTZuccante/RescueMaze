@@ -23,7 +23,6 @@ void setup() {
   Serial.begin();
   I2C_1.begin();
   I2C_2.begin();
-  robot.setup();
 
   bool usbMode = !digitalRead(USBBUTTON);
   //Check that everything is working
