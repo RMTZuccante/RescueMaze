@@ -122,21 +122,19 @@ int Robot::go(bool frontLaser) {
       uint16_t now = dist->read();
       if (((before > now) ? before - now : now - before) < 5) {
         charge();
-        while(((before > now) ? before - now : now - before) < 10){
-          ++weight;
-          if(res != RISE)res = OBSTACLE;
-          now = dist->read();
-        }
+        if(res != RISE)res = OBSTACLE;
       }
       before = now;
       i = 0;
     }
+    if(res == OBSTACLE) ++weight;
     i++;
     front = dist->read();
-    //Debug.println(String("Laser read: ")+front);
+    Debug.println(String("Laser read: ")+front);
     // controllo salita
     float incl = mov.inclination();
     if (abs(incl) > RISEINCL) {
+      Debug.println(String("ïncl count : "+ salita));
       salita++;
       weight = 0;
       if(res != RISE)res = OBSTACLE;
@@ -297,13 +295,16 @@ uint16_t Robot::endDist(uint16_t distance, bool front) {
  * Using the two distance sensors tries to place the robot parallel to a wall.
  */
 void Robot::straighten(){
-  int dif;
-  dif=difLaser();
-  if(((distances.frontL.read() <= CENTRED<<1)&&(distances.frontR.read() <= CENTRED<<1)) && abs(dif) > 10){
+  int dif=0;
+  for(int i = 0; i < STR_READ_TIMES ; i++){
+    dif+=difLaser();
+  }
+  dif/=STR_READ_TIMES;
+  if(((distances.frontL.read() <= NEAR_WALL)&&(distances.frontR.read() <= NEAR_WALL)) && abs(dif) > MIN_ER && abs(dif) < MAX_ER){
     mov.rotation(dif>0);
     do{
       dif=difLaser();
-    }while(abs(dif)>3);
+    }while(abs(dif)>STR_GOAL);
     Debug.println("End Straighten");
     mov.stop();
   }
@@ -335,6 +336,7 @@ void Robot::center(){
 void Robot::charge(){
   mov.setSpeed(MAXSPEED);
   back(50);
+  mov.go();
 }
  
 /**
@@ -349,9 +351,7 @@ float Robot::getInclination() {
  */
 int Robot::difLaser(){
   int dif=0;
-  //for(int i = 0 ; i<3; i++){
   dif=distances.frontL.read()-distances.frontR.read()+LASER_DIF;
-  //dif=dif/3;
   Debug.println(String("dif ")+String(dif));
   return dif;
 }

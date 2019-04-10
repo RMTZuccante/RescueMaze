@@ -35,10 +35,17 @@
 #define CENTRED_BACK 80
 #define CENTRED2 40
 #define LONG_RANGE 1000
-#define CELL_DIM 300
+#define CELL_DIM 320
 #define CELL_FRONT 200
 #define CELL_BACK 100
-#define LASER_DIF -10
+//straighten related
+#define NEAR_WALL 140
+#define MIN_ER 5
+#define MAX_ER 30
+#define STR_GOAL 2
+#define STR_READ_TIMES 3
+#define LASER_DIF -8
+
 #define TEMP_DIF 1.0
 #define TEMP_K 23
 #define RISEINCL 17
