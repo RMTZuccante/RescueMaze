@@ -90,7 +90,7 @@ int Robot::go(){
   uint16_t fl=distances.frontL.read();
   uint16_t fr=distances.frontR.read();
   uint16_t b=distances.back.read();
-  return go( ((fl > fr ? fr : fl) < b) && !(abs(fl-fr) > cellFront() && b < MAX_RANGE));
+  return go(b > MAX_RANGE || ((fl > fr ? fr : fl) <= b) && (abs(fl-fr) < cellFront()));
 }
 
 /**
@@ -120,7 +120,7 @@ int Robot::go(bool frontLaser) {
     // ogni 20 iterazioni controllo l'ostacolo
     if (i == 20) {
       uint16_t now = dist->read();
-      if (((before > now) ? before - now : now - before) < 5) {
+      if (((before > now) ? before - now : now - before) < 5 && now < MAX_RANGE) {
         charge();
         if(res != RISE)res = OBSTACLE;
       }
@@ -136,12 +136,12 @@ int Robot::go(bool frontLaser) {
     if (abs(incl) > RISEINCL) {
       ++salita;
       weight = 0;
-      if(res != RISE && salita > 1)res = OBSTACLE;
+      if(res != RISE)res = OBSTACLE;
     }
     else salita = 0;
 
     // se rilevata eseguo salita
-    if(salita >= 5){
+    if(salita >= 10){
       Debug.println("salita");
       res = RISE;
       weight = 0;
