@@ -115,17 +115,20 @@ int Robot::go(bool frontLaser) {
   int i = 0;
   int salita = 0;
   int weight = 0;
-  
-  uint16_t front = dist->read();
-  uint16_t before = front;
+  uint16_t front = 0;
+  uint16_t myLaser = dist->read();
+  uint16_t before = myLaser;
   if(color.isBlack()) res=BLACK; // controllo il colore
-  uint16_t start = front;
+  uint16_t start = myLaser;
   mov.go(); // inizio a muovermi
   mov.setSpeed(SPEED);
   Debug.println(String("start go "));
-  Debug.println(String("First read: ")+front);
+  Debug.println(String("First read: ")+myLaser);
   float incl = mov.getRoll();
-  while (((!frontLaser) && (front > MAX_RANGE) && (incl>MIN_CHANGE_INCL) ) || ((frontLaser) ? (front > end) : (front < end)) && res!=BLACK) {
+  while (((front > MAX_RANGE) && (incl > MIN_CHANGE_INCL) ) || ((frontLaser) ? (myLaser > end) : (myLaser < end)) && res!=BLACK) {
+    if(!frontLaser){
+      front = distances.frontL.read();
+    }
     // ogni 20 iterazioni controllo l'ostacolo
     if (i == 20) {
       uint16_t now = dist->read();
@@ -138,8 +141,8 @@ int Robot::go(bool frontLaser) {
     }
     if(res == OBSTACLE) ++weight;
     i++;
-    front = dist->read();
-    Debug.println(String("Laser read: ")+front);
+    myLaser = dist->read();
+    Debug.println(String("Laser read: ")+myLaser);
     incl = mov.getRoll();
     Debug.println(String("Incl : ")+incl);
     // controllo salita
@@ -151,8 +154,8 @@ int Robot::go(bool frontLaser) {
     else salita = 0;
 
     // se rilevata eseguo salita
-    if(salita >= 10){
-      Debug.println("salita");
+    if(salita >= 5){
+      Debug.println("Rising");
       res = RISE;
       weight = 0;
       for(int i = 0; i < 3; ){
@@ -160,19 +163,21 @@ int Robot::go(bool frontLaser) {
         mov.delayr(100);
         incl = mov.getRoll();
         Debug.println(String("Incl: ")+incl);
-        if(abs(incl) < RISEINCL-5) ++i;
+        if(abs(incl) < MIN_CHANGE_INCL) ++i;
         else i = 0;
       }
       frontLaser = (distances.frontL.read() < MAX_RANGE);
-      dist = &(frontLaser?((distances.frontL.read()<distances.frontR.read()) ? distances.frontL : distances.frontR ) : distances.back);
-      end = endDist(dist->read(),front);
+      dist = &(frontLaser ? ((distances.frontL.read() < distances.frontR.read()) ? distances.frontL : distances.frontR ) : distances.back);
+      end = endDist(dist->read()+CELL_DIM,frontLaser);
+      Debug.println(String(frontLaser?"using front laser":"using back laser"));
+      Debug.println(String("New End")+String(end));
     }
 
     // controllo colore
     if(color.isBlack()) res=BLACK;
 
     // controllo temperature
-    if(abs(start-front) > centered()){
+    if(abs(start-myLaser) > centered()){
       isVictimL = max(isVictimL, temps.left.read());
       isVictimR = max(isVictimR, temps.right.read());
     }
@@ -194,6 +199,7 @@ int Robot::go(bool frontLaser) {
   Debug.println(String("stop"));
   straighten();
   //if(res != OBSTACLE) center();
+  Debug.println(String("RES: ")+res);
   return res == OBSTACLE ? weight/5+OBSTACLE : res;
 }
 

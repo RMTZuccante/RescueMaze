@@ -31,7 +31,7 @@
 #define RISE 3
 #define DISTORTION 30
 #define MIN_CHANGE_OBS 5
-#define MIN_CHANGE_INCL 1
+#define MIN_CHANGE_INCL 3
 //Measurements
 #define SIDE_SPACE 40
 #define LONG_RANGE 1000
