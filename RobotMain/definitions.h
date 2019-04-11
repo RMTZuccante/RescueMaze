@@ -44,7 +44,6 @@
 #define LASER_DIF -8
 
 #define TEMP_DIF 1.0
-#define TEMP_K 22
 #define RISEINCL 10
 
 //Temperature addresses
