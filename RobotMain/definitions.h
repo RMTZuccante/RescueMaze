@@ -87,6 +87,7 @@
 
 //Buttons
 #define PUSHBUTTON PC15
+#define PUSHBUTTON2 PC14
 #define USBBUTTON PB5
 
 //Cagamattoni
