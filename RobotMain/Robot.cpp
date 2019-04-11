@@ -167,6 +167,8 @@ int Robot::go(bool frontLaser) {
     mov.idle();
   }
   mov.setSpeed(SPEED);
+  Debug.println(String("isVictimL: ")+isVictimL);
+  Debug.println(String("isVictimR: ")+isVictimR);
   mov.stop();
 
   // se rilevato nero torno indietro
@@ -283,7 +285,7 @@ uint16_t Robot::endDist(uint16_t distance, bool front) {
     distance = distance > cellFront() ? distance - cellFront() : 0;
     return distance - ((distance) % CELL_DIM) + centered();
   }
-  return distance - ((distance) % CELL_DIM) + centered()/2 + CELL_DIM;
+  return distance - ((distance) % CELL_DIM) + centered()*2/3 + CELL_DIM;
 
 }
 
