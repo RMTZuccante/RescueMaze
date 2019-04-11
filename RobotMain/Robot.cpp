@@ -99,7 +99,6 @@ int Robot::go(){
  * @return FALSE if it found a black cell
  */
 int Robot::go(bool frontLaser) {
-  mov.setSpeed(SPEED);
   VL53L0X* dist = &(frontLaser?((distances.frontL.read()<distances.frontR.read()) ? distances.frontL : distances.frontR ) : distances.back);
   uint16_t end = endDist(dist->read(),frontLaser); // calcolo a che distanza devo arrivare
   Debug.println(String("End")+String(end));
@@ -112,15 +111,15 @@ int Robot::go(bool frontLaser) {
   uint16_t before = front;
   if(color.isBlack()) res=BLACK; // controllo il colore
   uint16_t start = front;
-  Debug.println(String(res));
   mov.go(); // inizio a muovermi
+  mov.setSpeed(SPEED);
   Debug.println(String("start go "));
   Debug.println(String("First read: ")+front);
   while (((frontLaser) ? (front > end) : (front < end)) && res!=BLACK) {
     // ogni 20 iterazioni controllo l'ostacolo
     if (i == 20) {
       uint16_t now = dist->read();
-      if (((before > now) ? before - now : now - before) < 5 && now < MAX_RANGE) {
+      if (((before > now) ? before - now : now - before) < 3 && now < MAX_RANGE) {
         charge();
         if(res != RISE)res = OBSTACLE;
       }
@@ -284,7 +283,7 @@ uint16_t Robot::endDist(uint16_t distance, bool front) {
     distance = distance > cellFront() ? distance - cellFront() : 0;
     return distance - ((distance) % CELL_DIM) + centered();
   }
-  return distance - ((distance) % CELL_DIM) + centered() + CELL_DIM;
+  return distance - ((distance) % CELL_DIM) + centered()/2 + CELL_DIM;
 
 }
 
