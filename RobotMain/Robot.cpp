@@ -100,7 +100,7 @@ int Robot::go(){
   uint16_t fl=distances.frontL.read();
   uint16_t fr=distances.frontR.read();
   uint16_t b=distances.back.read();
-  return go(b > MAX_RANGE || ((fl > fr ? fr : fl) <= b) && (abs(fl-fr) < cellFront()));
+  return go( (!useBack) || (b > MAX_RANGE || ((fl > fr ? fr : fl) <= b) && (abs(fl-fr) < cellFront())) );
 }
 
 /**
@@ -113,6 +113,7 @@ int Robot::go(bool frontLaser) {
   uint16_t end = endDist(dist->read(),frontLaser); // calcolo a che distanza devo arrivare
   Debug.println(String("End")+String(end));
   Debug.println(String(frontLaser?"using front laser":"using back laser"));
+  bool charged = false;
   int res = 0;
   int i = 0;
   int salita = 0;
@@ -132,10 +133,11 @@ int Robot::go(bool frontLaser) {
       front = distances.frontL.read();
     }
     // ogni 20 iterazioni controllo l'ostacolo
-    if (i == 20) {
+    if (i == 20 && (!charged) ) {
       uint16_t now = dist->read();
       if (((before > now) ? before - now : now - before) < MIN_CHANGE_OBS && now < MAX_RANGE) {
         charge();
+        charged = true;
         if(res != RISE)res = OBSTACLE;
       }
       before = now;
@@ -158,6 +160,7 @@ int Robot::go(bool frontLaser) {
     // se rilevata eseguo salita
     if(salita >= 5){
       Debug.println("Rising");
+      useBack = false;
       res = RISE;
       weight = 0;
       for(int i = 0; i < 3; ){
@@ -168,7 +171,7 @@ int Robot::go(bool frontLaser) {
         if(abs(incl) < MIN_CHANGE_INCL) ++i;
         else i = 0;
       }
-      frontLaser = (distances.frontL.read() < MAX_RANGE);
+      frontLaser = ( (!useBack) || distances.frontL.read() < MAX_RANGE);
       dist = &(frontLaser ? ((distances.frontL.read() < distances.frontR.read()) ? distances.frontL : distances.frontR ) : distances.back);
       end = endDist(dist->read()+CELL_DIM,frontLaser);
       Debug.println(String(frontLaser?"using front laser":"using back laser"));
@@ -239,6 +242,7 @@ void Robot::rotate(bool dir, float angle) {
   Debug.println(String("Front: ")+String(distances.frontL.read()));
   mov.rotate(dir, angle, type);
   straighten();
+  useBack = true;
 }
 
 /**
