@@ -162,7 +162,7 @@ int Robot::go(bool frontLaser) {
     if(color.isBlack()) res=BLACK;
 
     // controllo temperature
-    if(abs(start-front) > CENTRED){
+    if(abs(start-front) > centered()){
       isVictimL = max(isVictimL, temps.left.read());
       isVictimR = max(isVictimR, temps.right.read());
     }
@@ -282,11 +282,10 @@ void Robot::setLED(bool red, bool green, bool blue) {
  */
 uint16_t Robot::endDist(uint16_t distance, bool front) {
   if(front){
-    distance = distance > CELL_FRONT ? distance - CELL_FRONT : 0;
-    return distance - ((distance) % CELL_DIM) + CENTRED;
+    distance = distance > cellFront() ? distance - cellFront() : 0;
+    return distance - ((distance) % CELL_DIM) + centered();
   }
-  distance = distance + CELL_BACK;
-  return distance - ((distance) % CELL_DIM) + CENTRED_BACK + CELL_DIM;
+  return distance - ((distance) % CELL_DIM) + centered() + CELL_DIM;
 
 }
 
@@ -319,10 +318,10 @@ void Robot::center(){
   bool left =distances.left.read() < distances.right.read();
   VL53L0X *laser= &(left ? distances.left : distances.right);
   float b = distances.back.read();
-  if(laser->read() < CENTRED2 && b < LONG_RANGE){
+  if(laser->read() < SIDE_SPACE && b < LONG_RANGE){
     rotate(left, 30);
     mov.go(true);
-    while(laser->read() < CENTRED2);
+    while(laser->read() < SIDE_SPACE);
     rotate(!left,30);
     mov.go(false);
     while(distances.back.read() < b);
@@ -363,3 +362,14 @@ int Robot::difLaser(){
 float Robot::getBattery() {
   return ((analogRead(B_PIN) * (3.3f / 4095.0f)) * (B_R1+B_R2))/B_R2;
 }
+
+/**
+ * Calculates the distance the robot have to hold to be centered
+ */
+int Robot::centered(){
+  return (CELL_DIM- ROBOT_DIM)/2;
+}
+
+ int Robot::cellFront(){
+  return CELL_DIM - ROBOT_DIM;
+ }

@@ -31,12 +31,10 @@
 #define RISE 3
 #define DISTORTION 30
 //Measurements
-#define CENTRED2 40
+#define SIDE_SPACE 40
 #define LONG_RANGE 1000
-#define ROBOT_DIM
+#define ROBOT_DIM 150
 #define CELL_DIM 320
-#define CELL_FRONT 200
-#define CELL_BACK 100
 //straighten related
 #define NEAR_WALL 140
 #define MIN_ER 5
