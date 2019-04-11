@@ -87,6 +87,11 @@ struct Distances {
 struct Temps {
   Temperature left;
   Temperature right;
+  float ambient;
+
+  void calibrate() {
+    ambient = (left.read() + right.read()) / 2;
+  }
 
   bool check() {
     left.setAddress(T_LEFT);
@@ -95,7 +100,7 @@ struct Temps {
   }
 
   float getAmbient() {
-    return (left.readAmb() + right.readAmb()) / 2;
+    return ambient;
   }
 
   operator String() {
@@ -111,6 +116,7 @@ class Robot {
   public:
     void setup();
     void begin();
+    void calibrate();
     bool check();
     bool checkBattery();
 

@@ -52,6 +52,8 @@ void setup() {
   delay(250);
   robot.setLED(0, 0, 0);
 
+  robot.calibrate();
+
   Debug.println("STARTING!", Levels::INFO);
 
   if(usbMode) while(1) loopUSB();

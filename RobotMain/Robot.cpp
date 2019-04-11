@@ -13,6 +13,10 @@ void Robot::begin() {
   //tempk = (temps.left.read()+temps.left.read())/2+TEMP_DIF;
 }
 
+void Robot::calibrate() {
+  temps.calibrate();
+}
+
 void Robot::climb(int k) {
   Debug.println(String("climb"), Levels::INFO);
   mov.climb(k);
