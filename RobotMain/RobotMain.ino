@@ -94,6 +94,7 @@ void loop() {
       Com.write(Commands::GETTEMPS);
       Com.write(robot.getTempLeft());
       Com.write(robot.getTempRight());
+      Com.write(robot.getTempAmb());
       break;
     case Commands::GETINCLINATION:
       Com.write(Commands::GETINCLINATION);
