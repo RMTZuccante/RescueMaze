@@ -94,10 +94,15 @@ struct Temps {
     return left.check() && right.check();
   }
 
+  float getAmbient() {
+    return (left.readAmb() + right.readAmb()) / 2;
+  }
+
   operator String() {
     String out = "temps={";
     out+="left="+String(left.read());
     out+=",right="+String(right.read());
+    out+=",ambient="+String(getAmbient());
     return out+"}";
   }
 };
@@ -115,6 +120,7 @@ class Robot {
     void setBlackThreshold(uint8_t black_threshold);
     float getTempLeft();
     float getTempRight();
+    float getTempAmb();
     Temps getTemps();
     float getInclination();
     float getBattery();

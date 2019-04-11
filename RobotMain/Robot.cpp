@@ -82,6 +82,10 @@ float Robot::getTempRight() {
 	return out;
 }
 
+float Robot::getTempAmb() {
+  return temps.getAmbient();
+}
+
 Temps Robot::getTemps() {
   return temps;
 }
