@@ -125,7 +125,7 @@ int Robot::go(bool frontLaser) {
   Debug.println(String("start go "));
   Debug.println(String("First read: ")+front);
   float incl = mov.getRoll();
-  while (((!frontLaser) && (front > MAX_RANGE) && (abs(incl) > MIN_CHANGE_INCL) ) || ((frontLaser) ? (front > end) : (front < end)) && res!=BLACK) {
+  while (((!frontLaser) && (front > MAX_RANGE) && (incl>MIN_CHANGE_INCL) ) || ((frontLaser) ? (front > end) : (front < end)) && res!=BLACK) {
     // ogni 20 iterazioni controllo l'ostacolo
     if (i == 20) {
       uint16_t now = dist->read();
@@ -141,6 +141,7 @@ int Robot::go(bool frontLaser) {
     front = dist->read();
     Debug.println(String("Laser read: ")+front);
     incl = mov.getRoll();
+    Debug.println(String("Incl : ")+incl);
     // controllo salita
     if (abs(incl) > RISEINCL) {
       ++salita;
@@ -158,10 +159,11 @@ int Robot::go(bool frontLaser) {
         mov.idle();
         mov.delayr(100);
         incl = mov.getRoll();
+        Debug.println(String("Incl: ")+incl);
         if(abs(incl) < RISEINCL-5) ++i;
         else i = 0;
       }
-      frontLaser = (distances.frontL.read()<MAX_RANGE);
+      frontLaser = (distances.frontL.read() < MAX_RANGE);
       dist = &(frontLaser?((distances.frontL.read()<distances.frontR.read()) ? distances.frontL : distances.frontR ) : distances.back);
       end = endDist(dist->read(),front);
     }
