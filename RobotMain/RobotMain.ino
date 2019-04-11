@@ -18,6 +18,9 @@ void setup() {
   pinMode(PUSHBUTTON2, INPUT_PULLUP);
   pinMode(USBBUTTON, INPUT_PULLUP);
   digitalWrite(LED_BUILTIN, LOW);
+  
+  //Attaching interrupts
+  attachInterrupt(PUSHBUTTON2, reset, FALLING);
 
   //Hardware initialization
   Com.begin();
@@ -50,9 +53,6 @@ void setup() {
   robot.setLED(0, 0, 0);
 
   Debug.println("STARTING!", Levels::INFO);
-  
-  //Attaching interrupts
-  attachInterrupt(PUSHBUTTON2, reset, FALLING);
 
   if(usbMode) while(1) loopUSB();
 }
