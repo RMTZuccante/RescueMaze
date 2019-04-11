@@ -24,6 +24,7 @@ class Moviment {
     void setSpeed(uint16_t speed);
     void setK(int rightK, int leftK);
     float inclination();
+    float getRoll();
     void idle();
     void delayr(unsigned int t);
   private:

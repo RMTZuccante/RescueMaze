@@ -90,7 +90,7 @@ int Robot::go(){
   uint16_t fl=distances.frontL.read();
   uint16_t fr=distances.frontR.read();
   uint16_t b=distances.back.read();
-  return go( ((fl > fr ? fr : fl) < b) && (abs(fl-fr) < CELL_DIM && b < MAX_RANGE));
+  return go( ((fl > fr ? fr : fl) < b) && !(abs(fl-fr) > cellFront() && b < MAX_RANGE));
 }
 
 /**
@@ -132,12 +132,11 @@ int Robot::go(bool frontLaser) {
     front = dist->read();
     Debug.println(String("Laser read: ")+front);
     // controllo salita
-    float incl = mov.inclination();
+    float incl = mov.getRoll();
     if (abs(incl) > RISEINCL) {
-      Debug.println(String("ïncl count : "+ salita));
-      salita++;
+      ++salita;
       weight = 0;
-      if(res != RISE)res = OBSTACLE;
+      if(res != RISE && salita > 1)res = OBSTACLE;
     }
     else salita = 0;
 
@@ -149,7 +148,7 @@ int Robot::go(bool frontLaser) {
       for(int i = 0; i < 3; ){
         mov.idle();
         mov.delayr(100);
-        incl = mov.inclination();
+        incl = mov.getRoll();
         if(abs(incl) < RISEINCL-5) ++i;
         else i = 0;
       }
@@ -182,7 +181,7 @@ int Robot::go(bool frontLaser) {
   Debug.println(String("stop"));
   straighten();
   //if(res != OBSTACLE) center();
-  return res == OBSTACLE ? weight+OBSTACLE : res;
+  return res == OBSTACLE ? weight/5+OBSTACLE : res;
 }
 
 /**

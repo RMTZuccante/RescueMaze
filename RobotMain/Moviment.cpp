@@ -212,6 +212,9 @@ float Moviment::inclination() {
   return orientation.inclination();
 }
 
+ float Moviment::getRoll(){
+  return orientation.roll();
+ }
 /**
  * Does idle operation, aka does nothing.
  */
