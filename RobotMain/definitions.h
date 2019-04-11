@@ -14,9 +14,9 @@
 #define FRONT_WALL 2
 #define MAXSPEED 65535
 #define SPEED 30000
-#define FIRST_K 3000
-#define SECOND_K 3000
-#define ROTATION_P 500
+#define FIRST_K -5000
+#define SECOND_K -5000
+#define ROTATION_P 300
 #define SLOW_ROTATION 20000
 #define ROTATION_SPEED 60000
 #define ROTATION_K 1
@@ -30,6 +30,8 @@
 #define OBSTACLE 10
 #define RISE 3
 #define DISTORTION 30
+#define MIN_CHANGE_OBS 5
+#define MIN_CHANGE_INCL 3
 //Measurements
 #define SIDE_SPACE 40
 #define LONG_RANGE 1000

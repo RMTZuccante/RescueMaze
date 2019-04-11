@@ -115,6 +115,7 @@ int Robot::go(bool frontLaser) {
   int i = 0;
   int salita = 0;
   int weight = 0;
+  
   uint16_t front = dist->read();
   uint16_t before = front;
   if(color.isBlack()) res=BLACK; // controllo il colore
@@ -123,11 +124,12 @@ int Robot::go(bool frontLaser) {
   mov.setSpeed(SPEED);
   Debug.println(String("start go "));
   Debug.println(String("First read: ")+front);
-  while (((frontLaser) ? (front > end) : (front < end)) && res!=BLACK) {
+  float incl = mov.getRoll();
+  while (((!frontLaser) && (front > MAX_RANGE) && (abs(incl) > MIN_CHANGE_INCL) ) || ((frontLaser) ? (front > end) : (front < end)) && res!=BLACK) {
     // ogni 20 iterazioni controllo l'ostacolo
     if (i == 20) {
       uint16_t now = dist->read();
-      if (((before > now) ? before - now : now - before) < 3 && now < MAX_RANGE) {
+      if (((before > now) ? before - now : now - before) < MIN_CHANGE_OBS && now < MAX_RANGE) {
         charge();
         if(res != RISE)res = OBSTACLE;
       }
@@ -138,8 +140,8 @@ int Robot::go(bool frontLaser) {
     i++;
     front = dist->read();
     Debug.println(String("Laser read: ")+front);
+    incl = mov.getRoll();
     // controllo salita
-    float incl = mov.getRoll();
     if (abs(incl) > RISEINCL) {
       ++salita;
       weight = 0;
@@ -159,8 +161,8 @@ int Robot::go(bool frontLaser) {
         if(abs(incl) < RISEINCL-5) ++i;
         else i = 0;
       }
-      bool front = (distances.frontL.read()<2000);
-      dist = &(front?((distances.frontL.read()<distances.frontR.read()) ? distances.frontL : distances.frontR ) : distances.back);
+      frontLaser = (distances.frontL.read()<MAX_RANGE);
+      dist = &(frontLaser?((distances.frontL.read()<distances.frontR.read()) ? distances.frontL : distances.frontR ) : distances.back);
       end = endDist(dist->read(),front);
     }
 
@@ -175,6 +177,8 @@ int Robot::go(bool frontLaser) {
     mov.idle();
   }
   mov.setSpeed(SPEED);
+  Debug.println(String("isVictimL: ")+isVictimL);
+  Debug.println(String("isVictimR: ")+isVictimR);
   mov.stop();
 
   // se rilevato nero torno indietro
@@ -291,8 +295,7 @@ uint16_t Robot::endDist(uint16_t distance, bool front) {
     distance = distance > cellFront() ? distance - cellFront() : 0;
     return distance - ((distance) % CELL_DIM) + centered();
   }
-  return distance - ((distance) % CELL_DIM) + centered()/2 + CELL_DIM;
-
+  return distance - ((distance) % CELL_DIM) + centered()*2/3 + CELL_DIM;
 }
 
 /**
