@@ -159,6 +159,7 @@ class Robot {
     uint16_t endDist(uint16_t distance, bool front);
     float isVictimL;
     float isVictimR;
+    bool useBack = true;
 };
 
 #endif
