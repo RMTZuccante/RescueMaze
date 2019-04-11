@@ -215,6 +215,11 @@ float Moviment::inclination() {
  float Moviment::getRoll(){
   return orientation.roll();
  }
+
+float Moviment::getTemp() {
+  return orientation.getTemperature();
+}
+ 
 /**
  * Does idle operation, aka does nothing.
  */

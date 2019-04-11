@@ -87,10 +87,12 @@ struct Distances {
 struct Temps {
   Temperature left;
   Temperature right;
-  float ambient;
+  float ambientL;
+  float ambientR;
 
   void calibrate() {
-    ambient = (left.read() + right.read()) / 2;
+    ambientL = left.read();
+    ambientR = right.read();
   }
 
   bool check() {
@@ -100,13 +102,13 @@ struct Temps {
   }
 
   float getAmbient() {
-    return ambient;
+    return (ambientL + ambientR) / 2.0f;
   }
 
   operator String() {
     String out = "temps={";
-    out+="left="+String(left.read());
-    out+=",right="+String(right.read());
+    out+="left="+String(left.read()-ambientL);
+    out+=",right="+String(right.read()-ambientR);
     out+=",ambient="+String(getAmbient());
     return out+"}";
   }

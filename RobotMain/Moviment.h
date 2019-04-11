@@ -25,6 +25,7 @@ class Moviment {
     void setK(int rightK, int leftK);
     float inclination();
     float getRoll();
+    float getTemp();
     void idle();
     void delayr(unsigned int t);
   private:
