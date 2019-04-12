@@ -17,6 +17,7 @@
 #define FIRST_K -5000
 #define SECOND_K -5000
 #define ROTATION_P 300
+#define STR_K 3000
 #define SLOW_ROTATION 20000
 #define ROTATION_SPEED 60000
 #define ROTATION_K 1

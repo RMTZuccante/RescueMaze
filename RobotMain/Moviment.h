@@ -29,6 +29,7 @@ class Moviment {
     float getTemp();
     void idle();
     void delayr(unsigned int t);
+    void straighten();
   private:
     float endAngle(float angle, bool invert, float end);
     void rotationSpeed(bool direction , float endRotation);
