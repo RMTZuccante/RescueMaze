@@ -59,6 +59,9 @@ void setup() {
   delay(250);
   robot.setLED(0, 0, 0);
 
+  //Attaching interrupts
+  attachInterrupt(PUSHBUTTON, reset, FALLING);
+
   robot.calibrate();
 
   Debug.println("STARTING!", Levels::INFO);
