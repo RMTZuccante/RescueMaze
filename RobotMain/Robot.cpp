@@ -204,7 +204,7 @@ int Robot::go(bool frontLaser) {
     Debug.println(String("Call to back"));
     back();
   }
-  else mov.endGo();
+  else if(res != RISE)mov.endGo();
   mov.stop();
 
   Debug.println(String("stop"));
@@ -364,7 +364,7 @@ void Robot::center(){
 void Robot::charge(){
   mov.setSpeed(MAXSPEED);
   back(100);
-  mov.go();
+  mov.go(false);
 }
  
 /**

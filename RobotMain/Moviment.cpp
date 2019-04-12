@@ -49,6 +49,8 @@ void Moviment::climb(int k) {
  * Moves the robot forward.
  */
 void Moviment::go() {
+  orientation.start(20);
+  direzione = orientation.yaw();
   go(false);
 }
 
@@ -57,8 +59,6 @@ void Moviment::go() {
  * @param invert Forward if TRUE, backward if FALSE.
  */
 void Moviment::go(bool invert) {
-  orientation.start(20);
-  direzione = orientation.yaw();
   motorsR.start(min(speed, MAXSPEED), invert);
   motorsL.start(min(speed, MAXSPEED), invert);
 }
