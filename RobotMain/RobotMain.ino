@@ -14,13 +14,8 @@ void reset() {
 void setup() {
   //I/O initialization
   pinMode(LED_BUILTIN, OUTPUT);
-  pinMode(PUSHBUTTON, INPUT_PULLUP);
-  pinMode(PUSHBUTTON2, INPUT_PULLUP);
   pinMode(USBBUTTON, INPUT_PULLUP);
   digitalWrite(LED_BUILTIN, LOW);
-  
-  //Attaching interrupts
-  attachInterrupt(PUSHBUTTON2, reset, FALLING);
 
   //Hardware initialization
   Com.begin();
@@ -29,6 +24,18 @@ void setup() {
   I2C_2.begin();
 
   bool usbMode = !digitalRead(USBBUTTON);
+
+  if(usbMode) {
+    pinMode(PUSHBUTTON, INPUT_PULLUP);
+    pinMode(PUSHBUTTON2, INPUT_PULLUP);
+  } else {  
+    pinMode(PUSHBUTTON, INPUT);
+    pinMode(PUSHBUTTON2, INPUT);
+  }
+  
+  //Attaching interrupts
+  attachInterrupt(PUSHBUTTON2, reset, FALLING);
+  
   //Check that everything is working
   bool ok = (usbMode || Com.check()) && robot.check() && robot.checkBattery();
   Debug.println("Check done.", Levels::INFO);
