@@ -122,6 +122,9 @@ void loop() {
     case Commands::SETBLACK:
       robot.setBlackThreshold(Com.read());
       break;
+    case Commands::MIRROR:
+      gpio_toggle_bit(PIN_MAP[LED_BUILTIN].gpio_device, PIN_MAP[LED_BUILTIN].gpio_bit);
+      break;
     case Commands::RESET:
       reset();
       break;
@@ -176,6 +179,9 @@ void loopUSB() {
   }
   else if (cmd == "getbattery") {
     Serial.println("Battery: "+String(robot.getBattery())+"v.");
+  }
+  else if (cmd == "mirror") {
+      gpio_toggle_bit(PIN_MAP[LED_BUILTIN].gpio_device, PIN_MAP[LED_BUILTIN].gpio_bit);
   }
   else Serial.println("Unknown command");
 }
