@@ -100,7 +100,10 @@ int Robot::go(){
   uint16_t fl=distances.frontL.read();
   uint16_t fr=distances.frontR.read();
   uint16_t b=distances.back.read();
-  return go( (!useBack) || (b > MAX_RANGE || ((fl > fr ? fr : fl) <= b) && (abs(fl-fr) < cellFront())) );
+  if( (abs(fl-fr) < cellFront()) && fl < (CELL_DIM *2))return go(true); //Se il robot è prossimo alla cella utilizza il front
+  if(b > MAX_RANGE) return go(true); //Altrimenti Se il back è o rischia di andare fuori range
+  if(useBack)return go((fl > fr ? fr : fl) <= b)); //Altrimenti Se non è dopo una salita controlla la misura minore
+  return go (true);
 }
 
 /**
@@ -132,8 +135,8 @@ int Robot::go(bool frontLaser) {
     if(!frontLaser){
       front = distances.frontL.read();
     }
-    // ogni 20 iterazioni controllo l'ostacolo
-    if (i == 20 && (!charged) ) {
+    // ogni 7 iterazioni controlla l'ostacolo
+    if (i == 7 && (!charged) ) {
       uint16_t now = dist->read();
       if (((before > now) ? before - now : now - before) < MIN_CHANGE_OBS && now < MAX_RANGE) {
         charge();
@@ -143,7 +146,10 @@ int Robot::go(bool frontLaser) {
       before = now;
       i = 0;
     }
-    if(res == OBSTACLE) ++weight;
+    if(res == OBSTACLE) {
+      ++weight;
+      mov.straighten();
+    }
     i++;
     myLaser = dist->read();
     Debug.println(String("Laser read: ")+myLaser);
@@ -309,7 +315,7 @@ uint16_t Robot::endDist(uint16_t distance, bool front) {
     distance = distance > cellFront() ? distance - cellFront() : 0;
     return distance - ((distance) % CELL_DIM) + centered();
   }
-  return distance - ((distance) % CELL_DIM) + centered()*2/3 + CELL_DIM;
+  return distance - ((distance) % CELL_DIM) + centered() + CELL_DIM;
 }
 
 /**
@@ -357,7 +363,7 @@ void Robot::center(){
  */
 void Robot::charge(){
   mov.setSpeed(MAXSPEED);
-  back(50);
+  back(100);
   mov.go();
 }
  
@@ -390,7 +396,7 @@ float Robot::getBattery() {
  * Calculates the distance the robot have to hold to be centered
  */
 int Robot::centered(){
-  return (CELL_DIM- ROBOT_DIM)/2;
+  return (CELL_DIM- ROBOT_DIM)*0.35;
 }
 
  int Robot::cellFront(){

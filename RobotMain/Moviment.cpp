@@ -59,6 +59,16 @@ void Moviment::go(bool invert) {
   motorsR.start(min(speed, MAXSPEED), invert);
   motorsL.start(min(speed, MAXSPEED), invert);
 }
+/**
+ * Straightens the robot by checking on the starting direction
+ */
+
+void Moviment::straighten() {
+  float fix = (direzione - orientation.yaw()) * STR_K;
+  fix = fix > 0 ? fix : 0;
+  motorsR.start(min(speed + fix, MAXSPEED), false);
+  motorsL.start(min(speed - fix, MAXSPEED) , false);
+}
 
 /**
  * Straightens the robot at the end of a movement.
