@@ -129,7 +129,7 @@ class Robot {
     float getTempLeft();
     float getTempRight();
     float getTempAmb();
-    Temps getTemps();
+    String getTemps();
     float getInclination();
     float getBattery();
     void straighten();

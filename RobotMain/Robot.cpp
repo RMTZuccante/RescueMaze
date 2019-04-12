@@ -75,24 +75,24 @@ void Robot::setBlackThreshold(uint8_t black_threshold) {
 }
 
 float Robot::getTempLeft() {
-  float out = temps.left.read() - temps.ambientL;
+  float out = temps.left.read();
   out = max(out, isVictimL);
   isVictimL = 0;
-  return out;
+  return out - temps.ambientL;
 }
 
 float Robot::getTempRight() {
-	float out = temps.right.read() - temps.ambientR;
+	float out = temps.right.read();
 	out = max(out, isVictimR);
 	isVictimR = 0;
-	return out;
+	return out - temps.ambientR;
 }
 
 float Robot::getTempAmb() {
   return temps.getAmbient();
 }
 
-Temps Robot::getTemps() {
+String Robot::getTemps() {
   return temps;
 }
 
