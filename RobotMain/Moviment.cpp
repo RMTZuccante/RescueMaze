@@ -18,6 +18,9 @@ void Moviment::begin() {
   motorsR.begin();
   motorsL.begin();
   orientation.begin();
+}
+
+void Moviment::calibrate() {
   delay(100);
   orientation.calibrate();
   delay(100);

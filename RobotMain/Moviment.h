@@ -11,6 +11,7 @@ class Moviment {
   public:
     Moviment (uint16_t speed, Temperature *tl, Temperature *tr , float *isVictimL,float *isVictimR);
     void begin();
+    void calibrate();
     bool check();
     void go();
     void go (bool invert);

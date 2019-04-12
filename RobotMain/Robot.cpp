@@ -15,6 +15,7 @@ void Robot::begin() {
 
 void Robot::calibrate() {
   temps.calibrate();
+  mov.calibrate();
 }
 
 void Robot::climb(int k) {
