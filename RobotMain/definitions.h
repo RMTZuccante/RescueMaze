@@ -38,6 +38,8 @@
 #define LONG_RANGE 1000
 #define ROBOT_DIM 150
 #define CELL_DIM 320
+#define FRONT_P 0.6
+#define BACK_P 0.4
 //straighten related
 #define NEAR_WALL 140
 #define MIN_ER 5

@@ -145,7 +145,8 @@ class Robot {
     void setLED(bool red, bool green, bool blue);
     void center();
     void charge();
-    int centered();
+    int centeredF();
+    int centeredB();
     int cellFront();
     void delayr(unsigned int t);
   private:

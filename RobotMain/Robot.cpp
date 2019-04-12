@@ -188,7 +188,7 @@ int Robot::go(bool frontLaser) {
     if(color.isBlack()) res=BLACK;
 
     // controllo temperature
-    if(abs(start-myLaser) > centered()){
+    if(abs(start-myLaser) > centeredB()){
       isVictimL = max(isVictimL, temps.left.read());
       isVictimR = max(isVictimR, temps.right.read());
     }
@@ -313,9 +313,9 @@ void Robot::setLED(bool red, bool green, bool blue) {
 uint16_t Robot::endDist(uint16_t distance, bool front) {
   if(front){
     distance = distance > cellFront() ? distance - cellFront() : 0;
-    return distance - ((distance) % CELL_DIM) + centered();
+    return distance - ((distance) % CELL_DIM) + centeredF();
   }
-  return distance - ((distance) % CELL_DIM) + centered() + CELL_DIM;
+  return distance - ((distance) % CELL_DIM) + centeredB() + CELL_DIM;
 }
 
 /**
@@ -395,8 +395,11 @@ float Robot::getBattery() {
 /**
  * Calculates the distance the robot have to hold to be centered
  */
-int Robot::centered(){
-  return (CELL_DIM- ROBOT_DIM)*0.4;
+int Robot::centeredF(){
+  return (CELL_DIM- ROBOT_DIM)*FRONT_P;
+}
+int Robot::centeredB(){
+  return (CELL_DIM- ROBOT_DIM)*BACK_P;
 }
 
  int Robot::cellFront(){

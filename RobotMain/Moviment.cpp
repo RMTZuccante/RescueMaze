@@ -43,7 +43,6 @@ void Moviment::climb(int k) {
   motorsR.start(min(50000+k,MAXSPEED), false);
   motorsL.start(min(50000-k,MAXSPEED), false);
 }
-
  
 /**
  * Moves the robot forward.
