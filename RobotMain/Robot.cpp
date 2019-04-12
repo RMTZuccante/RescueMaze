@@ -15,7 +15,6 @@ void Robot::begin() {
 
 void Robot::calibrate() {
   temps.calibrate();
-  mov.calibrate();
 }
 
 void Robot::climb(int k) {
@@ -103,7 +102,7 @@ int Robot::go(){
   uint16_t b=distances.back.read();
   if( (abs(fl-fr) < cellFront()) && fl < (CELL_DIM *2))return go(true); //Se il robot è prossimo alla cella utilizza il front
   if(b > MAX_RANGE) return go(true); //Altrimenti Se il back è o rischia di andare fuori range
-  if(useBack)return go((fl > fr ? fr : fl) <= b)); //Altrimenti Se non è dopo una salita controlla la misura minore
+  if(useBack)return go((fl > fr ? fr : fl) <= b); //Altrimenti Se non è dopo una salita controlla la misura minore
   return go (true);
 }
 
@@ -397,7 +396,7 @@ float Robot::getBattery() {
  * Calculates the distance the robot have to hold to be centered
  */
 int Robot::centered(){
-  return (CELL_DIM- ROBOT_DIM)*0.35;
+  return (CELL_DIM- ROBOT_DIM)*0.4;
 }
 
  int Robot::cellFront(){
