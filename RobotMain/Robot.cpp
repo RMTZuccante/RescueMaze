@@ -14,6 +14,7 @@ void Robot::begin() {
 }
 
 void Robot::calibrate() {
+  mov.calibrate();
   temps.calibrate();
 }
 
