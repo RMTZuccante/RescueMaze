@@ -113,7 +113,14 @@ int Robot::go(){
  */
 int Robot::go(bool frontLaser) {
   VL53L0X* dist = &(frontLaser?((distances.frontL.read()<distances.frontR.read()) ? distances.frontL : distances.frontR ) : distances.back);
-  uint16_t end = endDist(dist->read(),frontLaser); // calcolo a che distanza devo arrivare
+  uint16_t myLaser = 0;
+  for(int i=0; i < LASER_READ_TIMES; i++){
+    myLaser += dist->read();
+  }
+  myLaser /= LASER_READ_TIMES;
+  uint16_t end = endDist(myLaser,frontLaser); // calcolo a che distanza devo arrivare
+  
+  myLaser = dist->read();
   Debug.println(String("End")+String(end));
   Debug.println(String(frontLaser?"using front laser":"using back laser"));
   bool charged = false;
@@ -121,11 +128,10 @@ int Robot::go(bool frontLaser) {
   int i = 0;
   int salita = 0;
   int weight = 0;
-  uint16_t front = 0;
-  uint16_t myLaser = dist->read();
   uint16_t before = myLaser;
   if(color.isBlack()) res=BLACK; // controllo il colore
   uint16_t start = myLaser;
+  uint16_t front = 0;
   mov.go(); // inizio a muovermi
   mov.setSpeed(SPEED);
   Debug.println(String("start go "));
@@ -324,10 +330,10 @@ uint16_t Robot::endDist(uint16_t distance, bool front) {
  */
 void Robot::straighten(){
   int dif=0;
-  for(int i = 0; i < STR_READ_TIMES ; i++){
+  for(int i = 0; i < LASER_READ_TIMES ; i++){
     dif+=difLaser();
   }
-  dif/=STR_READ_TIMES;
+  dif/=LASER_READ_TIMES;
   if(((distances.frontL.read() <= NEAR_WALL)&&(distances.frontR.read() <= NEAR_WALL)) && abs(dif) > MIN_ER && abs(dif) < MAX_ER){
     mov.rotation(dif>0);
     do{

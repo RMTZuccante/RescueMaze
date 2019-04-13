@@ -13,7 +13,7 @@
 #define BACK_WALL 1
 #define FRONT_WALL 2
 #define MAXSPEED 65535
-#define SPEED 30000
+#define SPEED 15000
 #define FIRST_K -5000
 #define SECOND_K -5000
 #define ROTATION_P 300
@@ -45,7 +45,7 @@
 #define MIN_ER 5
 #define MAX_ER 30
 #define STR_GOAL 2
-#define STR_READ_TIMES 3
+#define LASER_READ_TIMES 3
 #define LASER_DIF -8
 
 #define TEMP_DIF 1.0

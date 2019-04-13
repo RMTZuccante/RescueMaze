@@ -193,8 +193,8 @@ void Moviment::rotationSpeed(bool invert, float endRotation) {
   direzione = orientation.yaw();
   if (endRotation - direzione > 0) setK(FIRST_K + ((endRotation - direzione) * ROTATION_P), SECOND_K + ((endRotation - direzione) * ROTATION_P));
   else setK(SECOND_K + ((direzione - endRotation) * ROTATION_P), FIRST_K + ((direzione - endRotation) * ROTATION_P));
-  motorsR.start(min((speed + kR) , MAXSPEED), !invert);
-  motorsL.start(min((speed + kL) , MAXSPEED), invert);
+  motorsR.start(min((SLOW_ROTATION + kR) , MAXSPEED), !invert);
+  motorsL.start(min((SLOW_ROTATION + kL) , MAXSPEED), invert);
 }
 
 /**
